@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "47114877694",
+    "project_id": "edunetdemo-5c098",
+    "storage_bucket": "edunetdemo-5c098.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:47114877694:android:f4bab8d0f59173cfd283af",
+        "android_client_info": {
+          "package_name": "com.example.edunetdemo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyACdw03Mh0b7fabnCNZb5PBbpmxuORmOHg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
