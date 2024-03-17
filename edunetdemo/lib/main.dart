@@ -95,23 +95,12 @@ class SharePosts extends StatelessWidget {
               ],
             ),
           ),
-          Positioned(
-            right: 16,
-            bottom: 16,
-            child: IconButton(
-              onPressed: () {
-                // Add functionality to share post here
-              },
-              icon: Icon(Icons.add_circle_outline_rounded), // Using an appropriate icon
-              iconSize: 36, // Adjust icon size as needed
-              color: Colors.blue, // Customize icon color
-            ),
-          ),
         ],
       ),
     );
   }
 }
+
 
 
 class ManageAccount extends StatelessWidget {
