@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 
-class MyHomePage extends StatefulWidget {
+class Student_Dashboard extends StatefulWidget {
+  const Student_Dashboard({super.key});
+
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  State<Student_Dashboard> createState() => _Student_DashboardState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _Student_DashboardState extends State<Student_Dashboard> {
+  @override
   int _selectedIndex = 0;
 
   @override
