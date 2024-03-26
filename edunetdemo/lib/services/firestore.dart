@@ -13,6 +13,7 @@ class FirestoreService {
   required String alumniDesignation,
   required String caption,
   required String description,
+  String? imageURL,
 }) {
   return alumni_posts.add({
     'type': type,
@@ -20,6 +21,7 @@ class FirestoreService {
     'alumniDesignation': alumniDesignation,
     'caption': caption,
     'description': description,
+    'imageURL': imageURL,
     'timestamp': Timestamp.now(),
   });
 }
@@ -30,40 +32,4 @@ class FirestoreService {
         alumni_posts.orderBy('timestamp', descending: true).snapshots();
     return alumniPostsStream;
   }
-
-
-// get collection of users
-  // final CollectionReference users =
-  //     FirebaseFirestore.instance.collection('users');
-
-  // // add a user
-  // Future<void> addUser({
-  //   required String userId,
-  //   required String fullName,
-  //   required int yearOfStudy,
-  // }) {
-  //   return users.doc('users').set({
-  //     'userId': userId,
-  //     'fullName': fullName,
-  //     'yearOfStudy': yearOfStudy,
-  //   });
-  // }
-
-  // // read user data
-  // Stream<DocumentSnapshot> getUserData() {
-  //   return users.doc('users').snapshots();
-  // }
-
-  // // update user data
-  // Future<void> updateUserData({
-  //   required String userId,
-  //   required String fullName,
-  //   required int yearOfStudy,
-  // }) {
-  //   return users.doc('users').update({
-  //     'userId': userId,
-  //     'fullName': fullName,
-  //     'yearOfStudy': yearOfStudy,
-  //   });
-  // }
 }
