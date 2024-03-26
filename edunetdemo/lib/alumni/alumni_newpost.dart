@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:edunetdemo/services/firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:path/path.dart' as path;
@@ -26,46 +27,74 @@ class _AlumniNewPostPageState extends State<AlumniNewPostPage> {
   ];
   XFile? _selectedImage;
   final _picker = ImagePicker();
-////////////////////////////////////
-Future<String?> _uploadImage() async {
-  if (_selectedImage == null) return null;
 
-  final storageRef = FirebaseStorage.instance.ref();
-  final fileName = path.basename(_selectedImage!.path);
-  final imageRef = storageRef.child('alumni_posts/$fileName');
+  Future<String?> _uploadImage() async {
+    if (_selectedImage == null) return null;
 
-  try {
-    await imageRef.putFile(File(_selectedImage!.path));
-    final downloadURL = await imageRef.getDownloadURL();
-    return downloadURL;
-  } catch (e) {
-    print('Error uploading image: $e');
-    return null;
+    final storageRef = FirebaseStorage.instance.ref();
+    final fileName = path.basename(_selectedImage!.path);
+    final imageRef = storageRef.child('alumni_posts/$fileName');
+
+    try {
+      await imageRef.putFile(File(_selectedImage!.path));
+      final downloadURL = await imageRef.getDownloadURL();
+      return downloadURL;
+    } catch (e) {
+      print('Error uploading image: $e');
+      return null;
+    }
   }
-}
-////////////////////////////////////
-Future<void> _pickImage() async {
-  final XFile? pickedImage = await _picker.pickImage(source: ImageSource.gallery);
-  if (pickedImage != null) {
+
+  Future<void> _pickImage() async {
+    final XFile? pickedImage = await _picker.pickImage(source: ImageSource.gallery);
+    if (pickedImage != null) {
+      setState(() {
+        _selectedImage = pickedImage;
+      });
+    }
+  }
+
+  void _cancelImageSelection() {
     setState(() {
-      _selectedImage = pickedImage;
+      _selectedImage = null;
     });
   }
-}
-///////////////////////////////////
+
+  void _resetForm() {
+    _detailsController.clear();
+    _organisationNameController.clear();
+    setState(() {
+      _selectedImage = null;
+      _postType = 'Internship offers';
+    });
+  }
+
+  Future<void> _submitPost() async {
+    final imageURL = await _uploadImage();
+    await _firestoreService.addAlumniPosts(
+      type: _postType,
+      alumniName: 'John Doe', // Replace with the actual alumni name
+      alumniDesignation: 'Software Engineer', // Replace with the actual alumni designation
+      caption: _organisationNameController.text,
+      description: _detailsController.text,
+      imageURL: imageURL,
+    );
+    _resetForm();
+    // Show a success message or navigate to the home page
+  }
+
   @override
-Widget build(BuildContext context) {
-  return Scaffold(
-    appBar: AppBar(
-      title: const Text('Create Post'),
-    ),
-    body: Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // ... (existing code)
-                      const Text(
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Create Post'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
               'Post Type',
               style: TextStyle(
                 fontSize: 18.0,
@@ -135,46 +164,47 @@ Widget build(BuildContext context) {
                 fontWeight: FontWeight.bold,
               ),
             ),
-          const SizedBox(height: 16.0),
-                    ElevatedButton(
-            onPressed: _pickImage,
-            child: const Text('Upload Photo'),
-          ),
-          if (_selectedImage != null)
-            Padding(
-              padding: const EdgeInsets.only(top: 16.0),
-              child: Image.file(
-                File(_selectedImage!.path),
-                height: 200,
-                fit: BoxFit.contain,
-              ),
+            const SizedBox(height: 8.0),
+            Row(
+              children: [
+                IconButton(
+                  onPressed: _pickImage,
+                  icon:Icon(Icons.upload_file)
+                ),
+                if (_selectedImage != null)
+                  Expanded(
+                    child: Row(
+                      children: [
+                        const SizedBox(width: 16.0),
+                        Expanded(
+                          child: Image.file(
+                            File(_selectedImage!.path),
+                            height: 200,
+                            fit: BoxFit.contain,
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: _cancelImageSelection,
+                          icon: const Icon(Icons.cancel),
+                        ),
+                      ],
+                    ),
+                  ),
+              ],
             ),
-          const SizedBox(height: 16.0),
-          ElevatedButton(
-            onPressed: () async {
-              final imageURL = await _uploadImage();
-              await _firestoreService.addAlumniPosts(
-                type: _postType,
-                alumniName: 'John Doe', // Replace with the actual alumni name
-                alumniDesignation: 'Software Engineer', // Replace with the actual alumni designation
-                caption: _organisationNameController.text,
-                description: _detailsController.text,
-                imageURL: imageURL,
-              );
-              // Reset the form fields
-              _detailsController.clear();
-              _organisationNameController.clear();
-              setState(() {
-                _selectedImage = null;
-              });
-              // Show a success message or navigate to the home page
-            },
-            child: const Text('Submit'),
-          ),
-        ],
+            const SizedBox(height: 16.0),
+            ElevatedButton(
+              onPressed: _submitPost,
+              child: const Text('Submit'),
+            ),
+            const SizedBox(height: 16.0),
+            IconButton(
+              onPressed: _resetForm,
+              icon:Icon(Icons.delete)
+            ),
+          ],
+        ),
       ),
-    ),
-  );
+    );
+  }
 }
-}
-
