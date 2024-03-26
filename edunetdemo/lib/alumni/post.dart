@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(MaterialApp(
-    home: Scaffold(
-      appBar: AppBar(
-        title: Text('Posts'),
-      ),
-      body: PostCardList(),
-    ),
-  ));
-}
+// void main() {
+//   runApp(MaterialApp(
+//     home: Scaffold(
+//       appBar: AppBar(
+//         title: Text('Posts'),
+//       ),
+//       body: PostCardList(),
+//     ),
+//   ));
+// }
 
 class PostCardList extends StatelessWidget {
   @override
