@@ -2,7 +2,7 @@
 // src/screens/auth_screen.dart
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:edunetdemo/alumni/home_screen.dart';
+// import 'package:edunetdemo/try/home_screen.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -25,10 +25,10 @@ class _AuthScreenState extends State<AuthScreen> {
           email: email,
           password: password,
         );
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const HomeScreen()),
-        );
+        // Navigator.pushReplacement(
+        //   context,
+        //   MaterialPageRoute(builder: (context) => const HomeScreen()),
+        // );
       }
     } catch (e) {
       print('Error signing in: $e');

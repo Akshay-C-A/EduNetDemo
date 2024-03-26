@@ -1,10 +1,10 @@
 
 // src/screens/home_screen.dart
 import 'package:flutter/material.dart';
-import 'package:edunetdemo/alumni/student_dashboard.dart';
-import 'package:edunetdemo/alumni/alumni_dashboard.dart';
-import 'package:edunetdemo/alumni/moderator_dashboard.dart';
-import 'package:edunetdemo/alumni/admin_dashboard.dart';
+// import 'package:edunetdemo/try/student_dashboard.dart';
+// import 'package:edunetdemo/try/alumni_dashboard.dart';
+// import 'package:edunetdemo/try/moderator_dashboard.dart';
+// import 'package:edunetdemo/try/admin_dashboard.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -17,10 +17,10 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
   final List<Widget> _dashboards = [
-    const StudentDashboard(),
-    const AlumniDashboard(),
-    const ModeratorDashboard(),
-    const AdminDashboard(),
+    // const StudentDashboard(),
+    // const AlumniDashboard(),
+    // const ModeratorDashboard(),
+    // const AdminDashboard(),
   ];
 
   @override
