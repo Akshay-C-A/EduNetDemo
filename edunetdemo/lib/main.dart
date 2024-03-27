@@ -13,9 +13,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(
-    MaterialApp(
-      home: Alumni_Dashboard(),
-    )
-    );
+  runApp(MaterialApp(
+    home: Alumni_Dashboard(), //EduNetApp() was here
+  ));
 }
