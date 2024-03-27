@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:edunetdemo/alumni/alumni_post_card.dart';
 import 'package:edunetdemo/services/firestore.dart';
-
 import 'package:flutter/material.dart';
 
 class AlumniPage extends StatefulWidget {
@@ -15,39 +15,22 @@ class _AlumniPageState extends State<AlumniPage> {
 
   final TextEditingController textController = TextEditingController();
 
-  //open a dialogue box to add a note
-  void openNoteBox() {
-    showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-              content: TextField(
-                controller: textController,
-              ),
-              actions: [
-                ElevatedButton(
-                  onPressed: () {
-                    //add a note
-                    firestoreService.addTitle(textController.text);
-
-                    //clear text controller
-                    textController.clear();
-
-                    //close the box
-                    Navigator.pop(context);
-                  },
-                  child: Text("Add"),
-                )
-              ],
-            ));
-  }
-
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Alumni Posts'),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 16.0),
+            child: CircleAvatar(
+              backgroundImage: NetworkImage('https://example.com/profile.jpg'),
+              radius: 20.0,
+            ),
+          ),
+        ],
       ),
       body: StreamBuilder<QuerySnapshot>(
-        stream: firestoreService.getInternshipOffersStream(),
+        stream: firestoreService.getAlumniPostsStream(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}');
@@ -72,24 +55,30 @@ class _AlumniPageState extends State<AlumniPage> {
               // Get note from each doc
               Map<String, dynamic> data =
                   document.data() as Map<String, dynamic>;
-              String noteText = data['title'];
+              String type = data['type'];
+              String alumniName = data['alumniName'];
+              String alumniDesignation = data['alumniDesignation'];
+              String caption = data['caption'];
+              String description = data['description'];
 
               // Display as a list title
-              return Card(
-                elevation: 2,
-                margin: EdgeInsets.all(8),
-                child: ListTile(
-                  title: Text(noteText),
-                  onTap: () {},
-                ),
-              );
+              return AlumniPostCard(
+                  type: type,
+                  alumniName: alumniName,
+                  alumniDesignation: alumniDesignation,
+                  caption: caption,
+                  description: description);
+              // return Card(
+              //   elevation: 2,
+              //   margin: EdgeInsets.all(8),
+              //   child: ListTile(
+              //     title: Text(noteText),
+              //     onTap: () {},
+              //   ),
+              // );
             },
           );
         },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: openNoteBox,
-        child: const Icon(Icons.add),
       ),
     );
   }

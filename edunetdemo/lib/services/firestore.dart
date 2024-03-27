@@ -36,24 +36,10 @@ class FirestoreService {
     });
   }
 
-  //ALumni functions and collection
-  Future<void> addTitle(String title) {
-    return internship_offers.add({
-      'title': title,
-      'timestamp': Timestamp.now(),
-    });
-  }
   // get collection of alumni_posts
-  final CollectionReference alumni_post =
+  final CollectionReference alumni_posts =
       FirebaseFirestore.instance.collection('alumni_posts');
   // final DocumentReference internship_offers = alumni_post.doc('internship_offers');
-
-  final CollectionReference internship_offers =
-      FirebaseFirestore.instance.collection('internship_offers');
-  final CollectionReference placement_offers =
-      FirebaseFirestore.instance.collection('placement_offers');
-  final CollectionReference technical_events =
-      FirebaseFirestore.instance.collection('technical_events');
 
   // add a user
   // Future<void> addUser({
@@ -74,18 +60,10 @@ class FirestoreService {
   // }
 
 // To get the data for alumni posts
-  Stream<QuerySnapshot> getInternshipOffersStream() {
-    final internshipOffersStream =
-        internship_offers.orderBy('timestamp', descending: true).snapshots();
-    return internshipOffersStream;
-  }
-
-  Stream<QuerySnapshot> getTechnicalEventsStream() {
-    return technical_events.orderBy('timestamp', descending: true).snapshots();
-  }
-
-  Stream<QuerySnapshot> getPlacementOffersStream() {
-    return placement_offers.orderBy('timestamp', descending: true).snapshots();
+  Stream<QuerySnapshot> getAlumniPostsStream() {
+    final alumniPostsStream =
+        alumni_posts.orderBy('timestamp', descending: true).snapshots();
+    return alumniPostsStream;
   }
 
   // update user data
