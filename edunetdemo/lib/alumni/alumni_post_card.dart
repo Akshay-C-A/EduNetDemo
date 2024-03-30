@@ -93,13 +93,7 @@ class _AlumniPostCardState extends State<AlumniPostCard> {
                     widget.imageURL,
                     fit: BoxFit.cover,
                   )
-                : Container(
-                    height: 200,
-                    color: Colors.grey[300],
-                    child: Center(
-                      child: Text('No Image'),
-                    ),
-                  ),
+                : Container(),
           ),
           Padding(
             // padding: EdgeInsets.all(10.0),
