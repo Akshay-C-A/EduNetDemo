@@ -49,16 +49,16 @@ class FirestoreService {
 
   Future<void> addStudentPosts({
     required String type,
-    required String alumniName,
-    required String alumniDesignation,
+    required String studentName,
+    required String studentDesignation,
     required String caption,
     required String description,
     String? imageURL,
   }) {
     return alumni_posts.add({
       'type': type,
-      'alumniName': alumniName,
-      'alumniDesignation': alumniDesignation,
+      'alumniName': studentName,
+      'alumniDesignation': studentDesignation,
       'caption': caption,
       'description': description,
       'imageURL': imageURL,
