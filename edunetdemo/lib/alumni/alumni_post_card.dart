@@ -6,7 +6,7 @@ class AlumniPostCard extends StatefulWidget {
   final String alumniDesignation;
   final String caption;
   final String description;
-  final String? imagePath;
+  final String imageURL;
 
   AlumniPostCard({
     required this.type,
@@ -14,7 +14,7 @@ class AlumniPostCard extends StatefulWidget {
     required this.alumniDesignation,
     required this.caption,
     required this.description,
-    this.imagePath,
+    required this.imageURL,
   });
 
   @override
@@ -88,20 +88,16 @@ class _AlumniPostCardState extends State<AlumniPostCard> {
           ),
           Padding(
             padding: EdgeInsets.all(10.0),
-            child: widget.imagePath != null
-                ? Image.asset(
-                    widget.imagePath!,
+            child: widget.imageURL!.isNotEmpty
+                ? Image.network(
+                    widget.imageURL,
                     fit: BoxFit.cover,
                   )
                 : Container(
                     height: 200,
                     color: Colors.grey[300],
                     child: Center(
-                      child: Icon(
-                        Icons.image,
-                        size: 50,
-                        color: Colors.grey[600],
-                      ),
+                      child: Text('No Image'),
                     ),
                   ),
           ),

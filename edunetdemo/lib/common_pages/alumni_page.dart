@@ -23,7 +23,7 @@ class _AlumniPageState extends State<AlumniPage> {
           Padding(
             padding: const EdgeInsets.only(right: 16.0),
             child: CircleAvatar(
-              backgroundImage: NetworkImage('https://example.com/profile.jpg'),
+              //backgroundImage: NetworkImage('https://example.com/profile.jpg'),
               radius: 20.0,
             ),
           ),
@@ -60,6 +60,7 @@ class _AlumniPageState extends State<AlumniPage> {
               String alumniDesignation = data['alumniDesignation'];
               String caption = data['caption'];
               String description = data['description'];
+              String? imageURL = data['imageURL'];
 
               // Display as a list title
               return AlumniPostCard(
@@ -67,7 +68,9 @@ class _AlumniPageState extends State<AlumniPage> {
                   alumniName: alumniName,
                   alumniDesignation: alumniDesignation,
                   caption: caption,
-                  description: description);
+                  description: description,
+                  imageURL: imageURL ?? '');
+
               // return Card(
               //   elevation: 2,
               //   margin: EdgeInsets.all(8),
