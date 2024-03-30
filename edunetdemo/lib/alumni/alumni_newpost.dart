@@ -15,7 +15,7 @@ class AlumniNewPostPage extends StatefulWidget {
 }
 
 class _AlumniNewPostPageState extends State<AlumniNewPostPage> {
-  final _firestoreService = FirestoreService();
+  final _AlumniFirestoreService = FirestoreService();
   final _detailsController = TextEditingController();
   final _organisationNameController = TextEditingController();
   String _postType = 'Internship offers';
@@ -71,7 +71,7 @@ class _AlumniNewPostPageState extends State<AlumniNewPostPage> {
 
   Future<void> _submitPost() async {
     final imageURL = await _uploadImage();
-    await _firestoreService.addAlumniPosts(
+    await _AlumniFirestoreService.addAlumniPosts(
       type: _postType,
       alumniName: 'John Doe', // Replace with the actual alumni name
       alumniDesignation: 'Software Engineer', // Replace with the actual alumni designation

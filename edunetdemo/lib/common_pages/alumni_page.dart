@@ -11,7 +11,7 @@ class AlumniPage extends StatefulWidget {
 }
 
 class _AlumniPageState extends State<AlumniPage> {
-  final FirestoreService firestoreService = FirestoreService();
+  final FirestoreService AlumniFirestoreService = FirestoreService();
 
   final TextEditingController textController = TextEditingController();
 
@@ -30,7 +30,7 @@ class _AlumniPageState extends State<AlumniPage> {
         ],
       ),
       body: StreamBuilder<QuerySnapshot>(
-        stream: firestoreService.getAlumniPostsStream(),
+        stream: AlumniFirestoreService.getAlumniPostsStream(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}');
