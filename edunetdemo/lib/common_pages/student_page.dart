@@ -19,7 +19,7 @@ class StudentPageState extends State<StudentPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Alumni Posts'),
+        title: Text('Student Posts'),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 16.0),

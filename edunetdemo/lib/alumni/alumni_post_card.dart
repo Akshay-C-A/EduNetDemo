@@ -23,6 +23,7 @@ class AlumniPostCard extends StatefulWidget {
 
 class _AlumniPostCardState extends State<AlumniPostCard> {
   bool isLiked = false;
+  bool isExpanded = false;
 
   @override
   Widget build(BuildContext context) {
@@ -96,15 +97,23 @@ class _AlumniPostCardState extends State<AlumniPostCard> {
                 : Container(),
           ),
           Padding(
-            // padding: EdgeInsets.all(10.0),
-            // child: Text(description[20]),
             padding: EdgeInsets.all(10.0),
-            child: Text(
-              widget.description.length > 50
-                  ? '${widget.description.substring(0, 100)}...'
-                  : widget.description,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
+            child: GestureDetector(
+              onTap: () {
+                setState(() {
+                  isExpanded = !isExpanded;
+                });
+              },
+              child: Text(
+                isExpanded ||
+                        widget.description == null ||
+                        widget.description!.length <= 100
+                    ? widget.description ?? 'No description available'
+                    : '${widget.description!.substring(0, 100)}...',
+                maxLines: isExpanded ? null : 2,
+                overflow:
+                    isExpanded ? TextOverflow.clip : TextOverflow.ellipsis,
+              ),
             ),
           ),
           ButtonBar(
