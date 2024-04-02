@@ -1,3 +1,8 @@
+import 'package:edunetdemo/common_pages/alumni_page.dart';
+import 'package:edunetdemo/common_pages/event_page.dart';
+import 'package:edunetdemo/common_pages/student_page.dart';
+import 'package:edunetdemo/student/student_newpost.dart';
+import 'package:edunetdemo/student/student_notification.dart';
 import 'package:flutter/material.dart';
 
 class Student_Dashboard extends StatefulWidget {
@@ -11,16 +16,25 @@ class _Student_DashboardState extends State<Student_Dashboard> {
   @override
   int _selectedIndex = 0;
 
+    static List<Widget> _widgetOptions = <Widget>[
+    StudentPage(),
+    AlumniPage(),
+    StudentNewPostPage(),
+    EventPage(),
+    StudentNotification(),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Bottom Navigation Bar Example'),
-      ),
       body: Center(
-        child: Text('Selected Index: $_selectedIndex'),
+        child: IndexedStack(
+          index: _selectedIndex,
+          children: _widgetOptions,
+        ),
       ),
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
         currentIndex: _selectedIndex,
         onTap: (index) {
           setState(() {

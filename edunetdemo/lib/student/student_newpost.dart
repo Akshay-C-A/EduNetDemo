@@ -7,15 +7,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:path/path.dart' as path;
 import 'package:firebase_storage/firebase_storage.dart';
 
-class AlumniNewPostPage extends StatefulWidget {
-  const AlumniNewPostPage({super.key});
+class StudentNewPostPage extends StatefulWidget {
+  const StudentNewPostPage({super.key});
 
   @override
-  State<AlumniNewPostPage> createState() => _AlumniNewPostPageState();
+  State<StudentNewPostPage> createState() => _StudentNewPostPageState();
 }
 
-class _AlumniNewPostPageState extends State<AlumniNewPostPage> {
-  final _AlumniFirestoreService = FirestoreService();
+class _StudentNewPostPageState extends State<StudentNewPostPage> {
+  final _firestoreService = FirestoreService();
   final _detailsController = TextEditingController();
   final _organisationNameController = TextEditingController();
   String _postType = 'Internship offers';
@@ -33,7 +33,7 @@ class _AlumniNewPostPageState extends State<AlumniNewPostPage> {
 
     final storageRef = FirebaseStorage.instance.ref();
     final fileName = path.basename(_selectedImage!.path);
-    final imageRef = storageRef.child('alumni_posts/$fileName');
+    final imageRef = storageRef.child('student_posts/$fileName');
 
     try {
       await imageRef.putFile(File(_selectedImage!.path));
@@ -46,7 +46,8 @@ class _AlumniNewPostPageState extends State<AlumniNewPostPage> {
   }
 
   Future<void> _pickImage() async {
-    final XFile? pickedImage = await _picker.pickImage(source: ImageSource.gallery);
+    final XFile? pickedImage =
+        await _picker.pickImage(source: ImageSource.gallery);
     if (pickedImage != null) {
       setState(() {
         _selectedImage = pickedImage;
@@ -71,10 +72,11 @@ class _AlumniNewPostPageState extends State<AlumniNewPostPage> {
 
   Future<void> _submitPost() async {
     final imageURL = await _uploadImage();
-    await _AlumniFirestoreService.addAlumniPosts(
+    await _firestoreService.addAlumniPosts(
       type: _postType,
       alumniName: 'John Doe', // Replace with the actual alumni name
-      alumniDesignation: 'Software Engineer', // Replace with the actual alumni designation
+      alumniDesignation:
+          'Software Engineer', // Replace with the actual alumni designation
       caption: _organisationNameController.text,
       description: _detailsController.text,
       imageURL: imageURL,
@@ -169,9 +171,7 @@ class _AlumniNewPostPageState extends State<AlumniNewPostPage> {
               Row(
                 children: [
                   IconButton(
-                    onPressed: _pickImage,
-                    icon:Icon(Icons.upload_file)
-                  ),
+                      onPressed: _pickImage, icon: Icon(Icons.upload_file)),
                   if (_selectedImage != null)
                     Expanded(
                       child: Row(
@@ -199,10 +199,7 @@ class _AlumniNewPostPageState extends State<AlumniNewPostPage> {
                 child: const Text('Submit'),
               ),
               const SizedBox(height: 16.0),
-              IconButton(
-                onPressed: _resetForm,
-                icon:Icon(Icons.delete)
-              ),
+              IconButton(onPressed: _resetForm, icon: Icon(Icons.delete)),
             ],
           ),
         ),
