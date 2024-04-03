@@ -9,7 +9,7 @@ import 'firebase_options.dart';
 // import 'app.dart';
 
 void main() async {
-  // WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized();
   await Permission.photos.request();
   await Permission.storage.request();
   await Firebase.initializeApp(
