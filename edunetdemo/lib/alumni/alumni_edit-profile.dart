@@ -1,22 +1,5 @@
+import 'package:edunetdemo/services/firestore.dart';
 import 'package:flutter/material.dart';
-
-// void main() {
-//   runApp(EditProfileForm());
-// }
-
-// class EditProfileForm extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       home: Scaffold(
-//         appBar: AppBar(
-//           title: Text('Edit Profile'),
-//         ),
-//         body: EditProfileForm(),
-//       ),
-//     );
-//   }
-// }
 
 class EditProfileForm extends StatefulWidget {
   @override
@@ -112,5 +95,178 @@ class _EditProfileFormState extends State<EditProfileForm> {
     _skillsController.dispose();
     _companyController.dispose();
     super.dispose();
+  }
+}
+
+class EditPostForm extends StatefulWidget {
+  final String alumniId;
+  final String postId;
+  const EditPostForm({
+    super.key,
+    required this.alumniId,
+    required this.postId,
+  });
+
+  @override
+  State<EditPostForm> createState() => _EditPostFormState();
+}
+
+class _EditPostFormState extends State<EditPostForm> {
+  final _firestoreService = FirestoreService();
+  late final TextEditingController _detailsController;
+  late final TextEditingController _captionController;
+
+  Map<String, dynamic>? _postData;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchPost();
+  }
+
+  String _postType = 'Internship offers';
+  final List<String> _postTypes = [
+    'Internship offers',
+    'Placement offers',
+    'Technical events',
+    // 'My achievements'
+  ];
+
+  Future<void> _fetchPost() async {
+    final postSnapshot = await _firestoreService.getAlumniPost(
+      alumniId: widget.alumniId,
+      postId: widget.postId,
+    );
+
+    if (postSnapshot.exists) {
+      setState(() {
+        _postData = postSnapshot.data() as Map<String, dynamic>;
+        _detailsController =
+            TextEditingController(text: _postData!['description'] as String);
+        _captionController =
+            TextEditingController(text: _postData!['caption'] as String);
+        _postType = _postData!['type'] as String;
+      });
+    } else {
+      // Handle the case when the post is not found
+      setState(() {
+        _postData = null;
+        _detailsController = TextEditingController();
+        _captionController = TextEditingController();
+      });
+
+      // Show a snackbar or dialog to inform the user
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Post not found'),
+          duration: Duration(seconds: 3),
+        ),
+      );
+    }
+  }
+
+  Future<void> _updatePost() async {
+    await _firestoreService.updateAlumniPost(
+      postId: widget.postId,
+      type: _postType,
+      alumniId: widget.alumniId,
+      caption: _captionController.text,
+      description: _detailsController.text,
+    );
+
+    Navigator.pop(context);
+  }
+
+  @override
+  void dispose() {
+    _detailsController.dispose();
+    _captionController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Edit Post'),
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Post Type',
+                style: TextStyle(
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 8.0),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8.0),
+                  border: Border.all(color: Colors.grey),
+                ),
+                child: DropdownButton<String>(
+                  value: _postType,
+                  isExpanded: true,
+                  underline: const SizedBox.shrink(),
+                  items: _postTypes.map((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      _postType = newValue!;
+                    });
+                  },
+                ),
+              ),
+              const SizedBox(height: 16.0),
+              const Text(
+                'Details',
+                style: TextStyle(
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              TextField(
+                controller: _detailsController,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                ),
+                maxLines: null,
+              ),
+              const SizedBox(height: 16.0),
+              const Text(
+                'Caption',
+                style: TextStyle(
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              TextField(
+                controller: _captionController,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              const SizedBox(height: 16.0),
+              Center(
+                child: TextButton(
+                  onPressed: _updatePost,
+                  child: const Text('Update'),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

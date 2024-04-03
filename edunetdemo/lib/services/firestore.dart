@@ -67,11 +67,22 @@ class FirestoreService {
     return alumniProfileStream;
   }
 
+//To get a single alumni post
+  Future<DocumentSnapshot> getAlumniPost({
+    required String alumniId,
+    required String postId,
+  }) async {
+    print(alumniId);
+    final alumniRef = alumni.doc(alumniId);
+    final postSnapshot = await alumniRef.collection('posts').doc(postId).get();
+    return postSnapshot;
+  }
+
   //To delete data inside the profile posts and alumni_posts
-  Future<void> deletePost(
-      {required String alumniId,
-      required String postId,
-      }) async {
+  Future<void> deletePost({
+    required String alumniId,
+    required String postId,
+  }) async {
     try {
       // Delete the document in alumni profile
       await alumni.doc(alumniId).collection('posts').doc(postId).delete();
@@ -83,65 +94,93 @@ class FirestoreService {
       print('Error deleting post: $e');
     }
   }
+
+  // Update/Edit post data
+  Future<void> updateAlumniPost({
+    required String postId,
+    required String type,
+    required String alumniId,
+    required String caption,
+    required String description,
+  }) async {
+    // Update the post in the alumni_posts collection
+    await alumni_posts.doc(postId).update({
+      'type': type,
+      'caption': caption,
+      'description': description,
+      'timestamp': Timestamp.now(),
+      'edited': true,
+    });
+
+    // Update the post in the alumni user data
+    DocumentReference alumniRef = alumni.doc(alumniId);
+    await alumniRef.collection('posts').doc(postId).update({
+      'type': type,
+      'caption': caption,
+      'description': description,
+      'timestamp': Timestamp.now(),
+      'edited': true,
+    });
 //----------------------------------------------------------------------------------------------------------------------
 // STUDENT SECTION
 
-  final CollectionReference student_posts =
-      FirebaseFirestore.instance.collection('student_posts');
+    final CollectionReference student_posts =
+        FirebaseFirestore.instance.collection('student_posts');
 
-  Stream<QuerySnapshot> getStudentPostsStream() {
-    final alumniPostsStream =
-        alumni_posts.orderBy('timestamp', descending: true).snapshots();
-    return alumniPostsStream;
-  }
+    Stream<QuerySnapshot> getStudentPostsStream() {
+      final alumniPostsStream =
+          alumni_posts.orderBy('timestamp', descending: true).snapshots();
+      return alumniPostsStream;
+    }
 
-  Future<void> addStudentPosts({
-    required String type,
-    required String studentName,
-    required String studentDesignation,
-    required String caption,
-    required String description,
-    String? imageURL,
-  }) {
-    return alumni_posts.add({
-      'type': type,
-      'alumniName': studentName,
-      'alumniDesignation': studentDesignation,
-      'caption': caption,
-      'description': description,
-      'imageURL': imageURL,
-      'timestamp': Timestamp.now(),
-    });
-  }
+    Future<void> addStudentPosts({
+      required String type,
+      required String studentName,
+      required String studentDesignation,
+      required String caption,
+      required String description,
+      String? imageURL,
+    }) {
+      return alumni_posts.add({
+        'type': type,
+        'alumniName': studentName,
+        'alumniDesignation': studentDesignation,
+        'caption': caption,
+        'description': description,
+        'imageURL': imageURL,
+        'timestamp': Timestamp.now(),
+      });
+    }
 
 //------------------------------------------------------------------------------------------------------------------
 //EVENT SECTION
 
-  final CollectionReference event_posts =
-      FirebaseFirestore.instance.collection('student_posts');
+    final CollectionReference event_posts =
+        FirebaseFirestore.instance.collection('student_posts');
 
-  Stream<QuerySnapshot> getEventPostsStream() {
-    final alumniPostsStream =
-        alumni_posts.orderBy('timestamp', descending: true).snapshots();
-    return alumniPostsStream;
-  }
+    Stream<QuerySnapshot> getEventPostsStream() {
+      final alumniPostsStream =
+          alumni_posts.orderBy('timestamp', descending: true).snapshots();
+      return alumniPostsStream;
+    }
 
-  Future<void> addEventPosts({
-    required String type,
-    required String alumniName,
-    required String alumniDesignation,
-    required String caption,
-    required String description,
-    String? imageURL,
-  }) {
-    return alumni_posts.add({
-      'type': type,
-      'alumniName': alumniName,
-      'alumniDesignation': alumniDesignation,
-      'caption': caption,
-      'description': description,
-      'imageURL': imageURL,
-      'timestamp': Timestamp.now(),
-    });
+    Future<void> addEventPosts({
+      required String type,
+      required String alumniName,
+      required String alumniDesignation,
+      required String caption,
+      required String description,
+      String? imageURL,
+    }) {
+      return alumni_posts.add({
+        'type': type,
+        'alumniName': alumniName,
+        'alumniDesignation': alumniDesignation,
+        'caption': caption,
+        'description': description,
+        'imageURL': imageURL,
+        'timestamp': Timestamp.now(),
+      });
+    }
   }
 }

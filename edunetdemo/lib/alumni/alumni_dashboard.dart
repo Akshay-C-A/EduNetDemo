@@ -1,4 +1,6 @@
 
+// ignore_for_file: prefer_final_fields
+
 import 'package:edunetdemo/alumni/alumni_newpost.dart';
 import 'package:edunetdemo/alumni/alumni_notification.dart';
 import 'package:edunetdemo/common_pages/alumni_page.dart';

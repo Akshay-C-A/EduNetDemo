@@ -7,7 +7,8 @@ import 'package:flutter/material.dart';
 
 class AlumniPage extends StatefulWidget {
   final Alumni alumni;
-  const AlumniPage({super.key,required this.alumni});
+  // const AlumniPage({super.key});
+  const AlumniPage({super.key, required this.alumni});
 
   @override
   State<AlumniPage> createState() => _AlumniPageState();
@@ -26,8 +27,8 @@ class _AlumniPageState extends State<AlumniPage> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => ProfilePage(
-                          alumni: widget.alumni)));
+                      builder: (context) =>
+                          ProfilePage(alumni: widget.alumni)));
             },
             child: Padding(
               padding: const EdgeInsets.only(right: 16.0),

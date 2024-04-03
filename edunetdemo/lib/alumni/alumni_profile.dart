@@ -378,7 +378,15 @@ class _ProfileSquarePostState extends State<ProfileSquarePost> {
               shrinkWrap: true,
               children: [
                 GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => EditPostForm(
+                                alumniId: widget.alumniId,
+                                postId: widget.postId)));
+                  },
                   child: ListTile(
                     title: Text('Edit Post'),
                   ),
