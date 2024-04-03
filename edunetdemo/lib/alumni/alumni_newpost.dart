@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:edunetdemo/alumni/alumni_dashboard.dart';
 import 'package:edunetdemo/services/firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -8,7 +9,8 @@ import 'package:path/path.dart' as path;
 import 'package:firebase_storage/firebase_storage.dart';
 
 class AlumniNewPostPage extends StatefulWidget {
-  const AlumniNewPostPage({super.key});
+  final Alumni alumni;
+  const AlumniNewPostPage({super.key, required this.alumni});
 
   @override
   State<AlumniNewPostPage> createState() => _AlumniNewPostPageState();
@@ -73,8 +75,11 @@ class _AlumniNewPostPageState extends State<AlumniNewPostPage> {
     final imageURL = await _uploadImage();
     await _AlumniFirestoreService.addAlumniPosts(
       type: _postType,
-      alumniName: 'John Doe', // Replace with the actual alumni name
-      alumniDesignation: 'Software Engineer', // Replace with the actual alumni designation
+      //Added the alumni details from constructor parameter
+      alumniId: widget.alumni.alumniId,
+      alumniName: widget.alumni.alumni_name, // Replace with the actual alumni name
+      alumniDesignation:
+          widget.alumni.alumni_designation, // Replace with the actual alumni designation
       caption: _organisationNameController.text,
       description: _detailsController.text,
       imageURL: imageURL,

@@ -5,6 +5,26 @@ import 'package:edunetdemo/common_pages/alumni_page.dart';
 import 'package:edunetdemo/common_pages/student_page.dart';
 import 'package:flutter/material.dart';
 
+class Alumni {
+  final String alumniId;
+  final String alumni_name;
+  final String alumni_designation;
+  final List<String> skills;
+  final String email;
+  final String company;
+  final String alumni_dept;
+
+  Alumni({
+    required this.alumniId,
+    required this.alumni_name,
+    required this.alumni_designation,
+    required this.skills,
+    required this.email,
+    required this.company,
+    required this.alumni_dept,
+  });
+}
+
 class Alumni_Dashboard extends StatefulWidget {
   const Alumni_Dashboard({super.key});
 
@@ -16,9 +36,25 @@ class _Alumni_DashboardState extends State<Alumni_Dashboard> {
   int _selectedIndex = 0;
 
   static List<Widget> _widgetOptions = <Widget>[
-    AlumniPage(),
+    AlumniPage(
+            alumni: Alumni(
+            alumniId: 'john_doe',
+            alumni_name: 'John Doe',
+            alumni_designation: 'CS Engineer',
+            skills: ['Flutter', 'Django', 'C', 'C++'],
+            email: 'sura@gmail.com',
+            company: 'WIPRO',
+            alumni_dept: 'CS')),
     StudentPage(),
-    AlumniNewPostPage(),
+    AlumniNewPostPage(
+            alumni: Alumni(
+            alumniId: 'john_doe',
+            alumni_name: 'John Doe',
+            alumni_designation: 'CS Engineer',
+            skills: ['Flutter', 'Django', 'C', 'C++'],
+            email: 'sura@gmail.com',
+            company: 'WIPRO',
+            alumni_dept: 'CS')),
     AlumniNotification(),
   ];
   @override
