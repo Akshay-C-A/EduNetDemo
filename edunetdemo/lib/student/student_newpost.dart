@@ -72,15 +72,15 @@ class _StudentNewPostPageState extends State<StudentNewPostPage> {
 
   Future<void> _submitPost() async {
     final imageURL = await _uploadImage();
-    await _firestoreService.addAlumniPosts(
-      type: _postType,
-      alumniName: 'John Doe', // Replace with the actual alumni name
-      alumniDesignation:
-          'Software Engineer', // Replace with the actual alumni designation
-      caption: _organisationNameController.text,
-      description: _detailsController.text,
-      imageURL: imageURL,
-    );
+    // await _firestoreService.addAlumniPosts(
+    //   type: _postType,
+    //   alumniName: 'John Doe', // Replace with the actual alumni name
+    //   alumniDesignation:
+    //       'Software Engineer', // Replace with the actual alumni designation
+    //   caption: _organisationNameController.text,
+    //   description: _detailsController.text,
+    //   imageURL: imageURL,
+    // );
     _resetForm();
     // Show a success message or navigate to the home page
   }
