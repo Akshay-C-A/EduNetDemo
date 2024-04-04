@@ -67,6 +67,7 @@ class _AlumniPageState extends State<AlumniPage> {
               Map<String, dynamic> data =
                   document.data() as Map<String, dynamic>;
               String type = data['type'];
+              String alumniId = data['alumniId'];
               String alumniName = data['alumniName'];
               String alumniDesignation = data['alumniDesignation'];
               String caption = data['caption'];
@@ -75,20 +76,16 @@ class _AlumniPageState extends State<AlumniPage> {
 
               // Display as a list title
               return AlumniPostCard(
-                  type: type,
-                  alumniName: alumniName,
-                  alumniDesignation: alumniDesignation,
-                  caption: caption,
-                  description: description,
-                  imageURL: imgURL ?? '');
-              // return Card(
-              //   elevation: 2,
-              //   margin: EdgeInsets.all(8),
-              //   child: ListTile(
-              //     title: Text(noteText),
-              //     onTap: () {},
-              //   ),
-              // );
+                type: type,
+                alumnId: alumniId,
+                alumniName: alumniName,
+                alumniDesignation: alumniDesignation,
+                caption: caption,
+                description: description,
+                imageURL: imgURL ?? '',
+                postId: document.id,
+                likes: List<String>.from(data['likes'] ?? []),
+              );
             },
           );
         },

@@ -1,8 +1,17 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:edunetdemo/services/firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class AlumniPostCard extends StatefulWidget {
+  //data for likes
+  final String postId;
+  final List<String> likes;
+
+  //data for post
+  final String alumnId;
   final String type;
   final String alumniName;
   final String alumniDesignation;
@@ -12,11 +21,14 @@ class AlumniPostCard extends StatefulWidget {
 
   AlumniPostCard({
     required this.type,
+    required this.alumnId,
     required this.alumniName,
     required this.alumniDesignation,
     required this.caption,
     required this.description,
     required this.imageURL,
+    required this.postId,
+    required this.likes,
   });
 
   @override
@@ -24,9 +36,51 @@ class AlumniPostCard extends StatefulWidget {
 }
 
 class _AlumniPostCardState extends State<AlumniPostCard> {
+  //data for likes
+  final FirestoreService firestoreService = FirestoreService();
+  final currentUser = FirebaseAuth.instance.currentUser;
   bool isLiked = false;
+
   bool isExpanded = false;
   bool showLikeIcon = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // isLiked = widget.likes.contains(currentUser.email);
+    isLiked = widget.likes.contains('sura@gmail.com');
+  }
+
+  void toggleLike() {
+    setState(() {
+      isLiked = !isLiked;
+    });
+
+    List ref = firestoreService.alumniPostInstances(
+        postId: widget.postId, alumniId: widget.alumnId);
+    DocumentReference alumniPost = ref[0];
+    DocumentReference alumniProfile = ref[1];
+
+    if (isLiked) {
+      alumniPost.update({
+        // 'likes': FieldValue.arrayUnion([currentUser.email])
+        'likes': FieldValue.arrayUnion(['sura@gmail.com'])
+      });
+      alumniProfile.update({
+        // 'likes': FieldValue.arrayUnion([currentUser.email])
+        'likes': FieldValue.arrayUnion(['sura@gmail.com'])
+      });
+    } else {
+      alumniPost.update({
+        // 'likes': FieldValue.arrayRemove([currentUser.email])
+        'likes': FieldValue.arrayRemove(['sura@gmail.com'])
+      });
+      alumniProfile.update({
+        // 'likes': FieldValue.arrayRemove([currentUser.email])
+        'likes': FieldValue.arrayRemove(['sura@gmail.com'])
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -123,10 +177,8 @@ class _AlumniPostCardState extends State<AlumniPostCard> {
                       });
                     },
                     child: Text(
-                      isExpanded ||
-                              widget.description == null ||
-                              widget.description!.length <= 100
-                          ? widget.description ?? 'No description available'
+                      isExpanded || widget.description.length <= 100
+                          ? widget.description
                           : '${widget.description!.substring(0, 100)}...',
                       maxLines: isExpanded ? null : 2,
                       overflow: isExpanded
@@ -138,18 +190,21 @@ class _AlumniPostCardState extends State<AlumniPostCard> {
                 ButtonBar(
                   alignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    IconButton(
-                      icon: Icon(
-                        isLiked ? Icons.favorite : Icons.favorite_border,
-                        color: isLiked
-                            ? const Color.fromARGB(255, 201, 55, 45)
-                            : null,
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          isLiked = !isLiked;
-                        });
-                      },
+                    Column(
+                      children: [
+                        //like button
+                        LikeButton(isLiked: isLiked, onTap: toggleLike),
+
+                        SizedBox(
+                          height: 5,
+                        ),
+
+                        //like count
+                        Text(
+                          widget.likes.length.toString(),
+                          style: TextStyle(color: Colors.grey),
+                        ),
+                      ],
                     ),
                     IconButton(
                       icon: Icon(Icons.send),
@@ -177,6 +232,23 @@ class _AlumniPostCardState extends State<AlumniPostCard> {
               ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class LikeButton extends StatelessWidget {
+  final bool isLiked;
+  final void Function()? onTap;
+  LikeButton({super.key, required this.isLiked, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Icon(
+        isLiked ? Icons.favorite : Icons.favorite_border,
+        color: isLiked ? Colors.red : Colors.grey,
       ),
     );
   }
