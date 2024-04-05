@@ -1,6 +1,5 @@
 // main.dart
-// import 'package:edunetdemo/alumni/alumni_dashboard.dart';
-// import 'package:edunetdemo/alumni/alumni_dashboard.dart';
+import 'package:edunetdemo/alumni/alumni_dashboard.dart';
 // import 'app.dart';
 import 'package:edunetdemo/auth/login_check.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +16,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   runApp(MaterialApp(
-    // home: Alumni_Dashboard(),
-    home: const MainPage(),
+    home: Alumni_Dashboard(),
+    // home: const MainPage(),
   ));
 }
