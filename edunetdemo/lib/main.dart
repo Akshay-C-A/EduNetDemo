@@ -16,7 +16,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   runApp(MaterialApp(
-    home: Alumni_Dashboard(),
-    // home: const MainPage(),
+    // home: Alumni_Dashboard(),
+    home: const MainPage(),
   ));
 }
