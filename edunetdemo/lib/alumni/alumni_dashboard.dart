@@ -70,7 +70,7 @@ class _Alumni_DashboardState extends State<Alumni_Dashboard> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Alumni Posts'),
+        title: Text('Alumni'),
         actions: [
           GestureDetector(
             onTap: () {
