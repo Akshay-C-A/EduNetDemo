@@ -21,7 +21,6 @@ class _AlumniNewPostPageState extends State<AlumniNewPostPage> {
   final _AlumniFirestoreService = FirestoreService();
   final currentUser = FirebaseAuth.instance.currentUser;
 
-
   final _nameController = TextEditingController();
   final _designationController = TextEditingController();
   final _skillsController = TextEditingController();
@@ -30,6 +29,7 @@ class _AlumniNewPostPageState extends State<AlumniNewPostPage> {
   final _link1Controller = TextEditingController();
   final _link2Controller = TextEditingController();
   final _link3Controller = TextEditingController();
+  late final List<String> skills;
 
   // String _postType = 'Internship offers';
   // final List<String> _postTypes = [
@@ -94,13 +94,15 @@ class _AlumniNewPostPageState extends State<AlumniNewPostPage> {
     setState(() {
       _isLoading = true;
     });
-
+    String skillsInput = _skillsController.text.trim();
+    skills = skillsInput.split(',').map((skill) => skill.trim()).toList();
     final imageURL = await _uploadImage();
     await _AlumniFirestoreService.addAlumni(
       alumniName: _nameController.text,
       alumniDesignation: _designationController.text,
-      alumniMail: currentUser!.email, 
-      company: _companyController.text, 
+      skills: skillsInput,
+      alumniMail: currentUser!.email,
+      company: _companyController.text,
       about: _aboutController.text,
       dpURL: imageURL,
     );
@@ -112,7 +114,7 @@ class _AlumniNewPostPageState extends State<AlumniNewPostPage> {
     // Show a success message
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content: Text('New post added'),
+        content: Text('Profile Updated'),
         duration: Duration(seconds: 2),
       ),
     );
