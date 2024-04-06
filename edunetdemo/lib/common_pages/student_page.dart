@@ -18,7 +18,10 @@ class StudentPageState extends State<StudentPage> {
 
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Text('Student Page'),
+      body: Center(
+        child: Text('Posts from students will be shown here.'),
+      )
+      // body: Text('Student Page'),
 
       // body: StreamBuilder<QuerySnapshot>(
       //   stream: StudentFirestoreService.getAlumniPostsStream(),
