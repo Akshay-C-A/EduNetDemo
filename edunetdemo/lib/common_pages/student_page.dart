@@ -18,18 +18,8 @@ class StudentPageState extends State<StudentPage> {
 
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Student Posts'),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 16.0),
-            child: CircleAvatar(
-              //backgroundImage: NetworkImage('https://example.com/profile.jpg'),
-              radius: 20.0,
-            ),
-          ),
-        ],
-      ),
+      body: Text('Student Page'),
+
       // body: StreamBuilder<QuerySnapshot>(
       //   stream: StudentFirestoreService.getAlumniPostsStream(),
       //   builder: (context, snapshot) {

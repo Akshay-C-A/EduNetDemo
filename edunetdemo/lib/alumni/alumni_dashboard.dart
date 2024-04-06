@@ -1,8 +1,8 @@
-
 // ignore_for_file: prefer_final_fields
 
 import 'package:edunetdemo/alumni/alumni_newpost.dart';
 import 'package:edunetdemo/alumni/alumni_notification.dart';
+import 'package:edunetdemo/alumni/alumni_profile.dart';
 import 'package:edunetdemo/common_pages/alumni_page.dart';
 import 'package:edunetdemo/common_pages/student_page.dart';
 import 'package:flutter/material.dart';
@@ -35,11 +35,18 @@ class Alumni_Dashboard extends StatefulWidget {
 }
 
 class _Alumni_DashboardState extends State<Alumni_Dashboard> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    setState(() {});
+  }
+
   int _selectedIndex = 0;
 
   static List<Widget> _widgetOptions = <Widget>[
     AlumniPage(
-            alumni: Alumni(
+        alumni: Alumni(
             alumniId: 'john_doe',
             alumni_name: 'John Doe',
             alumni_designation: 'CS Engineer',
@@ -49,7 +56,7 @@ class _Alumni_DashboardState extends State<Alumni_Dashboard> {
             alumni_dept: 'CS')),
     StudentPage(),
     AlumniNewPostPage(
-            alumni: Alumni(
+        alumni: Alumni(
             alumniId: 'john_doe',
             alumni_name: 'John Doe',
             alumni_designation: 'CS Engineer',
@@ -63,6 +70,35 @@ class _Alumni_DashboardState extends State<Alumni_Dashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Alumni'),
+        actions: [
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ProfileScreen(
+                        alumni: Alumni(
+                            alumniId: 'john_doe',
+                            alumni_name: 'John Doe',
+                            alumni_designation: 'CS Engineer',
+                            skills: ['Flutter', 'Django', 'C', 'C++'],
+                            email: 'sura@gmail.com',
+                            company: 'WIPRO',
+                            alumni_dept: 'CS')),
+                  ));
+            },
+            child: Padding(
+              padding: const EdgeInsets.only(right: 16.0),
+              child: CircleAvatar(
+                //backgroundImage: NetworkImage('https://example.com/profile.jpg'),
+                radius: 20.0,
+              ),
+            ),
+          ),
+        ],
+      ),
       body: Center(
         child: IndexedStack(
           index: _selectedIndex,

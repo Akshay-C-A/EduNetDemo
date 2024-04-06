@@ -22,7 +22,8 @@ class FirestoreService {
     required String description,
     String? imageURL,
   }) {
-    alumni_posts.doc('$alumniId${DateTime.now().toIso8601String()}').set({
+    String unique = DateTime.now().toIso8601String();
+    alumni_posts.doc('$alumniId$unique').set({
       'type': type,
       'alumniId': alumniId,
       'alumniName': alumniName,
@@ -35,9 +36,7 @@ class FirestoreService {
 
     //Adding post to alumni user data
     DocumentReference AlumniName = alumni.doc(alumniId);
-    return AlumniName.collection('posts')
-        .doc('$alumniId${DateTime.now().toIso8601String()}')
-        .set({
+    return AlumniName.collection('posts').doc('$alumniId$unique').set({
       'type': type,
       'alumniId': alumniId,
       'alumniName': alumniName,

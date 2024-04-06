@@ -16,31 +16,17 @@ class AlumniPage extends StatefulWidget {
 }
 
 class _AlumniPageState extends State<AlumniPage> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    setState(() {});
+  }
+
   final FirestoreService firestoreService = FirestoreService();
 
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Alumni Posts'),
-        actions: [
-          GestureDetector(
-            onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          ProfileScreen(alumni: widget.alumni)));
-            },
-            child: Padding(
-              padding: const EdgeInsets.only(right: 16.0),
-              child: CircleAvatar(
-                //backgroundImage: NetworkImage('https://example.com/profile.jpg'),
-                radius: 20.0,
-              ),
-            ),
-          ),
-        ],
-      ),
       body: StreamBuilder<QuerySnapshot>(
         stream: firestoreService.getAlumniPostsStream(),
         builder: (context, snapshot) {

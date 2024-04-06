@@ -16,9 +16,6 @@ class _AlumniNotificationState extends State<AlumniNotification> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Alumni Notifications'),
-      ),
       body: StreamBuilder<QuerySnapshot>(
         stream: AlumniFirestoreService.getAlumniPostsStream(),
         builder: (context, snapshot) {
