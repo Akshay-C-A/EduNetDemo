@@ -229,12 +229,22 @@ class _AlumniPostCardState extends State<AlumniPostCard> {
                         ),
                       ],
                     ),
+                    
                     IconButton(
                       icon: Icon(Icons.send),
-                      onPressed: () {
-                        Share.share(
-                          '${widget.caption}\n${widget.description}\n${widget.imageURL}',
-                          subject: '${widget.alumniName} shared a post',
+                      onPressed: () async {
+                        // Create a temporary file to store the image
+                        final tempDir = await getTemporaryDirectory();
+                        final tempFile = File('${tempDir.path}/shared_image.jpg');
+
+                        // Download the image to the temporary file
+                        var response = await http.get(Uri.parse(widget.imageURL));
+                        await tempFile.writeAsBytes(response.bodyBytes);
+
+                        // Share the image and other details
+                        await Share.shareFiles(
+                          [tempFile.path],
+                          text: '${widget.alumniName} shared a post:\n\n${widget.caption}\n\n${widget.description}',
                         );
                       },
                     ),
