@@ -5,6 +5,7 @@ import 'package:edunetdemo/alumni/alumni_notification.dart';
 import 'package:edunetdemo/alumni/alumni_profile.dart';
 import 'package:edunetdemo/common_pages/alumni_page.dart';
 import 'package:edunetdemo/common_pages/student_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class Alumni {
@@ -35,6 +36,7 @@ class Alumni_Dashboard extends StatefulWidget {
 }
 
 class _Alumni_DashboardState extends State<Alumni_Dashboard> {
+  final currentUser = FirebaseAuth.instance.currentUser;
   @override
   void initState() {
     // TODO: implement initState
@@ -51,7 +53,7 @@ class _Alumni_DashboardState extends State<Alumni_Dashboard> {
             alumni_name: 'John Doe',
             alumni_designation: 'CS Engineer',
             skills: ['Flutter', 'Django', 'C', 'C++'],
-            email: 'sura@gmail.com',
+            email: '',
             company: 'WIPRO',
             alumni_dept: 'CS')),
     StudentPage(),
@@ -61,12 +63,12 @@ class _Alumni_DashboardState extends State<Alumni_Dashboard> {
             alumni_name: 'John Doe',
             alumni_designation: 'CS Engineer',
             skills: ['Flutter', 'Django', 'C', 'C++'],
-            email: 'sura@gmail.com',
+            email: '1',
             company: 'WIPRO',
             alumni_dept: 'CS')),
     AlumniNotification(),
   ];
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
