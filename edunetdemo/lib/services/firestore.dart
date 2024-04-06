@@ -18,23 +18,29 @@ class FirestoreService {
 
 //To add user details
 Future<void> addAlumni({
-    required String alumniMail,
-    required String alumniId,
+    required String? alumniMail,
     required String alumniName,
     required String alumniDesignation,
     required String company,
     required String about,
+    required String skills,
     String? dpURL,
+    String? linkedIn,
+    String? twitter,
+    String? mail,
   }) {
-    String unique = DateTime.now().toIso8601String();
-    return alumni.doc('$alumniId$unique').set({
+    return alumni.doc('$alumniMail').set({
       'alumniMail' : alumniMail,
-      'alumniId': alumniId,
+      'alumniId': alumniMail,
       'alumniName': alumniName,
       'alumniDesignation': alumniDesignation,
+      'skills' : skills,
       'company' : company,
       'about' : about,
       'dpURL': dpURL,
+      'linkedIn' : linkedIn,
+      'twitter' : twitter,
+      'mail' : alumniMail,
     });
   }
 

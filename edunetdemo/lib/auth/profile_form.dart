@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:edunetdemo/alumni/alumni_dashboard.dart';
 import 'package:edunetdemo/services/firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -18,6 +19,7 @@ class AlumniNewPostPage extends StatefulWidget {
 
 class _AlumniNewPostPageState extends State<AlumniNewPostPage> {
   final _AlumniFirestoreService = FirestoreService();
+  final currentUser = FirebaseAuth.instance.currentUser;
 
   final _nameController = TextEditingController();
   final _designationController = TextEditingController();
@@ -27,6 +29,7 @@ class _AlumniNewPostPageState extends State<AlumniNewPostPage> {
   final _link1Controller = TextEditingController();
   final _link2Controller = TextEditingController();
   final _link3Controller = TextEditingController();
+  late final List<String> skills;
 
   // String _postType = 'Internship offers';
   // final List<String> _postTypes = [
@@ -91,15 +94,16 @@ class _AlumniNewPostPageState extends State<AlumniNewPostPage> {
     setState(() {
       _isLoading = true;
     });
-
+    String skillsInput = _skillsController.text.trim();
+    skills = skillsInput.split(',').map((skill) => skill.trim()).toList();
     final imageURL = await _uploadImage();
     await _AlumniFirestoreService.addAlumni(
-      alumniId: _nameController.text,
-      alumniName: widget.alumni.alumni_name,
-      alumniDesignation: widget.alumni.alumni_designation,
-      alumniMail: '', 
-      company: '', 
-      about: '',
+      alumniName: _nameController.text,
+      alumniDesignation: _designationController.text,
+      skills: skillsInput,
+      alumniMail: currentUser!.email,
+      company: _companyController.text,
+      about: _aboutController.text,
       dpURL: imageURL,
     );
 
@@ -110,7 +114,7 @@ class _AlumniNewPostPageState extends State<AlumniNewPostPage> {
     // Show a success message
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content: Text('New post added'),
+        content: Text('Profile Updated'),
         duration: Duration(seconds: 2),
       ),
     );
