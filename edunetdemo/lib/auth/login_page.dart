@@ -11,6 +11,7 @@ class _LoginPageState extends State<LoginPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   bool _isLoading = false;
+  bool _isObscure = true; // Track whether the password is obscured or not
 
   Future<void> signIn() async {
     setState(() {
@@ -54,7 +55,7 @@ class _LoginPageState extends State<LoginPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
-                 // Adding space between the top and the 'Login' heading
+                // Adding space between the top and the 'Login' heading
                 Text(
                   'LOGIN',
                   textAlign: TextAlign.center,
@@ -79,8 +80,18 @@ class _LoginPageState extends State<LoginPage> {
                   controller: passwordController,
                   decoration: InputDecoration(
                     labelText: 'Password',
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _isObscure ? Icons.visibility : Icons.visibility_off,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _isObscure = !_isObscure; // Toggle password visibility
+                        });
+                      },
+                    ),
                   ),
-                  obscureText: true,
+                  obscureText: _isObscure, // Toggle password visibility based on state
                 ),
 
                 SizedBox(height: 20.0),
@@ -88,12 +99,12 @@ class _LoginPageState extends State<LoginPage> {
                 if (_isLoading)
                   CircularProgressIndicator()
                 else
-                ElevatedButton(
-                  onPressed: () {
-                    signIn();
-                  },
-                  child: Text('Login'),
-                ),
+                  ElevatedButton(
+                    onPressed: () {
+                      signIn();
+                    },
+                    child: Text('Login'),
+                  ),
               ],
             ),
           ),
