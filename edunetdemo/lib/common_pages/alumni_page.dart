@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:edunetdemo/alumni/alumni_dashboard.dart';
 import 'package:edunetdemo/alumni/alumni_post_card.dart';
+import 'package:edunetdemo/alumni/alumni_profile.dart';
 import 'package:edunetdemo/alumni/alumni_profile_old.dart';
 import 'package:edunetdemo/services/firestore.dart';
 import 'package:flutter/material.dart';
@@ -28,7 +29,7 @@ class _AlumniPageState extends State<AlumniPage> {
                   context,
                   MaterialPageRoute(
                       builder: (context) =>
-                          ProfilePage(alumni: widget.alumni)));
+                          ProfileScreen(alumni: widget.alumni)));
             },
             child: Padding(
               padding: const EdgeInsets.only(right: 16.0),
