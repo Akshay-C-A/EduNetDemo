@@ -81,7 +81,7 @@ class _LoginPageState extends State<LoginPage> {
   //           ),
 
   //           SizedBox(height: 20.0),
-  
+
   //           if (_isLoading)
   //             CircularProgressIndicator()
   //           else
@@ -122,7 +122,7 @@ class _LoginPageState extends State<LoginPage> {
                 SizedBox(height: 10.0),
 
                 TextField(
-                  // controller: _emailController,
+                  controller: emailController,
                   decoration: InputDecoration(
                     labelText: 'Email id',
                   ),
@@ -131,7 +131,7 @@ class _LoginPageState extends State<LoginPage> {
                 SizedBox(height: 20.0),
 
                 TextField(
-                  // controller: _passwordController,
+                  controller: passwordController,
                   decoration: InputDecoration(
                     labelText: 'Password',
                   ),
