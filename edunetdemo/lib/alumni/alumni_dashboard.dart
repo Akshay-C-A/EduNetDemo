@@ -30,16 +30,13 @@ class Alumni {
 
 class Alumni_Dashboard extends StatefulWidget {
   final Alumni alumni;
-  const Alumni_Dashboard({
-    super.key,required this.alumni
-  });
+  const Alumni_Dashboard({super.key, required this.alumni});
 
   @override
   State<Alumni_Dashboard> createState() => _Alumni_DashboardState();
 }
 
 class _Alumni_DashboardState extends State<Alumni_Dashboard> {
-
   final currentUser = FirebaseAuth.instance.currentUser;
   @override
   void initState() {
@@ -50,17 +47,14 @@ class _Alumni_DashboardState extends State<Alumni_Dashboard> {
 
   int _selectedIndex = 0;
 
-  
-
   @override
   Widget build(BuildContext context) {
     List<Widget> widgetOptions = <Widget>[
-    AlumniPage(alumni: widget.alumni),
-    StudentPage(),
-    AlumniNewPostPage(
-        alumni: widget.alumni),
-    AlumniNotification(),
-  ];
+      AlumniPage(alumni: widget.alumni),
+      StudentPage(),
+      AlumniNewPostPage(alumni: widget.alumni),
+      AlumniNotification(),
+    ];
     return Scaffold(
       appBar: AppBar(
         title: Text('Alumni'),
@@ -70,15 +64,7 @@ class _Alumni_DashboardState extends State<Alumni_Dashboard> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => ProfileScreen(
-                        alumni: Alumni(
-                            alumniId: 'john_doe',
-                            alumni_name: 'John Doe',
-                            alumni_designation: 'CS Engineer',
-                            skills: ['Flutter', 'Django', 'C', 'C++'],
-                            email: 'sura@gmail.com',
-                            company: 'WIPRO',
-                            alumni_dept: 'CS')),
+                    builder: (context) => ProfileScreen(alumni: widget.alumni),
                   ));
             },
             child: Padding(
