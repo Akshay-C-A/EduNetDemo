@@ -10,7 +10,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as path;
 
 class ProfileForm extends StatefulWidget {
-  const ProfileForm({super.key,});
+  const ProfileForm({
+    super.key,
+  });
 
   @override
   State<ProfileForm> createState() => _ProfileFormState();
@@ -124,6 +126,7 @@ class _ProfileFormState extends State<ProfileForm> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(),
       body: _isLoading
           ? Center(
               child: SpinKitFadingCircle(
@@ -200,7 +203,7 @@ class _ProfileFormState extends State<ProfileForm> {
                       ),
                     ),
                     const Text(
-                      'Designation',
+                      'Skills',
                       style: TextStyle(
                         fontSize: 18.0,
                         fontWeight: FontWeight.bold,
@@ -209,12 +212,12 @@ class _ProfileFormState extends State<ProfileForm> {
                     TextField(
                       controller: _skillsController,
                       decoration: const InputDecoration(
-                        hintText: 'Enter Current Designation',
+                        hintText: 'Enter Skills',
                         border: OutlineInputBorder(),
                       ),
                     ),
                     const Text(
-                      'Designation',
+                      'Company',
                       style: TextStyle(
                         fontSize: 18.0,
                         fontWeight: FontWeight.bold,
@@ -223,12 +226,12 @@ class _ProfileFormState extends State<ProfileForm> {
                     TextField(
                       controller: _companyController,
                       decoration: const InputDecoration(
-                        hintText: 'Enter Current Designation',
+                        hintText: 'Enter Company Name',
                         border: OutlineInputBorder(),
                       ),
                     ),
                     const Text(
-                      'Designation',
+                      'About',
                       style: TextStyle(
                         fontSize: 18.0,
                         fontWeight: FontWeight.bold,
@@ -237,12 +240,12 @@ class _ProfileFormState extends State<ProfileForm> {
                     TextField(
                       controller: _aboutController,
                       decoration: const InputDecoration(
-                        hintText: 'Enter Current Designation',
+                        hintText: 'Enter About',
                         border: OutlineInputBorder(),
                       ),
                     ),
                     const Text(
-                      'Designation',
+                      'LinkedIn',
                       style: TextStyle(
                         fontSize: 18.0,
                         fontWeight: FontWeight.bold,
@@ -251,12 +254,12 @@ class _ProfileFormState extends State<ProfileForm> {
                     TextField(
                       controller: _link1Controller,
                       decoration: const InputDecoration(
-                        hintText: 'Enter Current Designation',
+                        hintText: 'Enter LinkedIn link or username',
                         border: OutlineInputBorder(),
                       ),
                     ),
                     const Text(
-                      'Designation',
+                      'Twitter',
                       style: TextStyle(
                         fontSize: 18.0,
                         fontWeight: FontWeight.bold,
@@ -265,12 +268,12 @@ class _ProfileFormState extends State<ProfileForm> {
                     TextField(
                       controller: _link2Controller,
                       decoration: const InputDecoration(
-                        hintText: 'Enter Current Designation',
+                        hintText: 'Enter Twitter link or username',
                         border: OutlineInputBorder(),
                       ),
                     ),
                     const Text(
-                      'Designation',
+                      'Mail Id',
                       style: TextStyle(
                         fontSize: 18.0,
                         fontWeight: FontWeight.bold,
@@ -279,7 +282,7 @@ class _ProfileFormState extends State<ProfileForm> {
                     TextField(
                       controller: _link3Controller,
                       decoration: const InputDecoration(
-                        hintText: 'Enter Current Designation',
+                        hintText: 'Enter Mail Id',
                         border: OutlineInputBorder(),
                       ),
                     ),
