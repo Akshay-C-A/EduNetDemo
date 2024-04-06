@@ -195,3 +195,94 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 }
 
+class ProfilePage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Details'),
+        backgroundColor: Colors.brown[300],
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              color: Colors.brown[300],
+              child: Column(
+                children: [
+                  CircleAvatar(
+                    radius: 50,
+                    backgroundColor: Colors.brown[400],
+                  ),
+                  SizedBox(height: 16),
+                  Text(
+                    'Ruben Mangostorm',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text('Designation'),
+                  SizedBox(height: 16),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16),
+                    child: Text(
+                      'About It is a long established fact that a reader will be distracted by the readable content of a page when',
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  SizedBox(height: 16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.close),
+                      SizedBox(width: 16),
+                      Icon(Icons.mail),
+                      SizedBox(width: 16),
+                      Icon(Icons.mail),
+                    ],
+                  ),
+                  SizedBox(height: 16),
+                ],
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Details',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  Text('Company'),
+                  Text('Wipro'),
+                  SizedBox(height: 16),
+                  Text('Skills'),
+                  Text('Wipro'),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.info),
+            label: 'Details',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.post_add),
+            label: 'Posts',
+          ),
+        ],
+      ),
+    );
+  }
+}
