@@ -74,19 +74,17 @@ class _AlumniNewPostPageState extends State<AlumniNewPostPage> {
 
   void _resetForm() {
     _nameController.clear();
-  final _designationController = TextEditingController();
-  final _skillsController = TextEditingController();
-  final _companyController = TextEditingController();
-  final _aboutController = TextEditingController();
-  final _link1Controller = TextEditingController();
-  final _link2Controller = TextEditingController();
-  final _link3Controller
-    _Controller.clear();
-    _organisationNameController.clear();
-    // setState(() {
-    //   _selectedImage = null;
-    //   _postType = 'Internship offers';
-    // });
+    _designationController.clear();
+    _skillsController.clear();
+    _companyController.clear();
+    _aboutController.clear();
+    _link1Controller.clear();
+    _link2Controller.clear();
+    _link3Controller.clear();
+
+    setState(() {
+      _selectedImage = null;
+    });
   }
 
   Future<void> _submitPost() async {
@@ -95,14 +93,14 @@ class _AlumniNewPostPageState extends State<AlumniNewPostPage> {
     });
 
     final imageURL = await _uploadImage();
-    await _AlumniFirestoreService.addAlumniPosts(
-      type: _postType,
-      alumniId: widget.alumni.alumniId,
+    await _AlumniFirestoreService.addAlumni(
+      alumniId: _nameController.text,
       alumniName: widget.alumni.alumni_name,
       alumniDesignation: widget.alumni.alumni_designation,
-      caption: _organisationNameController.text,
-      description: _detailsController.text,
-      imageURL: imageURL,
+      alumniMail: '', 
+      company: '', 
+      about: '',
+      dpURL: imageURL,
     );
 
     setState(() {
