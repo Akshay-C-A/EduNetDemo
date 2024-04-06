@@ -15,7 +15,15 @@ class MainPage extends StatelessWidget {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             // User is logged in, navigate to the AlumniDashboard
-            return Alumni_Dashboard();
+            return Alumni_Dashboard(
+                alumni: Alumni(
+                    alumniId: 'john_doe',
+                    alumni_name: 'John Doe',
+                    alumni_designation: 'CS Engineer',
+                    skills: ['Flutter', 'Django', 'C', 'C++'],
+                    email: '1',
+                    company: 'WIPRO',
+                    alumni_dept: 'CS'));
           } else {
             // User is not logged in, navigate to the LoginPage
             return LoginPage();

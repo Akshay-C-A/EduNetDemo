@@ -1,9 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+
+
+class FirestoreService {
+
+
 //----------------------------------------------------------------------------------------------------------------
 // ALUMNI SECTION
 
-class FirestoreService {
   // get collection of alumni_posts
   final CollectionReference alumni_posts =
       FirebaseFirestore.instance.collection('alumni_posts');
@@ -11,6 +15,28 @@ class FirestoreService {
   final CollectionReference alumni =
       FirebaseFirestore.instance.collection('alumni');
   // final DocumentReference internship_offers = alumni_post.doc('internship_offers');
+
+//To add user details
+Future<void> addAlumni({
+    required String alumniMail,
+    required String alumniId,
+    required String alumniName,
+    required String alumniDesignation,
+    required String company,
+    required String about,
+    String? dpURL,
+  }) {
+    String unique = DateTime.now().toIso8601String();
+    return alumni.doc('$alumniId$unique').set({
+      'alumniMail' : alumniMail,
+      'alumniId': alumniId,
+      'alumniName': alumniName,
+      'alumniDesignation': alumniDesignation,
+      'company' : company,
+      'about' : about,
+      'dpURL': dpURL,
+    });
+  }
 
 // To add alumni post data from form to alumni and alumniPosts
   Future<void> addAlumniPosts({

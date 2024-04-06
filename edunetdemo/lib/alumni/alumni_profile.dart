@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:edunetdemo/alumni/alumni_dashboard.dart';
 import 'package:edunetdemo/alumni/alumni_edit-profile.dart';
+import 'package:edunetdemo/alumni/alumni_post_card.dart';
 import 'package:edunetdemo/auth/login_check.dart';
 import 'package:edunetdemo/services/firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -613,10 +614,19 @@ class _ProfileSquarePostState extends State<ProfileSquarePost> {
     return GestureDetector(
       onTap: () {
         // Handle tap if needed
+        _showForm();
       },
       onLongPress: () {
         // Long press to delete the post
-        _showForm();
+
+        // showDialog(
+        //     context: context,
+        //     builder: (context) => Dialog(
+        //           child: Container(
+        //             height: MediaQuery.of(context).size.height * .2,
+        //             child: Text('Sample Text'),
+        //           ),
+        //         ));
       },
       child: Card(
         margin: EdgeInsets.all(2.0),
