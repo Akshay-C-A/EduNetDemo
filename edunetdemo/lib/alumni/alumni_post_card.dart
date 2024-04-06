@@ -47,8 +47,8 @@ class _AlumniPostCardState extends State<AlumniPostCard> {
   @override
   void initState() {
     super.initState();
-    // isLiked = widget.likes.contains(currentUser.email);
-    isLiked = widget.likes.contains('sura@gmail.com');
+    isLiked = widget.likes.contains(currentUser!.email);
+    // isLiked = widget.likes.contains('sura@gmail.com');
   }
 
   void toggleLike() {
@@ -63,21 +63,21 @@ class _AlumniPostCardState extends State<AlumniPostCard> {
 
     if (isLiked) {
       alumniPost.update({
-        // 'likes': FieldValue.arrayUnion([currentUser.email])
-        'likes': FieldValue.arrayUnion(['sura@gmail.com'])
+        'likes': FieldValue.arrayUnion([currentUser!.email])
+        // 'likes': FieldValue.arrayUnion(['sura@gmail.com'])
       });
       alumniProfile.update({
-        // 'likes': FieldValue.arrayUnion([currentUser.email])
-        'likes': FieldValue.arrayUnion(['sura@gmail.com'])
+        'likes': FieldValue.arrayUnion([currentUser!.email])
+        // 'likes': FieldValue.arrayUnion(['sura@gmail.com'])
       });
     } else {
       alumniPost.update({
-        // 'likes': FieldValue.arrayRemove([currentUser.email])
-        'likes': FieldValue.arrayRemove(['sura@gmail.com'])
+        'likes': FieldValue.arrayRemove([currentUser!.email])
+        // 'likes': FieldValue.arrayRemove(['sura@gmail.com'])
       });
       alumniProfile.update({
-        // 'likes': FieldValue.arrayRemove([currentUser.email])
-        'likes': FieldValue.arrayRemove(['sura@gmail.com'])
+        'likes': FieldValue.arrayRemove([currentUser!.email])
+        // 'likes': FieldValue.arrayRemove(['sura@gmail.com'])
       });
     }
   }
