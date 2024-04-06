@@ -59,6 +59,7 @@ class _Alumni_DashboardState extends State<Alumni_Dashboard> {
             alumni_dept: 'CS')),
     AlumniNotification(),
   ];
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
