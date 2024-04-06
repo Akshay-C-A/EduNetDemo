@@ -7,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:path/path.dart' as path;
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class AlumniNewPostPage extends StatefulWidget {
   final Alumni alumni;
@@ -106,12 +107,12 @@ class _AlumniNewPostPageState extends State<AlumniNewPostPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Create Post'),
-      ),
       body: _isLoading
-          ? const Center(
-              child: CircularProgressIndicator(),
+          ? Center(
+              child: SpinKitFadingCircle(
+                color: Theme.of(context).primaryColor,
+                size: 50.0,
+              ),
             )
           : SingleChildScrollView(
               child: Padding(
