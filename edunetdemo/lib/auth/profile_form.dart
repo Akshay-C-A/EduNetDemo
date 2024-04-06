@@ -9,15 +9,14 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as path;
 
-class AlumniNewPostPage extends StatefulWidget {
-  final Alumni alumni;
-  const AlumniNewPostPage({super.key, required this.alumni});
+class ProfileForm extends StatefulWidget {
+  const ProfileForm({super.key,});
 
   @override
-  State<AlumniNewPostPage> createState() => _AlumniNewPostPageState();
+  State<ProfileForm> createState() => _ProfileFormState();
 }
 
-class _AlumniNewPostPageState extends State<AlumniNewPostPage> {
+class _ProfileFormState extends State<ProfileForm> {
   final _AlumniFirestoreService = FirestoreService();
   final currentUser = FirebaseAuth.instance.currentUser;
 

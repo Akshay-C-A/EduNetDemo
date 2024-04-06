@@ -3,6 +3,7 @@ import 'package:edunetdemo/alumni/alumni_dashboard.dart';
 import 'package:edunetdemo/alumni/alumni_edit-profile.dart';
 import 'package:edunetdemo/alumni/alumni_post_card.dart';
 import 'package:edunetdemo/auth/login_check.dart';
+import 'package:edunetdemo/auth/profile_form.dart';
 import 'package:edunetdemo/services/firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -117,7 +118,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => EditProfileForm(),
+                                  builder: (context) => ProfileForm(),
                                 ),
                               );
                             },
