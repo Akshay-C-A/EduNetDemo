@@ -47,7 +47,7 @@ class _AlumniPostCardState extends State<AlumniPostCard> {
   @override
   void initState() {
     super.initState();
-    // isLiked = widget.likes.contains(currentUser!.email);
+    isLiked = widget.likes.contains(currentUser!.email);
   }
 
   void toggleLike() {
