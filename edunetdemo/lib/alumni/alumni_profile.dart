@@ -75,14 +75,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             width: 110,
                             height: 110,
                             decoration: BoxDecoration(
-                              color: Colors.amber,
+                              color: Colors.grey[300],
                               borderRadius: BorderRadius.circular(35),
                             ),
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(28),
-                                child: Image.network('assets/ban1.jpg',
+                                child: Image.network(
+                                    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRMUD7t-efVsZcOQIrC6FzYqdfaIGrpl_BkkvIHEGlAtw&s',
                                     fit: BoxFit.cover),
                               ),
                             ),
