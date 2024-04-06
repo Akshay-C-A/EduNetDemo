@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:edunetdemo/alumni/alumni_dashboard.dart';
 import 'package:edunetdemo/alumni/alumni_edit-profile.dart';
+import 'package:edunetdemo/auth/login_check.dart';
 import 'package:edunetdemo/services/firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -22,12 +24,22 @@ class _ProfilePageState extends State<ProfilePage> {
       appBar: AppBar(
         title: Text(widget.alumni.alumni_name),
         actions: [
-          TextButton(
-            onPressed: () {
-              print('LogOut');
-            },
-            child: Text('LogOut'),
-          ),
+TextButton(
+  onPressed: () async {
+    try {
+      await FirebaseAuth.instance.signOut();
+      // Navigate to the MainPage
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => MainPage()),
+        (route) => false,
+      );
+    } catch (e) {
+      print('Error signing out: $e');
+    }
+  },
+  child: Text('LogOut'),
+),
         ],
       ),
       body: SingleChildScrollView(
