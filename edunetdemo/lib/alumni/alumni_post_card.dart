@@ -1,9 +1,15 @@
 import 'dart:async';
-
+import 'package:share_plus/share_plus.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:edunetdemo/services/firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:http/http.dart' as http;
+
 
 class AlumniPostCard extends StatefulWidget {
   //data for likes
@@ -33,6 +39,28 @@ class AlumniPostCard extends StatefulWidget {
 
   @override
   State<AlumniPostCard> createState() => _AlumniPostCardState();
+}
+
+Future<void> _downloadImageToGallery(String imageURL) async {
+  try {
+    // Get the directory for saving the image
+    Directory? directory = await getExternalStorageDirectory();
+    if (directory != null) {
+      // Create the file path
+      String fileName = '${DateTime.now().millisecondsSinceEpoch}.jpg';
+      File file = File('${directory.path}/$fileName');
+
+      // Download the image
+      var response = await http.get(Uri.parse(imageURL));
+      await file.writeAsBytes(response.bodyBytes);
+
+      // Add the image to the device's gallery
+      final result = await ImageGallerySaver.saveFile(file.path);
+      print('Image saved to gallery: $result');
+    }
+  } catch (e) {
+    print('Error downloading image: $e');
+  }
 }
 
 class _AlumniPostCardState extends State<AlumniPostCard> {
@@ -128,22 +156,22 @@ class _AlumniPostCardState extends State<AlumniPostCard> {
                           ),
                         ],
                       ),
-                      PopupMenuButton(
-                        itemBuilder: (_) => [
-                          PopupMenuItem(
-                            child: Text('Option 1'),
-                            value: 'option1',
-                          ),
-                          PopupMenuItem(
-                            child: Text('Option 2'),
-                            value: 'option2',
-                          ),
-                          PopupMenuItem(
-                            child: Text('Option 3'),
-                            value: 'option3',
-                          ),
-                        ],
-                      ),
+                      // PopupMenuButton(
+                      //   itemBuilder: (_) => [
+                      //     PopupMenuItem(
+                      //       child: Text('Option 1'),
+                      //       value: 'option1',
+                      //     ),
+                      //     PopupMenuItem(
+                      //       child: Text('Option 2'),
+                      //       value: 'option2',
+                      //     ),
+                      //     PopupMenuItem(
+                      //       child: Text('Option 3'),
+                      //       value: 'option3',
+                      //     ),
+                      //   ],
+                      // ),
                     ],
                   ),
                 ),
@@ -203,11 +231,38 @@ class _AlumniPostCardState extends State<AlumniPostCard> {
                     ),
                     IconButton(
                       icon: Icon(Icons.send),
-                      onPressed: () {},
+                      onPressed: () {
+                        Share.share(
+                          '${widget.caption}\n${widget.description}\n${widget.imageURL}',
+                          subject: '${widget.alumniName} shared a post',
+                        );
+                      },
                     ),
+
                     IconButton(
                       icon: Icon(Icons.bookmark_border),
-                      onPressed: () {},
+                      onPressed: () async {
+                        // Check and request storage permission
+                        PermissionStatus status = await Permission.storage.request();
+                        if (status.isGranted) {
+                          // Download the image to the gallery
+                          await _downloadImageToGallery(widget.imageURL);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Image downloaded to gallery'),
+                              duration: Duration(seconds: 2),
+                            ),
+                          );
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Permission denied to access storage'),
+                              duration: Duration(seconds: 2),
+                            ),
+                          );
+                        }
+                      },
+
                     ),
                   ],
                 ),
