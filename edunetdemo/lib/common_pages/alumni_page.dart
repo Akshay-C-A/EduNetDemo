@@ -16,6 +16,13 @@ class AlumniPage extends StatefulWidget {
 }
 
 class _AlumniPageState extends State<AlumniPage> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    setState(() {});
+  }
+
   final FirestoreService firestoreService = FirestoreService();
 
   Widget build(BuildContext context) {

@@ -35,6 +35,15 @@ class Alumni_Dashboard extends StatefulWidget {
 }
 
 class _Alumni_DashboardState extends State<Alumni_Dashboard> {
+@override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    setState(() {
+      
+    });
+  }
+
   int _selectedIndex = 0;
 
   static List<Widget> _widgetOptions = <Widget>[
