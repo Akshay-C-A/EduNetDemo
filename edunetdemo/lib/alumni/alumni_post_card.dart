@@ -10,7 +10,6 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:http/http.dart' as http;
 
-
 class AlumniPostCard extends StatefulWidget {
   //data for likes
   final String postId;
@@ -24,6 +23,7 @@ class AlumniPostCard extends StatefulWidget {
   final String caption;
   final String description;
   final String imageURL;
+  final String dpURL;
 
   AlumniPostCard({
     required this.type,
@@ -33,6 +33,7 @@ class AlumniPostCard extends StatefulWidget {
     required this.caption,
     required this.description,
     required this.imageURL,
+    required this.dpURL,
     required this.postId,
     required this.likes,
   });
@@ -136,7 +137,7 @@ class _AlumniPostCardState extends State<AlumniPostCard> {
                         children: [
                           CircleAvatar(
                             radius: 20,
-                            //backgroundImage: AssetImage('assets/images/profile.jpg'),
+                            backgroundImage: NetworkImage(widget.dpURL),
                           ),
                           SizedBox(width: 10),
                           Column(
@@ -229,31 +230,33 @@ class _AlumniPostCardState extends State<AlumniPostCard> {
                         ),
                       ],
                     ),
-                    
-                      IconButton(
-                        icon: Icon(Icons.send),
-                        onPressed: () async {
-                          // Create a temporary file to store the image
-                          final tempDir = await getTemporaryDirectory();
-                          final tempFile = File('${tempDir.path}/shared_image.jpg');
+                    IconButton(
+                      icon: Icon(Icons.send),
+                      onPressed: () async {
+                        // Create a temporary file to store the image
+                        final tempDir = await getTemporaryDirectory();
+                        final tempFile =
+                            File('${tempDir.path}/shared_image.jpg');
 
-                          // Download the image to the temporary file
-                          var response = await http.get(Uri.parse(widget.imageURL));
-                          await tempFile.writeAsBytes(response.bodyBytes);
+                        // Download the image to the temporary file
+                        var response =
+                            await http.get(Uri.parse(widget.imageURL));
+                        await tempFile.writeAsBytes(response.bodyBytes);
 
-                          // Share the image and other details
-                          await Share.shareXFiles(
-                            [XFile(tempFile.path)],
-                            text: '${widget.alumniName} shared a post:\n\n${widget.caption}\n\n${widget.description}',
-                          );
-                        },
-                      ),
-
+                        // Share the image and other details
+                        await Share.shareXFiles(
+                          [XFile(tempFile.path)],
+                          text:
+                              '${widget.alumniName} shared a post:\n\n${widget.caption}\n\n${widget.description}',
+                        );
+                      },
+                    ),
                     IconButton(
                       icon: Icon(Icons.bookmark_border),
                       onPressed: () async {
                         // Check and request storage permission
-                        PermissionStatus status = await Permission.storage.request();
+                        PermissionStatus status =
+                            await Permission.storage.request();
                         if (status.isGranted) {
                           // Download the image to the gallery
                           await _downloadImageToGallery(widget.imageURL);
@@ -266,13 +269,13 @@ class _AlumniPostCardState extends State<AlumniPostCard> {
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              content: Text('Permission denied to access storage'),
+                              content:
+                                  Text('Permission denied to access storage'),
                               duration: Duration(seconds: 2),
                             ),
                           );
                         }
                       },
-
                     ),
                   ],
                 ),

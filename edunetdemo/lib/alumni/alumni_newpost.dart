@@ -286,7 +286,8 @@ class _AlumniNewPostPageState extends State<AlumniNewPostPage> {
   }
 
   Future<void> _pickImage() async {
-    final XFile? pickedImage = await _picker.pickImage(source: ImageSource.gallery);
+    final XFile? pickedImage =
+        await _picker.pickImage(source: ImageSource.gallery);
     if (pickedImage != null) {
       setState(() {
         _selectedImage = pickedImage;
@@ -323,6 +324,7 @@ class _AlumniNewPostPageState extends State<AlumniNewPostPage> {
       caption: _organisationNameController.text,
       description: _detailsController.text,
       imageURL: imageURL,
+      dpURL: widget.alumni.dpURL,
     );
 
     setState(() {
