@@ -16,9 +16,10 @@ class _Student_DashboardState extends State<Student_Dashboard> {
   @override
   int _selectedIndex = 0;
 
-    static List<Widget> _widgetOptions = <Widget>[
+  static List<Widget> _widgetOptions = <Widget>[
     StudentPage(),
-    AlumniPage(),
+    StudentPage(),
+    // AlumniPage(),
     StudentNewPostPage(),
     EventPage(),
     StudentNotification(),

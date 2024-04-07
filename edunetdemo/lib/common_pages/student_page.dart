@@ -18,72 +18,65 @@ class StudentPageState extends State<StudentPage> {
 
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Student Posts'),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 16.0),
-            child: CircleAvatar(
-              //backgroundImage: NetworkImage('https://example.com/profile.jpg'),
-              radius: 20.0,
-            ),
-          ),
-        ],
-      ),
-      body: StreamBuilder<QuerySnapshot>(
-        stream: StudentFirestoreService.getAlumniPostsStream(),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return Text('Error: ${snapshot.error}');
-          }
+      body: Center(
+        child: Text('Posts from students will be shown here.'),
+      )
+      // body: Text('Student Page'),
 
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          }
+      // body: StreamBuilder<QuerySnapshot>(
+      //   stream: StudentFirestoreService.getAlumniPostsStream(),
+      //   builder: (context, snapshot) {
+      //     if (snapshot.hasError) {
+      //       return Text('Error: ${snapshot.error}');
+      //     }
 
-          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return Center(child: Text('No data available'));
-          }
+      //     if (snapshot.connectionState == ConnectionState.waiting) {
+      //       return Center(child: CircularProgressIndicator());
+      //     }
 
-          List alumniPostList = snapshot.data!.docs;
-          return ListView.builder(
-            itemCount: alumniPostList.length,
-            itemBuilder: (context, index) {
-              // Get each individual doc
-              DocumentSnapshot document = alumniPostList[index];
-              // String docID = document.id;
+      //     if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+      //       return Center(child: Text('No data available'));
+      //     }
 
-              // Get note from each doc
-              Map<String, dynamic> data =
-                  document.data() as Map<String, dynamic>;
-              String type = data['type'];
-              String alumniName = data['alumniName'];
-              String alumniDesignation = data['alumniDesignation'];
-              String caption = data['caption'];
-              String description = data['description'];
-              String? imageURL = data['imageURL'];
+      //     List alumniPostList = snapshot.data!.docs;
+      //     return ListView.builder(
+      //       itemCount: alumniPostList.length,
+      //       itemBuilder: (context, index) {
+      //         // Get each individual doc
+      //         DocumentSnapshot document = alumniPostList[index];
+      //         // String docID = document.id;
 
-              // Display as a list title
-              return StudentPostCard(
-                  type: type,
-                  studentName: alumniName,
-                  studentDesignation: alumniDesignation,
-                  caption: caption,
-                  description: description,
-                  imageURL: imageURL ?? '');
+      //         // Get note from each doc
+      //         Map<String, dynamic> data =
+      //             document.data() as Map<String, dynamic>;
+      //         String type = data['type'];
+      //         String alumniName = data['alumniName'];
+      //         String alumniDesignation = data['alumniDesignation'];
+      //         String caption = data['caption'];
+      //         String description = data['description'];
+      //         String? imageURL = data['imageURL'];
 
-              // return Card(
-              //   elevation: 2,
-              //   margin: EdgeInsets.all(8),
-              //   child: ListTile(
-              //     title: Text(noteText),
-              //     onTap: () {},
-              //   ),
-              // );
-            },
-          );
-        },
-      ),
+      //         // Display as a list title
+      //         return StudentPostCard(
+      //             type: type,
+      //             studentName: alumniName,
+      //             studentDesignation: alumniDesignation,
+      //             caption: caption,
+      //             description: description,
+      //             imageURL: imageURL ?? '');
+
+      //         // return Card(
+      //         //   elevation: 2,
+      //         //   margin: EdgeInsets.all(8),
+      //         //   child: ListTile(
+      //         //     title: Text(noteText),
+      //         //     onTap: () {},
+      //         //   ),
+      //         // );
+      //       },
+      //     );
+      //   },
+      // ),
     );
   }
 }
