@@ -134,7 +134,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Lorem ipsum dolor sit amet, consectetur adipiscing elit.Lorem ipsum dolor sit amet, consectetur adipiscing elit.Lorem ipsum dolor sit amet, consectetur adipiscing elit.Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+                            widget.alumni.about,
                             style: TextStyle(
                               fontSize: 16,
                             ),
@@ -154,17 +154,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceAround,
                                 children: [
-                                  Icon(
-                                    Icons.phone,
-                                    size: 30,
+                                  IconButton(
+                                    onPressed: (){},
+                                    icon:Icon(Icons.phone,
+                                    size: 30,)
                                   ),
-                                  Icon(
-                                    Icons.email,
-                                    size: 30,
+                                  IconButton(
+                                    onPressed: (){},
+                                    icon:Icon(Icons.email,
+                                    size: 30,)
                                   ),
-                                  Icon(
-                                    Icons.location_on,
-                                    size: 30,
+                                  IconButton(
+                                    onPressed: (){},
+                                    icon:Icon(Icons.location_on,
+                                    size: 30,)
                                   ),
                                 ],
                               ),
