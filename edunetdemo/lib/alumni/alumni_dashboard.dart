@@ -51,7 +51,7 @@ class _Alumni_DashboardState extends State<Alumni_Dashboard> {
   late String alumni_name = 'john doe';
   late String alumni_designation = 'CS Engineer';
   late List<dynamic> skills = ['null'];
-  late String alumniId = 'john_doe';
+  late String alumniId;
   late String about = 'eg';
   late String company = 'eg';
   late String? linkedIn = 'eg';
@@ -64,12 +64,13 @@ class _Alumni_DashboardState extends State<Alumni_Dashboard> {
   @override
   void initState() {
     super.initState();
+    _fetchDetails();
   }
 
   int _selectedIndex = 0;
 
   Future<void> _fetchDetails() async {
-    final alumniId = currentUser!.email;
+    alumniId = currentUser!.email!;
     final postSnapshot = await _firestoreService.getAlumni(
       alumniId: alumniId.toString(),
     );
@@ -85,6 +86,7 @@ class _Alumni_DashboardState extends State<Alumni_Dashboard> {
     if (postData != null) {
       alumni_name = postData['alumniName'] as String;
       alumni_designation = postData['alumniDesignation'] as String;
+      alumniId = currentUser!.email!;
       skills = (postData['skills'] as List<dynamic>).cast<String>();
       about = postData['about'] as String;
       company = postData['company'] as String;

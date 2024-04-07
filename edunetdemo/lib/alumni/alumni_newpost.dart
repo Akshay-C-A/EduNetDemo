@@ -255,7 +255,7 @@ class AlumniNewPostPage extends StatefulWidget {
 }
 
 class _AlumniNewPostPageState extends State<AlumniNewPostPage> {
-  final _AlumniFirestoreService = FirestoreService();
+  final FirestoreService _AlumniFirestoreService = FirestoreService();
   final _detailsController = TextEditingController();
   final _organisationNameController = TextEditingController();
   String _postType = 'Internship offers';
