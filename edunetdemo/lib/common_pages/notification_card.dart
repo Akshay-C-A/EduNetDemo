@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
 class NotificationCard extends StatefulWidget {
-  final String profileIMG;
   final String userName;
   final String caption;
+  final String dpURL;
 
   NotificationCard(
       {super.key,
-      required this.profileIMG,
       required this.userName,
-      required this.caption});
+      required this.caption,
+      required this.dpURL});
 
   @override
   State<NotificationCard> createState() => _NotificationCardState();
@@ -25,11 +25,9 @@ class _NotificationCardState extends State<NotificationCard> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             CircleAvatar(
-              radius: 25,
-              // backgroundImage: NetworkImage(widget.profileImageUrl),
-              backgroundImage: NetworkImage(
-                  'https://www.koimoi.com/wp-content/new-galleries/2023/10/shah-rukh-khan-once-destroyed-a-journalist-who-rudely-asked-him-to-be-serious-during-a-press-meet-saying-ask-me-more-i-will-answer-you-when-he-ran-out-of-questions-01.jpg'),
-            ),
+                radius: 25,
+                // backgroundImage: NetworkImage(widget.profileImageUrl),
+                backgroundImage: NetworkImage(widget.dpURL)),
             SizedBox(width: 10),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,

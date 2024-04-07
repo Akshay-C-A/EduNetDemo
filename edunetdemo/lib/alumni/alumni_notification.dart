@@ -44,13 +44,13 @@ class _AlumniNotificationState extends State<AlumniNotification> {
                   document.data() as Map<String, dynamic>;
               String userName = data['alumniName'];
               String caption = data['caption'];
-              String? profileIMG = data['imageURL'];
+              String dpURL = data['dpURL'];
 
               // Display as a list title
               return NotificationCard(
                   userName: userName,
                   caption: caption,
-                  profileIMG: profileIMG ?? '');
+                  dpURL: dpURL);
               // return Card(
               //   elevation: 2,
               //   margin: EdgeInsets.all(8),
