@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as path;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileForm extends StatefulWidget {
   const ProfileForm({
@@ -124,6 +125,8 @@ class _ProfileFormState extends State<ProfileForm> {
     );
 
     _resetForm();
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('hasCompletedProfileForm', true);
 
     Navigator.push(context, MaterialPageRoute(builder: (context)=> Alumni_Dashboard()));
   }
