@@ -174,7 +174,7 @@ class _Alumni_DashboardState extends State<Alumni_Dashboard> {
             child: Padding(
               padding: const EdgeInsets.only(right: 16.0),
               child: CircleAvatar(
-                //backgroundImage: NetworkImage('https://example.com/profile.jpg'),
+                backgroundImage: NetworkImage(dpURL),
                 radius: 20.0,
               ),
             ),
