@@ -60,6 +60,7 @@ class _AlumniPageState extends State<AlumniPage> {
               String caption = data['caption'];
               String description = data['description'];
               String? imgURL = data['imageURL'];
+              String? dpURL = data['dpURL'];
 
               // Display as a list title
               return AlumniPostCard(
@@ -70,6 +71,7 @@ class _AlumniPageState extends State<AlumniPage> {
                 caption: caption,
                 description: description,
                 imageURL: imgURL ?? '',
+                dpURL : dpURL ?? '',
                 postId: document.id,
                 likes: List<String>.from(data['likes'] ?? []),
               );

@@ -59,6 +59,7 @@ class FirestoreService {
     required String caption,
     required String description,
     String? imageURL,
+    String? dpURL,
   }) {
     String unique = DateTime.now().toIso8601String();
     alumni_posts.doc('$alumniId$unique').set({
@@ -69,6 +70,7 @@ class FirestoreService {
       'caption': caption,
       'description': description,
       'imageURL': imageURL,
+      'dpURL' : dpURL,
       'likes': [],
       'timestamp': Timestamp.now(),
     });
