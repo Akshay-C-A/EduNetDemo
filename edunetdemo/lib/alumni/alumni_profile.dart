@@ -84,8 +84,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               padding: const EdgeInsets.all(8.0),
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(28),
-                                child: Image.network(
-                                    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRMUD7t-efVsZcOQIrC6FzYqdfaIGrpl_BkkvIHEGlAtw&s',
+                                child: Image.network(widget.alumni.dpURL,
                                     fit: BoxFit.cover),
                               ),
                             ),
@@ -317,7 +316,7 @@ class UserInfoSection extends StatelessWidget {
 
 // SkillsSection
 class SkillsSection extends StatelessWidget {
-  final List<String> skills;
+  final List<dynamic> skills;
 
   SkillsSection({required this.skills});
 

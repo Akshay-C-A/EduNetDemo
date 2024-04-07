@@ -30,7 +30,7 @@ class _ProfileFormState extends State<ProfileForm> {
   final _link1Controller = TextEditingController();
   final _link2Controller = TextEditingController();
   final _link3Controller = TextEditingController();
-  late final List<String> skills;
+  late List<String> skills = [];
 
   // String _postType = 'Internship offers';
   // final List<String> _postTypes = [
@@ -101,11 +101,14 @@ class _ProfileFormState extends State<ProfileForm> {
     await _AlumniFirestoreService.addAlumni(
       alumniName: _nameController.text,
       alumniDesignation: _designationController.text,
-      skills: skillsInput,
+      skills: skills,
       alumniMail: currentUser!.email,
       company: _companyController.text,
       about: _aboutController.text,
       dpURL: imageURL,
+      linkedIn: _link1Controller.text,
+      twitter: _link2Controller.text,
+      mail: _link3Controller.text,
     );
 
     setState(() {
@@ -121,6 +124,8 @@ class _ProfileFormState extends State<ProfileForm> {
     );
 
     _resetForm();
+
+    Navigator.push(context, MaterialPageRoute(builder: (context)=> Alumni_Dashboard()));
   }
 
   @override

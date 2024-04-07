@@ -1,10 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-
-
 class FirestoreService {
-
-
 //----------------------------------------------------------------------------------------------------------------
 // ALUMNI SECTION
 
@@ -16,33 +12,43 @@ class FirestoreService {
       FirebaseFirestore.instance.collection('alumni');
   // final DocumentReference internship_offers = alumni_post.doc('internship_offers');
 
-//To add user details
-Future<void> addAlumni({
+//To add alumni details
+  Future<void> addAlumni({
     required String? alumniMail,
     required String alumniName,
     required String alumniDesignation,
     required String company,
     required String about,
-    required String skills,
+    required List<String> skills,
     String? dpURL,
     String? linkedIn,
     String? twitter,
     String? mail,
   }) {
     return alumni.doc('$alumniMail').set({
-      'alumniMail' : alumniMail,
+      'alumniMail': alumniMail,
       'alumniId': alumniMail,
       'alumniName': alumniName,
       'alumniDesignation': alumniDesignation,
-      'skills' : skills,
-      'company' : company,
-      'about' : about,
+      'skills': skills,
+      'company': company,
+      'about': about,
       'dpURL': dpURL,
-      'linkedIn' : linkedIn,
-      'twitter' : twitter,
-      'mail' : alumniMail,
+      'linkedIn': linkedIn,
+      'twitter': twitter,
+      'mail': mail,
     });
   }
+
+// To get alumni details
+  Future<DocumentSnapshot> getAlumni({
+    required String? alumniId,
+  }) async {
+    print(alumniId);
+    final postSnapshot = await alumni.doc(alumniId).get();
+    return postSnapshot;
+  }
+
 
 // To add alumni post data from form to alumni and alumniPosts
   Future<void> addAlumniPosts({
@@ -63,6 +69,7 @@ Future<void> addAlumni({
       'caption': caption,
       'description': description,
       'imageURL': imageURL,
+      'likes': [],
       'timestamp': Timestamp.now(),
     });
 
