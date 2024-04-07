@@ -1,6 +1,35 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../alumni/alumni_dashboard.dart';
+
 class FirestoreService {
+
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  Future<Alumni?> getAlumniByEmail(String email) async {
+    final alumniSnapshot = await _firestore.collection('alumni')
+        .where('alumniMail', isEqualTo: email)
+        .limit(1)
+        .get();
+
+    if (alumniSnapshot.docs.isNotEmpty) {
+      final alumniData = alumniSnapshot.docs.first.data();
+      return Alumni(
+        alumniId: alumniData['alumniMail'],
+        alumni_name: alumniData['alumniName'],
+        alumni_designation: alumniData['alumniDesignation'],
+        skills: alumniData['skills'].cast<String>(),
+        about: alumniData['about'],
+        company: alumniData['company'],
+        linkedIn: alumniData['linkedIn'],
+        twitter: alumniData['twitter'],
+        mail: alumniData['mail'],
+        dpURL: alumniData['dpURL'],
+      );
+    } else {
+      return null;
+    }
+  }
 //----------------------------------------------------------------------------------------------------------------
 // ALUMNI SECTION
 
