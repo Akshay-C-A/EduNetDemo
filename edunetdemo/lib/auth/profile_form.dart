@@ -125,7 +125,10 @@ class _ProfileFormState extends State<ProfileForm> {
 
     _resetForm();
 
-    Navigator.push(context, MaterialPageRoute(builder: (context)=> Alumni_Dashboard()));
+    setState(() {
+      Alumni_Dashboard();
+    });
+    ;
   }
 
   @override
