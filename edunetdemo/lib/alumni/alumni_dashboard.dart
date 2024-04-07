@@ -64,7 +64,7 @@ class _Alumni_DashboardState extends State<Alumni_Dashboard> {
   @override
   void initState() {
     super.initState();
-    _fetchDetails();
+    // _fetchDetails();
   }
 
   int _selectedIndex = 0;
