@@ -64,59 +64,14 @@ class _Alumni_DashboardState extends State<Alumni_Dashboard> {
   @override
   void initState() {
     super.initState();
-    // _fetchDetails();
   }
 
   int _selectedIndex = 0;
 
-  // Future<void> _fetchDetails() async {
-  //   final alumniId = currentUser!.email;
-  //   final postSnapshot = await _firestoreService.getAlumni(
-  //     alumniId: alumniId,
-  //   );
-
-  //   if (postSnapshot.exists) {
-  //     setState(() async {
-  //       _postData = postSnapshot.data() as Map<String, dynamic>;
-
-  //       alumni_name = _postData!['alumniName'] as String;
-  //       alumni_designation = _postData!['alumniDesignation'] as String;
-  //       skills = (_postData!['skills'] as List<dynamic>).cast<String>();
-  //       about = _postData!['about'] as String;
-  //       company = _postData!['company'] as String;
-  //       linkedIn = _postData!['linkedIn'] as String;
-  //       twitter = _postData!['twitter'] as String;
-  //       mail = _postData!['mail'] as String;
-  //       dpURL = _postData!['dpURL'] as String;
-  //     });
-  //   } else {
-  //     // Handle the case when the post is not found
-  //     setState(() {
-  //       _postData = null;
-  //       alumni_name = 'john doe';
-  //       alumni_designation = 'CS Engineer';
-  //       skills = ['null'];
-  //       about = 'eg';
-  //       company = 'eg';
-  //       linkedIn = 'eg';
-  //       twitter = 'eg';
-  //       mail = 'eg';
-  //       dpURL = 'eg';
-  //     });
-
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(
-  //         content: Text('Account details not found'),
-  //         duration: Duration(seconds: 3),
-  //       ),
-  //     );
-  //   }
-  // }
-
   Future<void> _fetchDetails() async {
     final alumniId = currentUser!.email;
     final postSnapshot = await _firestoreService.getAlumni(
-      alumniId: alumniId,
+      alumniId: alumniId.toString(),
     );
 
     Map<String, dynamic>? postData;
@@ -127,36 +82,34 @@ class _Alumni_DashboardState extends State<Alumni_Dashboard> {
       postData = null;
     }
 
-    setState(() {
-      if (postData != null) {
-        alumni_name = postData['alumniName'] as String;
-        alumni_designation = postData['alumniDesignation'] as String;
-        skills = (postData['skills'] as List<dynamic>).cast<String>();
-        about = postData['about'] as String;
-        company = postData['company'] as String;
-        linkedIn = postData['linkedIn'] as String;
-        twitter = postData['twitter'] as String;
-        mail = postData['mail'] as String;
-        dpURL = postData['dpURL'] as String;
-      } else {
-        alumni_name = 'john doe';
-        alumni_designation = 'CS Engineer';
-        skills = ['null'];
-        about = 'eg';
-        company = 'eg';
-        linkedIn = 'eg';
-        twitter = 'eg';
-        mail = 'eg';
-        dpURL = 'eg';
+    if (postData != null) {
+      alumni_name = postData['alumniName'] as String;
+      alumni_designation = postData['alumniDesignation'] as String;
+      skills = (postData['skills'] as List<dynamic>).cast<String>();
+      about = postData['about'] as String;
+      company = postData['company'] as String;
+      linkedIn = postData['linkedIn'] as String;
+      twitter = postData['twitter'] as String;
+      mail = postData['mail'] as String;
+      dpURL = postData['dpURL'] as String;
+    } else {
+      alumni_name = 'john doe';
+      alumni_designation = 'CS Engineer';
+      skills = ['null'];
+      about = 'eg';
+      company = 'eg';
+      linkedIn = 'eg';
+      twitter = 'eg';
+      mail = 'eg';
+      dpURL = 'eg';
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Account details not found'),
-            duration: Duration(seconds: 3),
-          ),
-        );
-      }
-    });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Account details not found'),
+          duration: Duration(seconds: 3),
+        ),
+      );
+    }
   }
 
   @override
@@ -277,3 +230,48 @@ class _Alumni_DashboardState extends State<Alumni_Dashboard> {
     );
   }
 }
+
+
+  // Future<void> _fetchDetails() async {
+  //   final alumniId = currentUser!.email;
+  //   final postSnapshot = await _firestoreService.getAlumni(
+  //     alumniId: alumniId,
+  //   );
+
+  //   if (postSnapshot.exists) {
+  //     setState(() async {
+  //       _postData = postSnapshot.data() as Map<String, dynamic>;
+
+  //       alumni_name = _postData!['alumniName'] as String;
+  //       alumni_designation = _postData!['alumniDesignation'] as String;
+  //       skills = (_postData!['skills'] as List<dynamic>).cast<String>();
+  //       about = _postData!['about'] as String;
+  //       company = _postData!['company'] as String;
+  //       linkedIn = _postData!['linkedIn'] as String;
+  //       twitter = _postData!['twitter'] as String;
+  //       mail = _postData!['mail'] as String;
+  //       dpURL = _postData!['dpURL'] as String;
+  //     });
+  //   } else {
+  //     // Handle the case when the post is not found
+  //     setState(() {
+  //       _postData = null;
+  //       alumni_name = 'john doe';
+  //       alumni_designation = 'CS Engineer';
+  //       skills = ['null'];
+  //       about = 'eg';
+  //       company = 'eg';
+  //       linkedIn = 'eg';
+  //       twitter = 'eg';
+  //       mail = 'eg';
+  //       dpURL = 'eg';
+  //     });
+
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(
+  //         content: Text('Account details not found'),
+  //         duration: Duration(seconds: 3),
+  //       ),
+  //     );
+  //   }
+  // }

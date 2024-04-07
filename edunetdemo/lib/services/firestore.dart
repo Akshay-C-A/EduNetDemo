@@ -42,7 +42,7 @@ class FirestoreService {
 
 // To get alumni details
   Future<DocumentSnapshot> getAlumni({
-    required String? alumniId,
+    required String alumniId,
   }) async {
     print(alumniId);
     final postSnapshot = await alumni.doc(alumniId).get();
