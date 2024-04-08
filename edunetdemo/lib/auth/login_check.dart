@@ -75,12 +75,18 @@ class _MainPageState extends State<MainPage> {
             return FutureBuilder(
               future: _firestoreService.getAlumniByEmail(snapshot.data!.email!),
               builder: (context, alumniSnapshot) {
-                if (alumniSnapshot.hasData && alumniSnapshot.data != null) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(
+                  child: CircularProgressIndicator(),
+                 );
+                }
+                else if (alumniSnapshot.hasData && alumniSnapshot.data != null) {
                   // User's email is in the Firestore database, navigate to the alumni dashboard
                   return Alumni_Dashboard(
                     // alumni: alumniSnapshot.data!,
                   );
-                } else {
+                } 
+                else {
                   // User's email is not in the Firestore database, navigate to the profile form
                   return ProfileForm();
                 }

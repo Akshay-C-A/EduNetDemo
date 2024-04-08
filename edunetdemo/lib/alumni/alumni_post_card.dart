@@ -75,6 +75,19 @@ class _AlumniPostCardState extends State<AlumniPostCard> {
   bool isExpanded = false;
   bool showLikeIcon = false;
 
+  Color getButtonColor(String type) {
+    switch (type) {
+      case 'Placement offer':
+        return Color.fromARGB(255, 7, 156, 183);
+      case 'Internship offer':
+        return Color.fromARGB(255, 158, 79, 189);
+      case 'Technical event':
+        return Color.fromARGB(255, 155, 50, 85);
+      default:
+        return Colors.blue;
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -168,22 +181,22 @@ class _AlumniPostCardState extends State<AlumniPostCard> {
                           ),
                         ],
                       ),
-                      // PopupMenuButton(
-                      //   itemBuilder: (_) => [
-                      //     PopupMenuItem(
-                      //       child: Text('Option 1'),
-                      //       value: 'option1',
-                      //     ),
-                      //     PopupMenuItem(
-                      //       child: Text('Option 2'),
-                      //       value: 'option2',
-                      //     ),
-                      //     PopupMenuItem(
-                      //       child: Text('Option 3'),
-                      //       value: 'option3',
-                      //     ),
-                      //   ],
-                      // ),
+                      // Container for displaying post type
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                            vertical: 5, horizontal: 10),
+                        decoration: BoxDecoration(
+                          color: getButtonColor(widget.type),
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        child: Text(
+                          widget.type,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -314,7 +327,7 @@ class _AlumniPostCardState extends State<AlumniPostCard> {
 class LikeButton extends StatelessWidget {
   final bool isLiked;
   final void Function()? onTap;
-  LikeButton({super.key, required this.isLiked, required this.onTap});
+  LikeButton({Key? key, required this.isLiked, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
