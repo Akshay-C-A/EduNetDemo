@@ -124,11 +124,11 @@ class _EditPostFormState extends State<EditPostForm> {
     _fetchPost();
   }
 
-  String _postType = 'Internship offers';
+  String _postType = 'Internship offer';
   final List<String> _postTypes = [
-    'Internship offers',
-    'Placement offers',
-    'Technical events',
+    'Internship offer',
+    'Placement offer',
+    'Technical event',
     // 'My achievements'
   ];
 
