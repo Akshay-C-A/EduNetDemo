@@ -258,11 +258,11 @@ class _AlumniNewPostPageState extends State<AlumniNewPostPage> {
   final FirestoreService _AlumniFirestoreService = FirestoreService();
   final _detailsController = TextEditingController();
   final _captionController = TextEditingController();
-  String _postType = 'Internship offers';
+  String _postType = 'Internship offer';
   final List<String> _postTypes = [
-    'Internship offers',
-    'Placement offers',
-    'Technical events',
+    'Internship offer',
+    'Placement offer',
+    'Technical event',
   ];
   XFile? _selectedImage;
   final _picker = ImagePicker();
@@ -306,7 +306,7 @@ class _AlumniNewPostPageState extends State<AlumniNewPostPage> {
     _captionController.clear();
     setState(() {
       _selectedImage = null;
-      _postType = 'Internship offers';
+      _postType = 'Internship offer';
     });
   }
 
