@@ -1,5 +1,5 @@
 
-import 'package:edunetdemo/alumni/alumni_dashboard.dart';
+// import 'package:edunetdemo/alumni/alumni_dashboard.dart';
 
 import 'package:edunetdemo/auth/login_check.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
