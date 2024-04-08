@@ -20,7 +20,7 @@
 // class _AlumniNewPostPageState extends State<AlumniNewPostPage> {
 //   final _AlumniFirestoreService = FirestoreService();
 //   final _detailsController = TextEditingController();
-//   final _organisationNameController = TextEditingController();
+//   final _captionController = TextEditingController();
 //   String _postType = 'Internship offers';
 //   final List<String> _postTypes = [
 //     'Internship offers',
@@ -66,7 +66,7 @@
 
 //   void _resetForm() {
 //     _detailsController.clear();
-//     _organisationNameController.clear();
+//     _captionController.clear();
 //     setState(() {
 //       _selectedImage = null;
 //       _postType = 'Internship offers';
@@ -84,7 +84,7 @@
 //       alumniId: widget.alumni.alumniId,
 //       alumniName: widget.alumni.alumni_name,
 //       alumniDesignation: widget.alumni.alumni_designation,
-//       caption: _organisationNameController.text,
+//       caption: _captionController.text,
 //       description: _detailsController.text,
 //       imageURL: imageURL,
 //     );
@@ -176,7 +176,7 @@
 //                       ),
 //                     ),
 //                     TextField(
-//                       controller: _organisationNameController,
+//                       controller: _captionController,
 //                       decoration: const InputDecoration(
 //                         hintText: 'Enter organisation name',
 //                         border: OutlineInputBorder(),
@@ -257,7 +257,7 @@ class AlumniNewPostPage extends StatefulWidget {
 class _AlumniNewPostPageState extends State<AlumniNewPostPage> {
   final FirestoreService _AlumniFirestoreService = FirestoreService();
   final _detailsController = TextEditingController();
-  final _organisationNameController = TextEditingController();
+  final _captionController = TextEditingController();
   String _postType = 'Internship offers';
   final List<String> _postTypes = [
     'Internship offers',
@@ -303,7 +303,7 @@ class _AlumniNewPostPageState extends State<AlumniNewPostPage> {
 
   void _resetForm() {
     _detailsController.clear();
-    _organisationNameController.clear();
+    _captionController.clear();
     setState(() {
       _selectedImage = null;
       _postType = 'Internship offers';
@@ -321,7 +321,7 @@ class _AlumniNewPostPageState extends State<AlumniNewPostPage> {
       alumniId: widget.alumni.alumniId,
       alumniName: widget.alumni.alumni_name,
       alumniDesignation: widget.alumni.alumni_designation,
-      caption: _organisationNameController.text,
+      caption: _captionController.text,
       description: _detailsController.text,
       imageURL: imageURL,
       dpURL: widget.alumni.dpURL,
@@ -407,14 +407,14 @@ class _AlumniNewPostPageState extends State<AlumniNewPostPage> {
                     ),
                     const SizedBox(height: 16.0),
                     const Text(
-                      'Organisation Name',
+                      'Caption',
                       style: TextStyle(
                         fontSize: 18.0,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     TextField(
-                      controller: _organisationNameController,
+                      controller: _captionController,
                       decoration: const InputDecoration(
                         hintText: 'Enter organisation name',
                         border: OutlineInputBorder(),
