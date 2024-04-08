@@ -155,20 +155,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     MainAxisAlignment.spaceAround,
                                 children: [
                                   IconButton(
-                                    onPressed: (){},
-                                    icon:Icon(Icons.phone,
-                                    size: 30,)
-                                  ),
+                                      onPressed: () {},
+                                      icon: Icon(
+                                        Icons.phone,
+                                        size: 30,
+                                      )),
                                   IconButton(
-                                    onPressed: (){},
-                                    icon:Icon(Icons.email,
-                                    size: 30,)
-                                  ),
+                                      onPressed: () {},
+                                      icon: Icon(
+                                        Icons.email,
+                                        size: 30,
+                                      )),
                                   IconButton(
-                                    onPressed: (){},
-                                    icon:Icon(Icons.location_on,
-                                    size: 30,)
-                                  ),
+                                      onPressed: () {},
+                                      icon: Icon(
+                                        Icons.location_on,
+                                        size: 30,
+                                      )),
                                 ],
                               ),
                             ],
@@ -244,78 +247,78 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 }
 
-class UserInfoSection extends StatelessWidget {
-  final Alumni alumni;
+// class UserInfoSection extends StatelessWidget {
+//   final Alumni alumni;
 
-  UserInfoSection({required this.alumni});
+//   UserInfoSection({required this.alumni});
 
-  @override
-  Widget build(BuildContext context) {
-    Color color2566be = Color(0xFF2566BE);
-    LinearGradient gradient = LinearGradient(
-      begin: Alignment.topLeft,
-      end: Alignment.bottomRight,
-      colors: [
-        color2566be.withOpacity(0.5),
-        color2566be,
-      ],
-    );
+//   @override
+//   Widget build(BuildContext context) {
+//     Color color2566be = Color(0xFF2566BE);
+//     LinearGradient gradient = LinearGradient(
+//       begin: Alignment.topLeft,
+//       end: Alignment.bottomRight,
+//       colors: [
+//         color2566be.withOpacity(0.5),
+//         color2566be,
+//       ],
+//     );
 
-    return Container(
-      padding: EdgeInsets.all(16.0),
-      decoration: BoxDecoration(
-        gradient: gradient,
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          CircleAvatar(
-            radius: 60,
-            // backgroundImage: AssetImage('assets/profile_photo.jpg'),
-          ),
-          SizedBox(width: 20),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  alumni.alumni_name,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    fontSize: 24,
-                  ),
-                ),
-                SizedBox(height: 10),
-                Text(
-                  alumni.alumni_designation,
-                  style: TextStyle(fontSize: 18, color: Colors.white),
-                ),
-                SizedBox(height: 10),
-                Text(
-                  'Posts: 100',
-                  style: TextStyle(fontSize: 18, color: Colors.white),
-                ),
-              ],
-            ),
-          ),
-          IconButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => EditProfileForm(),
-                ),
-              );
-            },
-            icon: Icon(Icons.edit),
-          ),
-        ],
-      ),
-    );
-  }
-}
+//     return Container(
+//       padding: EdgeInsets.all(16.0),
+//       decoration: BoxDecoration(
+//         gradient: gradient,
+//       ),
+//       child: Row(
+//         crossAxisAlignment: CrossAxisAlignment.start,
+//         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//         children: [
+//           CircleAvatar(
+//             radius: 60,
+//             // backgroundImage: AssetImage('assets/profile_photo.jpg'),
+//           ),
+//           SizedBox(width: 20),
+//           Expanded(
+//             child: Column(
+//               crossAxisAlignment: CrossAxisAlignment.start,
+//               children: [
+//                 Text(
+//                   alumni.alumni_name,
+//                   style: TextStyle(
+//                     fontWeight: FontWeight.bold,
+//                     color: Colors.white,
+//                     fontSize: 24,
+//                   ),
+//                 ),
+//                 SizedBox(height: 10),
+//                 Text(
+//                   alumni.alumni_designation,
+//                   style: TextStyle(fontSize: 18, color: Colors.white),
+//                 ),
+//                 SizedBox(height: 10),
+//                 Text(
+//                   'Posts: 100',
+//                   style: TextStyle(fontSize: 18, color: Colors.white),
+//                 ),
+//               ],
+//             ),
+//           ),
+//           IconButton(
+//             onPressed: () {
+//               Navigator.push(
+//                 context,
+//                 MaterialPageRoute(
+//                   builder: (context) => EditProfileForm(),
+//                 ),
+//               );
+//             },
+//             icon: Icon(Icons.edit),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
 
 // SkillsSection
 class SkillsSection extends StatelessWidget {
@@ -423,10 +426,17 @@ class CompanySection extends StatelessWidget {
 class PostsSection extends StatefulWidget {
   final String alumniId;
   final FirestoreService firestoreService;
+  bool isView = false;
 
   PostsSection({
     required this.alumniId,
     required this.firestoreService,
+  });
+
+  PostsSection.withView({
+    required this.alumniId,
+    required this.firestoreService,
+    required this.isView,
   });
 
   @override
@@ -497,6 +507,7 @@ class _PostsSectionState extends State<PostsSection> {
                     imageURL: imgURL ?? '',
                     postId: document.id,
                     alumniId: widget.alumniId,
+                    isView: widget.isView,
                   );
                 },
               );
@@ -512,11 +523,13 @@ class ProfileSquarePost extends StatefulWidget {
   final String imageURL;
   final String postId;
   final String alumniId;
+  bool isView = false;
 
-  const ProfileSquarePost({
+  ProfileSquarePost({
     required this.imageURL,
     required this.postId,
     required this.alumniId,
+    required this.isView,
   });
 
   @override
@@ -617,7 +630,9 @@ class _ProfileSquarePostState extends State<ProfileSquarePost> {
     return GestureDetector(
       onTap: () {
         // Handle tap if needed
-        _showForm();
+        if (!widget.isView) {
+          _showForm();
+        }
       },
       onLongPress: () {
         // Long press to delete the post
