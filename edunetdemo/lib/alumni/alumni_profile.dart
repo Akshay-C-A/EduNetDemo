@@ -18,7 +18,13 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  String _selectedButton = 'Details';
+  Set<String> _selectedButton = {'Details'};
+
+  void updateSelected(Set<String> newSelection) {
+    setState(() {
+      _selectedButton = newSelection;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -177,50 +183,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ],
                           ),
                           SizedBox(height: width * 0.08),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              TextButton(
-                                onPressed: () {
-                                  setState(() {
-                                    _selectedButton = 'Details';
-                                  });
-                                },
-                                style: TextButton.styleFrom(
-                                  foregroundColor: _selectedButton == 'Details'
-                                      ? Colors.blue
-                                      : Colors.black,
-                                  textStyle: TextStyle(
-                                    decoration: _selectedButton == 'Details'
-                                        ? TextDecoration.underline
-                                        : TextDecoration.none,
-                                    decorationThickness: 2.0,
-                                  ),
-                                ),
-                                child: Text('Details'),
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  setState(() {
-                                    _selectedButton = 'Posts';
-                                  });
-                                },
-                                style: TextButton.styleFrom(
-                                  foregroundColor: _selectedButton == 'Posts'
-                                      ? Colors.blue
-                                      : Colors.black,
-                                  textStyle: TextStyle(
-                                    decoration: _selectedButton == 'Posts'
-                                        ? TextDecoration.underline
-                                        : TextDecoration.none,
-                                    decorationThickness: 2.0,
-                                  ),
-                                ),
-                                child: Text('Posts'),
-                              ),
-                            ],
+                          Center(
+                            child: SegmentedButton(
+                              segments: <ButtonSegment<String>>[
+                                ButtonSegment(
+                                    value: 'Details', label: Text('Details')),
+                                ButtonSegment(
+                                    value: 'Posts', label: Text('Posts')),
+                              ],
+                              selected: _selectedButton,
+                              onSelectionChanged: updateSelected,
+                            ),
                           ),
-                          if (_selectedButton == 'Details')
+                          if (_selectedButton.contains('Details'))
                             Column(
                               children: [
                                 SkillsSection(skills: widget.alumni.skills),
