@@ -57,7 +57,7 @@ class _Alumni_DashboardState extends State<Alumni_Dashboard> {
   late String? linkedIn = 'eg';
   late String? twitter = 'eg';
   late String? mail = 'eg';
-  late String dpURL = 'eg';
+  String dpURL = '';
 
   Map<String, dynamic>? _postData;
 
@@ -147,88 +147,88 @@ class _Alumni_DashboardState extends State<Alumni_Dashboard> {
       AlumniNotification(),
     ];
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Alumni'),
-        actions: [
-          GestureDetector(
-            onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ProfileScreen(
-                        alumni: Alumni(
-                      alumni_name: alumni_name,
-                      alumniId: alumniId,
-                      alumni_designation: alumni_designation,
-                      skills: skills,
-                      about: about,
-                      company: company,
-                      linkedIn: linkedIn,
-                      twitter: twitter,
-                      mail: mail,
-                      dpURL: dpURL,
-                    )),
-                  ));
-            },
-            child: Padding(
-              padding: const EdgeInsets.only(right: 16.0),
-              child: CircleAvatar(
-                backgroundImage: NetworkImage(dpURL),
-                radius: 20.0,
-              ),
+    return FutureBuilder(
+      future: _fetchDetails(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        } else if (snapshot.hasError) {
+          return Center(
+            child: Text('Error: ${snapshot.error}'),
+          );
+        } else {
+          return Scaffold(
+            appBar: AppBar(
+              title: Text('Alumni'),
+              actions: [
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ProfileScreen(
+                              alumni: Alumni(
+                            alumni_name: alumni_name,
+                            alumniId: alumniId,
+                            alumni_designation: alumni_designation,
+                            skills: skills,
+                            about: about,
+                            company: company,
+                            linkedIn: linkedIn,
+                            twitter: twitter,
+                            mail: mail,
+                            dpURL: dpURL,
+                          )),
+                        ));
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 16.0),
+                    child: CircleAvatar(
+                      backgroundImage: NetworkImage(dpURL),
+                      radius: 20.0,
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ),
-        ],
-      ),
-      body: FutureBuilder(
-        future: _fetchDetails(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          } else if (snapshot.hasError) {
-            return Center(
-              child: Text('Error: ${snapshot.error}'),
-            );
-          } else {
-            return IndexedStack(
+            body: IndexedStack(
               index: _selectedIndex,
               children: widgetOptions,
-            );
-          }
-        },
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        currentIndex: _selectedIndex,
-        onTap: (index) {
-          setState(() {
-            _selectedIndex = index;
-          });
-        },
-        selectedItemColor: Colors.black,
-        unselectedItemColor: Colors.grey,
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.people),
-            label: 'Students',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.add),
-            label: 'Post',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.notifications),
-            label: 'Notification',
-          ),
-        ],
-      ),
+            ),
+            bottomNavigationBar: BottomNavigationBar(
+              type: BottomNavigationBarType.fixed,
+              currentIndex: _selectedIndex,
+              onTap: (index) {
+                setState(() {
+                  _selectedIndex = index;
+                });
+              },
+              selectedItemColor: Colors.black,
+              unselectedItemColor: Colors.grey,
+              items: [
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.home),
+                  label: 'Home',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.people),
+                  label: 'Students',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.add),
+                  label: 'Post',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.notifications),
+                  label: 'Notification',
+                ),
+              ],
+            ),
+          );
+        }
+      },
     );
   }
 }

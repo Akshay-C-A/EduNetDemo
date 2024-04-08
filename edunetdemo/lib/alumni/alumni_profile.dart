@@ -195,12 +195,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               onSelectionChanged: updateSelected,
                             ),
                           ),
+                          SizedBox(height: width * 0.08),
                           if (_selectedButton.contains('Details'))
                             Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                SkillsSection(skills: widget.alumni.skills),
-                                // EmailSection(email: widget.alumni.email),
                                 CompanySection(company: widget.alumni.company),
+                                SizedBox(height: width * 0.08),
+                                SkillsSection(skills: widget.alumni.skills),
                               ],
                             )
                           else
@@ -303,30 +305,29 @@ class SkillsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Skills',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 18,
-            ),
+    var height = MediaQuery.of(context).size.height;
+    var width = MediaQuery.of(context).size.width;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Skills',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 18,
           ),
-          SizedBox(height: 5),
-          Wrap(
-            spacing: 8.0,
-            runSpacing: 8.0,
-            children: skills
-                .map((skill) => Chip(
-                      label: Text(skill),
-                    ))
-                .toList(),
-          ),
-        ],
-      ),
+        ),
+        SizedBox(height: 5),
+        Wrap(
+          spacing: 8.0,
+          runSpacing: 8.0,
+          children: skills
+              .map((skill) => Chip(
+                    label: Text(skill),
+                  ))
+              .toList(),
+        ),
+      ],
     );
   }
 }
@@ -372,27 +373,26 @@ class CompanySection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Company',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 18,
-            ),
+    var height = MediaQuery.of(context).size.height;
+    var width = MediaQuery.of(context).size.width;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Text(
+          'Company',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 18,
           ),
-          SizedBox(height: 5),
-          Text(
-            company,
-            style: TextStyle(
-              fontSize: 16,
-            ),
+        ),
+        SizedBox(height: 5),
+        Text(
+          company,
+          style: TextStyle(
+            fontSize: 16,
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
@@ -421,75 +421,66 @@ class PostsSection extends StatefulWidget {
 class _PostsSectionState extends State<PostsSection> {
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Posts',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 18,
-            ),
+    var height = MediaQuery.of(context).size.height;
+    var width = MediaQuery.of(context).size.width;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        StreamBuilder<QuerySnapshot>(
+          stream: widget.firestoreService.getAlumniProfilePosts(
+            alumniId: widget.alumniId,
           ),
-          SizedBox(height: 20),
-          StreamBuilder<QuerySnapshot>(
-            stream: widget.firestoreService.getAlumniProfilePosts(
-              alumniId: widget.alumniId,
-            ),
-            builder: (context, snapshot) {
-              if (snapshot.hasError) {
-                return Text('Error: ${snapshot.error}');
-              }
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return Text('Error: ${snapshot.error}');
+            }
 
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(child: CircularProgressIndicator());
-              }
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            }
 
-              if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                return Center(child: Text('No data available'));
-              }
+            if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+              return Center(child: Text('No data available'));
+            }
 
-              List alumniProfilePostList = snapshot.data!.docs;
-              return GridView.builder(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
-                  crossAxisSpacing: 2.0,
-                  mainAxisSpacing: 2.0,
-                ),
-                itemCount: alumniProfilePostList.length,
-                itemBuilder: (BuildContext context, int index) {
-                  // Get each individual doc
-                  DocumentSnapshot document = alumniProfilePostList[index];
-                  // String docID = document.id;
+            List alumniProfilePostList = snapshot.data!.docs;
+            return GridView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+                crossAxisSpacing: 2.0,
+                mainAxisSpacing: 2.0,
+              ),
+              itemCount: alumniProfilePostList.length,
+              itemBuilder: (BuildContext context, int index) {
+                // Get each individual doc
+                DocumentSnapshot document = alumniProfilePostList[index];
+                // String docID = document.id;
 
-                  // Get note from each doc
-                  Map<String, dynamic> data =
-                      document.data() as Map<String, dynamic>;
-                  String? imgURL = data['imageURL'];
+                // Get note from each doc
+                Map<String, dynamic> data =
+                    document.data() as Map<String, dynamic>;
+                String? imgURL = data['imageURL'];
 
-                  // Delete post function
-                  void deletePost() {
-                    setState(() {
-                      alumniProfilePostList.removeAt(index);
-                    });
-                  }
+                // Delete post function
+                void deletePost() {
+                  setState(() {
+                    alumniProfilePostList.removeAt(index);
+                  });
+                }
 
-                  return ProfileSquarePost(
-                    imageURL: imgURL ?? '',
-                    postId: document.id,
-                    alumniId: widget.alumniId,
-                    isView: widget.isView,
-                  );
-                },
-              );
-            },
-          ),
-        ],
-      ),
+                return ProfileSquarePost(
+                  imageURL: imgURL ?? '',
+                  postId: document.id,
+                  alumniId: widget.alumniId,
+                  isView: widget.isView,
+                );
+              },
+            );
+          },
+        ),
+      ],
     );
   }
 }

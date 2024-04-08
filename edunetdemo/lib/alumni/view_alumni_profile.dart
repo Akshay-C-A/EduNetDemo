@@ -232,12 +232,14 @@ class _ViewProfileState extends State<ViewProfile> {
                                 onSelectionChanged: updateSelected,
                               ),
                             ),
+                            SizedBox(height: width * 0.08),
                             if (_selectedButton.contains('Details'))
                               Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  SkillsSection(skills: skills),
-                                  // EmailSection(email: widget.alumni.email),
                                   CompanySection(company: company),
+                                  SizedBox(height: width * 0.08),
+                                  SkillsSection(skills: skills),
                                 ],
                               )
                             else
