@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'package:edunetdemo/alumni/view_alumni_profile.dart';
+import 'package:flutter/widgets.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:edunetdemo/services/firestore.dart';
@@ -135,9 +137,18 @@ class _AlumniPostCardState extends State<AlumniPostCard> {
                     children: [
                       Row(
                         children: [
-                          CircleAvatar(
-                            radius: 20,
-                            backgroundImage: NetworkImage(widget.dpURL),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => ViewProfile(
+                                          alumniId: widget.alumnId)));
+                            },
+                            child: CircleAvatar(
+                              radius: 20,
+                              backgroundImage: NetworkImage(widget.dpURL),
+                            ),
                           ),
                           SizedBox(width: 10),
                           Column(
