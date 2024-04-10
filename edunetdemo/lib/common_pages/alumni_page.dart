@@ -7,10 +7,7 @@ import 'package:edunetdemo/services/firestore.dart';
 import 'package:flutter/material.dart';
 
 class AlumniPage extends StatefulWidget {
-  final Alumni alumni;
-  // const AlumniPage({super.key});
-  const AlumniPage({super.key, required this.alumni});
-
+  const AlumniPage({super.key});
   @override
   State<AlumniPage> createState() => _AlumniPageState();
 }
@@ -71,7 +68,7 @@ class _AlumniPageState extends State<AlumniPage> {
                 caption: caption,
                 description: description,
                 imageURL: imgURL ?? '',
-                dpURL : dpURL ?? '',
+                dpURL: dpURL ?? '',
                 postId: document.id,
                 likes: List<String>.from(data['likes'] ?? []),
               );

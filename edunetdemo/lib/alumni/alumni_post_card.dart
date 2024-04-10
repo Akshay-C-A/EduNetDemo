@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:edunetdemo/alumni/view_alumni_profile.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/widgets.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -183,8 +184,8 @@ class _AlumniPostCardState extends State<AlumniPostCard> {
                       ),
                       // Container for displaying post type
                       Container(
-                        padding: EdgeInsets.symmetric(
-                            vertical: 5, horizontal: 10),
+                        padding:
+                            EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                         decoration: BoxDecoration(
                           color: getButtonColor(widget.type),
                           borderRadius: BorderRadius.circular(15),
@@ -254,52 +255,74 @@ class _AlumniPostCardState extends State<AlumniPostCard> {
                         ),
                       ],
                     ),
-                    IconButton(
-                      icon: Icon(Icons.send),
-                      onPressed: () async {
-                        // Create a temporary file to store the image
-                        final tempDir = await getTemporaryDirectory();
-                        final tempFile =
-                            File('${tempDir.path}/shared_image.jpg');
+                    Column(
+                      children: [
+                        GestureDetector(
+                          child: Icon(Icons.send),
+                          onTap: () async {
+                            // Create a temporary file to store the image
+                            final tempDir = await getTemporaryDirectory();
+                            final tempFile =
+                                File('${tempDir.path}/shared_image.jpg');
 
-                        // Download the image to the temporary file
-                        var response =
-                            await http.get(Uri.parse(widget.imageURL));
-                        await tempFile.writeAsBytes(response.bodyBytes);
+                            // Download the image to the temporary file
+                            var response =
+                                await http.get(Uri.parse(widget.imageURL));
+                            await tempFile.writeAsBytes(response.bodyBytes);
 
-                        // Share the image and other details
-                        await Share.shareXFiles(
-                          [XFile(tempFile.path)],
-                          text:
-                              '${widget.alumniName} shared a post:\n\n${widget.caption}\n\n${widget.description}',
-                        );
-                      },
+                            // Share the image and other details
+                            await Share.shareXFiles(
+                              [XFile(tempFile.path)],
+                              text:
+                                  '${widget.alumniName} shared a post:\n\n${widget.caption}\n\n${widget.description}',
+                            );
+                          },
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Text(
+                          'Share',
+                          style: TextStyle(color: Colors.grey),
+                        ),
+                      ],
                     ),
-                    IconButton(
-                      icon: Icon(Icons.bookmark_border),
-                      onPressed: () async {
-                        // Check and request storage permission
-                        PermissionStatus status =
-                            await Permission.storage.request();
-                        if (status.isGranted) {
-                          // Download the image to the gallery
-                          await _downloadImageToGallery(widget.imageURL);
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('Image downloaded to gallery'),
-                              duration: Duration(seconds: 2),
-                            ),
-                          );
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content:
-                                  Text('Permission denied to access storage'),
-                              duration: Duration(seconds: 2),
-                            ),
-                          );
-                        }
-                      },
+                    Column(
+                      children: [
+                        GestureDetector(
+                          child: Icon(Icons.bookmark_border),
+                          onTap: () async {
+                            // Check and request storage permission
+                            PermissionStatus status =
+                                await Permission.storage.request();
+                            if (status.isGranted) {
+                              // Download the image to the gallery
+                              await _downloadImageToGallery(widget.imageURL);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('Image downloaded to gallery'),
+                                  duration: Duration(seconds: 2),
+                                ),
+                              );
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                      'Permission denied to access storage'),
+                                  duration: Duration(seconds: 2),
+                                ),
+                              );
+                            }
+                          },
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Text(
+                          'Save',
+                          style: TextStyle(color: Colors.grey),
+                        ),
+                      ],
                     ),
                   ],
                 ),
