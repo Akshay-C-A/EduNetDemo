@@ -174,9 +174,6 @@ class _MainPageState extends State<MainPage> {
             return AdminDashboard();
           } else {
             FirebaseAuth.instance.signOut();
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Mail Id not allowed !')),
-            );
             return LoginPage();
           }
         } else {
