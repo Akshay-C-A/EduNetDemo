@@ -68,37 +68,45 @@ class _MainPageState extends State<MainPage> {
               child: CircularProgressIndicator(),
             );
           } else if (snapshot.hasData && snapshot.data != null) {
-            // User is logged in, check if their email is in the Firestore database
-            final userMail = FirebaseAuth.instance.currentUser!.email;
-            String userType = checkEmailPattern(userMail!);
-            if (userType == 'Student') {
-              return Student_Dashboard();
-            } else if (userType == 'Alumni') {
-              return FutureBuilder(
-                future: _firestoreService.isFirstTime(userMail),
-                builder: (context, asnapshot) {
-                  if (asnapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  } else if (asnapshot.hasError) {
-                    return Center(
-                      child: Text('Error: ${asnapshot.error}'),
-                    );
-                  } else if (asnapshot.data == true) {
-                    return const ProfileForm();
-                  } else {
-                    return const Alumni_Dashboard();
-                  }
-                },
-              );
-            } else if (userType == 'Admin') {
+              // User is logged in, check if their email is in the Firestore database
+              final userMail = FirebaseAuth.instance.currentUser!.email;
+              String userType = checkEmailPattern(userMail!);
+
+              if (userType == 'Student') {
+                return Student_Dashboard();
+              } 
+              else if (userType == 'Alumni') {
+                return FutureBuilder(
+                  future: _firestoreService.isFirstTime(userMail),
+                  builder: (context, asnapshot) {
+                    if (asnapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    } 
+                    else if (asnapshot.hasError) {
+                      return Center(
+                        child: Text('Error: ${asnapshot.error}'),
+                      );
+                    } 
+                    else if (asnapshot.data == true) {
+                      return const ProfileForm();
+                    } 
+                    else {
+                      return const Alumni_Dashboard();
+                    }
+                  },
+                );
+            } 
+            else if (userType == 'Admin') {
               return AdminDashboard();
-            } else {
+            } 
+            else {
               FirebaseAuth.instance.signOut();
               return LoginPage();
             }
-          } else {
+          } 
+          else {
             // User is not logged in, navigate to the LoginPage
             return LoginPage();
           }
