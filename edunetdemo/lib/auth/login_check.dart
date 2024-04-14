@@ -1,3 +1,120 @@
+import 'package:edunetdemo/admin/admin_dashboard.dart';
+import 'package:edunetdemo/alumni/alumni_dashboard.dart';
+import 'package:edunetdemo/auth/login_page.dart';
+import 'package:edunetdemo/auth/profile_form.dart';
+import 'package:edunetdemo/student/student_dashboard.dart';
+import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:edunetdemo/services/firestore.dart';
+
+class MainPage extends StatefulWidget {
+  const MainPage({super.key});
+
+  @override
+  State<MainPage> createState() => _MainPageState();
+}
+
+class _MainPageState extends State<MainPage> {
+  FirestoreService _firestoreService = FirestoreService();
+
+  String checkEmailPattern(String email) {
+    final currentYear = DateTime.now().year;
+    // Pattern for emails with @cs.sjcetpalai.ac.in
+    final sjcetPattern = RegExp(r'\b\w+@cs\.sjcetpalai\.ac\.in\b');
+    // Pattern for emails with @edunet.in
+    final edunetPattern = RegExp(r'\b\w+@edunet\.com\b');
+
+    if (sjcetPattern.hasMatch(email)) {
+      return checkYearPattern(email, currentYear);
+    } else if (edunetPattern.hasMatch(email)) {
+      return 'Admin';
+    } else {
+      return 'null';
+    }
+  }
+
+  String checkYearPattern(String email, int currentYear) {
+    // Pattern for emails with year (e.g. 2025) before @cs.sjcetpalai.ac.in
+    final yearPattern = RegExp(r'\b\w+(\d{4})@cs\.sjcetpalai\.ac\.in\b');
+
+    final match = yearPattern.firstMatch(email);
+    if (match != null) {
+      final emailYear = int.parse(match.group(1)!);
+      if (emailYear >= currentYear) {
+        return 'Student';
+      } else {
+        return 'Alumni';
+      }
+    } else {
+      return 'null';
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    FirebaseAuth.instance.authStateChanges();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: StreamBuilder(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: ((context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (snapshot.hasData && snapshot.data != null) {
+            // User is logged in, check if their email is in the Firestore database
+            final userMail = FirebaseAuth.instance.currentUser!.email;
+            String userType = checkEmailPattern(userMail!);
+            if (userType == 'Student') {
+              return Student_Dashboard();
+            } else if (userType == 'Alumni') {
+              return FutureBuilder(
+                future: _firestoreService.isFirstTime(userMail),
+                builder: (context, asnapshot) {
+                  if (asnapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else if (asnapshot.hasError) {
+                    return Center(
+                      child: Text('Error: ${asnapshot.error}'),
+                    );
+                  } else if (asnapshot.data == true) {
+                    return const ProfileForm();
+                  } else {
+                    return const Alumni_Dashboard();
+                  }
+                },
+              );
+            } else if (userType == 'Admin') {
+              return AdminDashboard();
+            } else {
+              FirebaseAuth.instance.signOut();
+              return LoginPage();
+            }
+          } else {
+            // User is not logged in, navigate to the LoginPage
+            return LoginPage();
+          }
+        }),
+      ),
+    );
+  }
+}
+
+
+
+
+
+
+
+
 // import 'package:edunetdemo/alumni/alumni_dashboard.dart';
 // import 'package:edunetdemo/auth/profile_form.dart';
 // import 'package:flutter/material.dart';
@@ -40,14 +157,8 @@
 
 //profile_check.dart
 
-import 'package:edunetdemo/admin/admin_dashboard.dart';
-import 'package:edunetdemo/alumni/alumni_dashboard.dart';
-import 'package:edunetdemo/auth/login_page.dart';
-import 'package:edunetdemo/auth/profile_form.dart';
-import 'package:edunetdemo/student/student_dashboard.dart';
-import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:edunetdemo/services/firestore.dart';
+
+
 
 // class MainPage extends StatefulWidget {
 //   const MainPage({super.key});
@@ -103,88 +214,3 @@ import 'package:edunetdemo/services/firestore.dart';
 //     );
 //   }
 // }
-
-class MainPage extends StatefulWidget {
-  const MainPage({super.key});
-
-  @override
-  State<MainPage> createState() => _MainPageState();
-}
-
-class _MainPageState extends State<MainPage> {
-  String checkEmailPattern(String email) {
-    final currentYear = DateTime.now().year;
-    // Pattern for emails with @cs.sjcetpalai.ac.in
-    final sjcetPattern = RegExp(r'\b\w+@cs\.sjcetpalai\.ac\.in\b');
-    // Pattern for emails with @edunet.in
-    final edunetPattern = RegExp(r'\b\w+@edunet\.com\b');
-
-    if (sjcetPattern.hasMatch(email)) {
-      return checkYearPattern(email, currentYear);
-    } else if (edunetPattern.hasMatch(email)) {
-      return 'Admin';
-    } else {
-      return 'null';
-    }
-  }
-
-  String checkYearPattern(String email, int currentYear) {
-    // Pattern for emails with year (e.g. 2025) before @cs.sjcetpalai.ac.in
-    final yearPattern = RegExp(r'\b\w+(\d{4})@cs\.sjcetpalai\.ac\.in\b');
-
-    final match = yearPattern.firstMatch(email);
-    if (match != null) {
-      final emailYear = int.parse(match.group(1)!);
-      if (emailYear >= currentYear) {
-        return 'Student';
-      } else {
-        return 'Alumni';
-      }
-    } else {
-      return 'null';
-    }
-  }
-
-  @override
-  void initState(){
-    // TODO: implement initState
-    super.initState();
-    FirebaseAuth.instance.authStateChanges();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-  return Scaffold(
-    body: StreamBuilder(
-      stream: FirebaseAuth.instance.authStateChanges(),
-      builder: ((context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        } else if (snapshot.hasData && snapshot.data != null) {
-          // User is logged in, check if their email is in the Firestore database
-          final userMail = FirebaseAuth.instance.currentUser!.email;
-          String userType = checkEmailPattern(userMail!);
-          if (userType == 'Student') {
-            return Student_Dashboard();
-          } else if (userType == 'Alumni') {
-            return Alumni_Dashboard();
-          } else if (userType == 'Admin') {
-            return AdminDashboard();
-          } else {
-            FirebaseAuth.instance.signOut();
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Mail Id not allowed !')),
-            );
-            return LoginPage();
-          }
-        } else {
-          // User is not logged in, navigate to the LoginPage
-          return LoginPage();
-        }
-      }),
-    ),
-  );
-}
-}

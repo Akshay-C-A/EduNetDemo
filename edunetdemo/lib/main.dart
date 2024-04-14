@@ -8,15 +8,11 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'firebase_options.dart';
 
-
-
-
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  
   await Permission.photos.request();
   await Permission.storage.request();
-
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
