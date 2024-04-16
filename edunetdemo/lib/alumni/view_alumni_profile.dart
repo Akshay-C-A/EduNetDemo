@@ -1,6 +1,7 @@
 import 'package:edunetdemo/alumni/alumni_profile.dart';
 import 'package:edunetdemo/services/firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class ViewProfile extends StatefulWidget {
   final String alumniId;
@@ -83,6 +84,39 @@ class _ViewProfileState extends State<ViewProfile> {
     setState(() {
       _selectedButton = newSelection;
     });
+  }
+
+  void _copyLinkedIn() {
+    Clipboard.setData(ClipboardData(
+        text: linkedIn.toString())); // Replace with your desired link
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Link copied to clipboard'),
+        duration: Duration(seconds: 2),
+      ),
+    );
+  }
+
+  void _copyMail() {
+    Clipboard.setData(
+        ClipboardData(text: mail.toString())); // Replace with your desired link
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Link copied to clipboard'),
+        duration: Duration(seconds: 2),
+      ),
+    );
+  }
+
+  void _copyTwitter() {
+    Clipboard.setData(ClipboardData(
+        text: twitter.toString())); // Replace with your desired link
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Link copied to clipboard'),
+        duration: Duration(seconds: 2),
+      ),
+    );
   }
 
   @override
@@ -198,23 +232,26 @@ class _ViewProfileState extends State<ViewProfile> {
                                       MainAxisAlignment.spaceAround,
                                   children: [
                                     IconButton(
-                                        onPressed: () {},
-                                        icon: Icon(
-                                          Icons.phone,
-                                          size: 30,
-                                        )),
+                                      onPressed: _copyLinkedIn,
+                                      icon: Image.asset(
+                                        'assets/Linkedin.png',
+                                        width: 25,
+                                      ),
+                                    ),
                                     IconButton(
-                                        onPressed: () {},
-                                        icon: Icon(
-                                          Icons.email,
-                                          size: 30,
-                                        )),
+                                      onPressed: _copyMail,
+                                      icon: Image.asset(
+                                        'assets/Mail.png',
+                                        width: 30,
+                                      ),
+                                    ),
                                     IconButton(
-                                        onPressed: () {},
-                                        icon: Icon(
-                                          Icons.location_on,
-                                          size: 30,
-                                        )),
+                                      onPressed: _copyTwitter,
+                                      icon: Image.asset(
+                                        'assets/X.png',
+                                        width: 25,
+                                      ),
+                                    ),
                                   ],
                                 ),
                               ],

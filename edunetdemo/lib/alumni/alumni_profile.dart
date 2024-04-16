@@ -7,6 +7,7 @@ import 'package:edunetdemo/auth/profile_form.dart';
 import 'package:edunetdemo/services/firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class ProfileScreen extends StatefulWidget {
   final Alumni alumni;
@@ -24,6 +25,41 @@ class _ProfileScreenState extends State<ProfileScreen> {
     setState(() {
       _selectedButton = newSelection;
     });
+  }
+
+  void _copyLinkedIn() {
+    Clipboard.setData(ClipboardData(
+        text: widget.alumni.linkedIn
+            .toString())); // Replace with your desired link
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Link copied to clipboard'),
+        duration: Duration(seconds: 2),
+      ),
+    );
+  }
+
+  void _copyMail() {
+    Clipboard.setData(ClipboardData(
+        text: widget.alumni.mail.toString())); // Replace with your desired link
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Link copied to clipboard'),
+        duration: Duration(seconds: 2),
+      ),
+    );
+  }
+
+  void _copyTwitter() {
+    Clipboard.setData(ClipboardData(
+        text: widget.alumni.twitter
+            .toString())); // Replace with your desired link
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Link copied to clipboard'),
+        duration: Duration(seconds: 2),
+      ),
+    );
   }
 
   @override
@@ -161,23 +197,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     MainAxisAlignment.spaceAround,
                                 children: [
                                   IconButton(
-                                      onPressed: () {},
-                                      icon: Icon(
-                                        Icons.phone,
-                                        size: 30,
-                                      )),
+                                    onPressed: _copyLinkedIn,
+                                    icon: Image.asset(
+                                      'assets/Linkedin.png',
+                                      width: 25,
+                                    ),
+                                  ),
                                   IconButton(
-                                      onPressed: () {},
-                                      icon: Icon(
-                                        Icons.email,
-                                        size: 30,
-                                      )),
+                                    onPressed: _copyMail,
+                                    icon: Image.asset(
+                                      'assets/Mail.png',
+                                      width: 30,
+                                    ),
+                                  ),
                                   IconButton(
-                                      onPressed: () {},
-                                      icon: Icon(
-                                        Icons.location_on,
-                                        size: 30,
-                                      )),
+                                    onPressed: _copyTwitter,
+                                    icon: Image.asset(
+                                      'assets/X.png',
+                                      width: 25,
+                                    ),
+                                  ),
                                 ],
                               ),
                             ],
@@ -223,79 +262,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 }
-
-// class UserInfoSection extends StatelessWidget {
-//   final Alumni alumni;
-
-//   UserInfoSection({required this.alumni});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     Color color2566be = Color(0xFF2566BE);
-//     LinearGradient gradient = LinearGradient(
-//       begin: Alignment.topLeft,
-//       end: Alignment.bottomRight,
-//       colors: [
-//         color2566be.withOpacity(0.5),
-//         color2566be,
-//       ],
-//     );
-
-//     return Container(
-//       padding: EdgeInsets.all(16.0),
-//       decoration: BoxDecoration(
-//         gradient: gradient,
-//       ),
-//       child: Row(
-//         crossAxisAlignment: CrossAxisAlignment.start,
-//         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//         children: [
-//           CircleAvatar(
-//             radius: 60,
-//             // backgroundImage: AssetImage('assets/profile_photo.jpg'),
-//           ),
-//           SizedBox(width: 20),
-//           Expanded(
-//             child: Column(
-//               crossAxisAlignment: CrossAxisAlignment.start,
-//               children: [
-//                 Text(
-//                   alumni.alumni_name,
-//                   style: TextStyle(
-//                     fontWeight: FontWeight.bold,
-//                     color: Colors.white,
-//                     fontSize: 24,
-//                   ),
-//                 ),
-//                 SizedBox(height: 10),
-//                 Text(
-//                   alumni.alumni_designation,
-//                   style: TextStyle(fontSize: 18, color: Colors.white),
-//                 ),
-//                 SizedBox(height: 10),
-//                 Text(
-//                   'Posts: 100',
-//                   style: TextStyle(fontSize: 18, color: Colors.white),
-//                 ),
-//               ],
-//             ),
-//           ),
-//           IconButton(
-//             onPressed: () {
-//               Navigator.push(
-//                 context,
-//                 MaterialPageRoute(
-//                   builder: (context) => EditProfileForm(),
-//                 ),
-//               );
-//             },
-//             icon: Icon(Icons.edit),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
 
 // SkillsSection
 class SkillsSection extends StatelessWidget {
