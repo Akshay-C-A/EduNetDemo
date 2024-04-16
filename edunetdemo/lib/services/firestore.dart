@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import '../alumni/alumni_dashboard.dart';
 
@@ -6,30 +7,53 @@ class FirestoreService {
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Future<Alumni?> getAlumniByEmail(String email) async {
-    final alumniSnapshot = await _firestore.collection('alumni')
-        .where('alumniMail', isEqualTo: email)
-        .limit(1)
-        .get();
+  // Future<Alumni?> getAlumniByEmail(String email) async {
+  //   final alumniSnapshot = await _firestore
+  //       .collection('alumni')
+  //       .where('alumniMail', isEqualTo: email)
+  //       .limit(1)
+  //       .get();
 
-    if (alumniSnapshot.docs.isNotEmpty) {
-      final alumniData = alumniSnapshot.docs.first.data();
-      return Alumni(
-        alumniId: alumniData['alumniMail'],
-        alumni_name: alumniData['alumniName'],
-        alumni_designation: alumniData['alumniDesignation'],
-        skills: alumniData['skills'].cast<String>(),
-        about: alumniData['about'],
-        company: alumniData['company'],
-        linkedIn: alumniData['linkedIn'],
-        twitter: alumniData['twitter'],
-        mail: alumniData['mail'],
-        dpURL: alumniData['dpURL'],
-      );
+  //   if (alumniSnapshot.docs.isNotEmpty) {
+  //     final alumniData = alumniSnapshot.docs.first.data();
+  //     return Alumni(
+  //       alumniId: alumniData['alumniMail'],
+  //       alumni_name: alumniData['alumniName'],
+  //       alumni_designation: alumniData['alumniDesignation'],
+  //       skills: alumniData['skills'].cast<String>(),
+  //       about: alumniData['about'],
+  //       company: alumniData['company'],
+  //       linkedIn: alumniData['linkedIn'],
+  //       twitter: alumniData['twitter'],
+  //       mail: alumniData['mail'],
+  //       dpURL: alumniData['dpURL'],
+  //     );
+  //   } else {
+  //     return null;
+  //   }
+  // }
+
+  // Future<bool> isFirstTime(String email) async {
+  //   DocumentReference isUser = alumni.doc(email);
+
+  //   try {
+  //     DocumentSnapshot doc = await isUser.get();
+  //     return doc.exists;
+  //   } catch (error) {
+  //     print('Error getting document: $error');
+  //     rethrow;
+  //   }
+  // }
+
+  Future<bool> isFirstTime(String? email) async {
+    if (email != null) {
+      final user = await FirebaseAuth.instance.userChanges().first;
+      return user?.displayName == null;
     } else {
-      return null;
+      return false;
     }
   }
+
 //----------------------------------------------------------------------------------------------------------------
 // ALUMNI SECTION
 
@@ -39,7 +63,6 @@ class FirestoreService {
   // get collection of alumni_posts
   final CollectionReference alumni =
       FirebaseFirestore.instance.collection('alumni');
-  // final DocumentReference internship_offers = alumni_post.doc('internship_offers');
 
 //To add alumni details
   Future<void> addAlumni({
@@ -78,7 +101,6 @@ class FirestoreService {
     return postSnapshot;
   }
 
-
 // To add alumni post data from form to alumni and alumniPosts
   Future<void> addAlumniPosts({
     required String type,
@@ -99,7 +121,7 @@ class FirestoreService {
       'caption': caption,
       'description': description,
       'imageURL': imageURL,
-      'dpURL' : dpURL,
+      'dpURL': dpURL,
       'likes': [],
       'timestamp': Timestamp.now(),
     });

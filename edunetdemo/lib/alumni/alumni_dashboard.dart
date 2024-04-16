@@ -117,19 +117,7 @@ class _Alumni_DashboardState extends State<Alumni_Dashboard> {
   @override
   Widget build(BuildContext context) {
     List<Widget> widgetOptions = <Widget>[
-      AlumniPage(
-          alumni: Alumni(
-        alumni_name: alumni_name,
-        alumniId: alumniId,
-        alumni_designation: alumni_designation,
-        skills: skills,
-        about: about,
-        company: company,
-        linkedIn: linkedIn,
-        twitter: twitter,
-        mail: mail,
-        dpURL: dpURL,
-      )),
+      AlumniPage(),
       StudentPage(),
       AlumniNewPostPage(
           alumni: Alumni(

@@ -113,6 +113,8 @@ class _ProfileFormState extends State<ProfileForm> {
       mail: _link3Controller.text,
     );
 
+    await FirebaseAuth.instance.currentUser!.updateDisplayName(_nameController.text);
+
     setState(() {
       _isLoading = false;
     });

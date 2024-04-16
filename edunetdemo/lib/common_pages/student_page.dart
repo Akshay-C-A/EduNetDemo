@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:edunetdemo/services/firestore.dart';
 import 'package:edunetdemo/student/student_post_card.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class StudentPage extends StatefulWidget {
@@ -19,8 +20,18 @@ class StudentPageState extends State<StudentPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Text('Posts from students will be shown here.'),
-      )
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('Student Dashboard'),
+            ElevatedButton(
+                onPressed: () {
+                  FirebaseAuth.instance.signOut();
+                },
+                child: Text('SignOut'))
+          ],
+        ),
+      ),
       // body: Text('Student Page'),
 
       // body: StreamBuilder<QuerySnapshot>(
