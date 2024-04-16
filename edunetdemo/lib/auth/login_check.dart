@@ -6,6 +6,7 @@ import 'package:edunetdemo/student/student_dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:edunetdemo/services/firestore.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -57,6 +58,13 @@ class _MainPageState extends State<MainPage> {
     FirebaseAuth.instance.authStateChanges();
   }
 
+  //signout
+    Future<void> _signOutUser() async {
+  final googleSignIn = GoogleSignIn();
+  await googleSignIn.signOut();
+  await FirebaseAuth.instance.signOut();
+}
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -100,9 +108,21 @@ class _MainPageState extends State<MainPage> {
             } 
             else if (userType == 'Admin') {
               return AdminDashboard();
-            } 
-            else {
-              FirebaseAuth.instance.signOut();
+//             } else {
+//               FirebaseAuth.instance.signOut();
+//               return LoginPage();
+//             }
+//           } else {
+//             // User is not logged in, navigate to the LoginPage
+//             return LoginPage();
+//           }
+//         }),
+//       ),
+//     );
+//   }
+// }
+            } else {
+              _signOutUser();
               return LoginPage();
             }
           } 
@@ -115,7 +135,6 @@ class _MainPageState extends State<MainPage> {
     );
   }
 }
-
 
 
 
