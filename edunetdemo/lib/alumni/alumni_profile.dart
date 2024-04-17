@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:edunetdemo/alumni/alumni_dashboard.dart';
 import 'package:edunetdemo/alumni/alumni_edit-profile.dart';
-import 'package:edunetdemo/alumni/alumni_post_card.dart';
 import 'package:edunetdemo/auth/login_check.dart';
 import 'package:edunetdemo/auth/profile_form.dart';
 import 'package:edunetdemo/services/firestore.dart';
@@ -27,33 +26,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
     });
   }
 
-  void _copyLinkedIn() {
-    Clipboard.setData(ClipboardData(
-        text: widget.alumni.linkedIn
-            .toString())); // Replace with your desired link
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Link copied to clipboard'),
-        duration: Duration(seconds: 2),
-      ),
-    );
-  }
-
-  void _copyMail() {
-    Clipboard.setData(ClipboardData(
-        text: widget.alumni.mail.toString())); // Replace with your desired link
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Link copied to clipboard'),
-        duration: Duration(seconds: 2),
-      ),
-    );
-  }
-
-  void _copyTwitter() {
-    Clipboard.setData(ClipboardData(
-        text: widget.alumni.twitter
-            .toString())); // Replace with your desired link
+  void _copyLink(String iconB) {
+    if (iconB == 'LinkedIn') {
+      Clipboard.setData(ClipboardData(text: widget.alumni.linkedIn.toString()));
+    } else if (iconB == 'Twitter') {
+      Clipboard.setData(ClipboardData(text: widget.alumni.twitter.toString()));
+    } else if (iconB == 'Mail') {
+      Clipboard.setData(ClipboardData(text: widget.alumni.mail.toString()));
+    }
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Link copied to clipboard'),
@@ -197,21 +177,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     MainAxisAlignment.spaceAround,
                                 children: [
                                   IconButton(
-                                    onPressed: _copyLinkedIn,
+                                    onPressed: () {
+                                      _copyLink('LinkedIn');
+                                    },
                                     icon: Image.asset(
                                       'assets/Linkedin.png',
                                       width: 25,
                                     ),
                                   ),
                                   IconButton(
-                                    onPressed: _copyMail,
+                                    onPressed: () {
+                                      _copyLink('Mail');
+                                    },
                                     icon: Image.asset(
                                       'assets/Mail.png',
                                       width: 30,
                                     ),
                                   ),
                                   IconButton(
-                                    onPressed: _copyTwitter,
+                                    onPressed: () {
+                                      _copyLink('Twitter');
+                                    },
                                     icon: Image.asset(
                                       'assets/X.png',
                                       width: 25,

@@ -2,6 +2,7 @@ import 'package:edunetdemo/admin/admin_dashboard.dart';
 import 'package:edunetdemo/alumni/alumni_dashboard.dart';
 import 'package:edunetdemo/auth/login_page.dart';
 import 'package:edunetdemo/auth/profile_form.dart';
+import 'package:edunetdemo/event/event_dashboard.dart';
 import 'package:edunetdemo/student/student_dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -23,12 +24,15 @@ class _MainPageState extends State<MainPage> {
     // Pattern for emails with @cs.sjcetpalai.ac.in
     final sjcetPattern = RegExp(r'\b\w+@cs\.sjcetpalai\.ac\.in\b');
     // Pattern for emails with @edunet.in
-    final edunetPattern = RegExp(r'\b\w+@edunet\.com\b');
+    final edunetAdminPattern = RegExp(r'\b\w+@admin\.edunet\.com\b');
+    final edunetModPattern = RegExp(r'\b\w+@mod\.edunet\.com\b');
 
     if (sjcetPattern.hasMatch(email)) {
       return checkYearPattern(email, currentYear);
-    } else if (edunetPattern.hasMatch(email)) {
+    } else if (edunetAdminPattern.hasMatch(email)) {
       return 'Admin';
+    } else if (edunetModPattern.hasMatch(email)) {
+      return 'Moderator';
     } else {
       return 'null';
     }
@@ -59,11 +63,11 @@ class _MainPageState extends State<MainPage> {
   }
 
   //signout
-    Future<void> _signOutUser() async {
-  final googleSignIn = GoogleSignIn();
-  await googleSignIn.signOut();
-  await FirebaseAuth.instance.signOut();
-}
+  Future<void> _signOutUser() async {
+    final googleSignIn = GoogleSignIn();
+    await googleSignIn.signOut();
+    await FirebaseAuth.instance.signOut();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -76,57 +80,40 @@ class _MainPageState extends State<MainPage> {
               child: CircularProgressIndicator(),
             );
           } else if (snapshot.hasData && snapshot.data != null) {
-              // User is logged in, check if their email is in the Firestore database
-              final userMail = FirebaseAuth.instance.currentUser!.email;
-              String userType = checkEmailPattern(userMail!);
+            // User is logged in, check if their email is in the Firestore database
+            final userMail = FirebaseAuth.instance.currentUser!.email;
+            String userType = checkEmailPattern(userMail!);
 
-              if (userType == 'Student') {
-                return Student_Dashboard();
-              } 
-              else if (userType == 'Alumni') {
-                return FutureBuilder(
-                  future: _firestoreService.isFirstTime(userMail),
-                  builder: (context, asnapshot) {
-                    if (asnapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    } 
-                    else if (asnapshot.hasError) {
-                      return Center(
-                        child: Text('Error: ${asnapshot.error}'),
-                      );
-                    } 
-                    else if (asnapshot.data == true) {
-                      return const ProfileForm();
-                    } 
-                    else {
-                      return const Alumni_Dashboard();
-                    }
-                  },
-                );
-            } 
-            else if (userType == 'Admin') {
+            if (userType == 'Student') {
+              return Student_Dashboard();
+            } else if (userType == 'Alumni') {
+              return FutureBuilder(
+                future: _firestoreService.isFirstTime(userMail),
+                builder: (context, asnapshot) {
+                  if (asnapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else if (asnapshot.hasError) {
+                    return Center(
+                      child: Text('Error: ${asnapshot.error}'),
+                    );
+                  } else if (asnapshot.data == true) {
+                    return const ProfileForm();
+                  } else {
+                    return const Alumni_Dashboard();
+                  }
+                },
+              );
+            } else if (userType == 'Admin') {
               return AdminDashboard();
-//             } else {
-//               FirebaseAuth.instance.signOut();
-//               return LoginPage();
-//             }
-//           } else {
-//             // User is not logged in, navigate to the LoginPage
-//             return LoginPage();
-//           }
-//         }),
-//       ),
-//     );
-//   }
-// }
+            } else if (userType == 'Moderator') {
+              return EventDashboard();
             } else {
               _signOutUser();
               return LoginPage();
             }
-          } 
-          else {
+          } else {
             // User is not logged in, navigate to the LoginPage
             return LoginPage();
           }
