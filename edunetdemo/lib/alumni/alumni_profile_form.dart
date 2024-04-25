@@ -10,16 +10,16 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as path;
 // import 'package:shared_preferences/shared_preferences.dart';
 
-class ProfileForm extends StatefulWidget {
-  const ProfileForm({
+class AlumniProfileForm extends StatefulWidget {
+  const AlumniProfileForm({
     super.key,
   });
 
   @override
-  State<ProfileForm> createState() => _ProfileFormState();
+  State<AlumniProfileForm> createState() => _AlumniProfileFormState();
 }
 
-class _ProfileFormState extends State<ProfileForm> {
+class _AlumniProfileFormState extends State<AlumniProfileForm> {
   final _AlumniFirestoreService = FirestoreService();
   final currentUser = FirebaseAuth.instance.currentUser;
 

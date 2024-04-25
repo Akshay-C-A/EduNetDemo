@@ -85,7 +85,24 @@ class _MainPageState extends State<MainPage> {
             String userType = checkEmailPattern(userMail!);
 
             if (userType == 'Student') {
-              return Student_Dashboard();
+              return FutureBuilder(
+                future: _firestoreService.isFirstTime(userMail),
+                builder: (context, asnapshot) {
+                  if (asnapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else if (asnapshot.hasError) {
+                    return Center(
+                      child: Text('Error: ${asnapshot.error}'),
+                    );
+                  } else if (asnapshot.data == true) {
+                    return const StudentProfileForm();
+                  } else {
+                    return const Student_Dashboard();
+                  }
+                },
+              );
             } else if (userType == 'Alumni') {
               return FutureBuilder(
                 future: _firestoreService.isFirstTime(userMail),
