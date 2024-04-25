@@ -54,6 +54,8 @@ class FirestoreService {
     }
   }
 
+
+
 //----------------------------------------------------------------------------------------------------------------
 // ALUMNI SECTION
 
@@ -63,6 +65,13 @@ class FirestoreService {
   // get collection of alumni_posts
   final CollectionReference alumni =
       FirebaseFirestore.instance.collection('alumni');
+
+//To get all alumni list
+  Stream<QuerySnapshot> getUserStream() {
+    final userStream =
+        alumni.orderBy('timestamp', descending: true).snapshots();
+    return userStream;
+  }
 
 //To add alumni details
   Future<void> addAlumni({

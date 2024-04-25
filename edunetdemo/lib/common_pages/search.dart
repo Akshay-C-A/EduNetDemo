@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:edunetdemo/alumni/view_alumni_profile.dart';
+import 'package:edunetdemo/services/firestore.dart';
 import 'package:flutter/material.dart';
 
 class SearchPage extends StatefulWidget {
@@ -10,6 +11,7 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
+  FirestoreService _firestoreService = FirestoreService();
   String name = ''.toString();
 
   @override
@@ -30,7 +32,7 @@ class _SearchPageState extends State<SearchPage> {
         ),
       ),
       body: StreamBuilder(
-        stream: FirebaseFirestore.instance.collection('alumni').snapshots(),
+        stream: _firestoreService.getUserStream(),
         builder: (context, snapshots) {
           if (snapshots.connectionState == ConnectionState.waiting) {
             return Center(
