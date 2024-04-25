@@ -1,7 +1,7 @@
 import 'package:edunetdemo/admin/admin_dashboard.dart';
 import 'package:edunetdemo/alumni/alumni_dashboard.dart';
 import 'package:edunetdemo/auth/login_page.dart';
-import 'package:edunetdemo/auth/profile_form.dart';
+import 'package:edunetdemo/alumni/alumni_profile_form.dart';
 import 'package:edunetdemo/event/event_dashboard.dart';
 import 'package:edunetdemo/student/student_dashboard.dart';
 import 'package:flutter/material.dart';

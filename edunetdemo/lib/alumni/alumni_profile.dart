@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:edunetdemo/alumni/alumni_dashboard.dart';
 import 'package:edunetdemo/alumni/alumni_edit-profile.dart';
 import 'package:edunetdemo/auth/login_check.dart';
-import 'package:edunetdemo/auth/profile_form.dart';
+import 'package:edunetdemo/alumni/alumni_profile_form.dart';
 import 'package:edunetdemo/services/firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
