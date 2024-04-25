@@ -274,11 +274,8 @@ class FirestoreService {
       'timestamp': Timestamp.now(),
     });
 
-
-   
-
     //Adding post to student user data
-    DocumentReference StudentId = student.doc(studentId);
+    DocumentReference StudentId = user.doc(studentId);
     return StudentId.collection('posts').doc('$studentId$unique').set({
       'studentId': studentId,
       'studentName': studentName,
@@ -303,7 +300,7 @@ class FirestoreService {
     String? twitter,
     String? mail,
   }) {
-    return student.doc('$studentMail').set({
+    return user.doc('$studentMail').set({
       'studentMail': studentMail,
       'studentId': studentMail,
       'studentName': studentName,
@@ -328,7 +325,7 @@ class FirestoreService {
 
     // Update the post in the student user data
     DocumentReference studentPostRef =
-        student.doc(studentId).collection('posts').doc(postId);
+        user.doc(studentId).collection('posts').doc(postId);
 
     return [studentRef, studentPostRef];
   }
@@ -336,7 +333,7 @@ class FirestoreService {
     required String studentId,
   }) async {
     print(studentId);
-    final postSnapshot = await student.doc(studentId).get();
+    final postSnapshot = await user.doc(studentId).get();
     return postSnapshot;
   }
 
@@ -356,13 +353,13 @@ class FirestoreService {
         .snapshots();
     return studentProfileStream;
   }
-  //To get a single alumni post
+  //To get a single student post
   Future<DocumentSnapshot> getStudentPost({
     required String studentId,
     required String postId,
   }) async {
     print(studentId);
-    final studentRef = student.doc(studentId);
+    final studentRef = user.doc(studentId);
     final postSnapshot = await studentRef.collection('posts').doc(postId).get();
     return postSnapshot;
   }
@@ -373,7 +370,7 @@ class FirestoreService {
   }) async {
     try {
       // Delete the document in student profile
-      await student.doc(studentId).collection('posts').doc(postId).delete();
+      await user.doc(studentId).collection('posts').doc(postId).delete();
       // Delete the post in student_posts
       await student_posts.doc(postId).delete();
 
@@ -398,7 +395,7 @@ class FirestoreService {
     });
 
     // Update the post in the alumni user data
-    DocumentReference studentRef = student.doc(studentId);
+    DocumentReference studentRef = user.doc(studentId);
     await studentRef.collection('posts').doc(postId).update({
       'caption': caption,
       'description': description,
@@ -417,7 +414,7 @@ class FirestoreService {
 
     // Update the post in the student user data
     DocumentReference studentPostRef =
-        student.doc(studentId).collection('posts').doc(postId);
+        user.doc(studentId).collection('posts').doc(postId);
 
     return [studentRef, studentPostRef];
   }
