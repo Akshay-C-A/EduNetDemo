@@ -126,8 +126,7 @@ class _StudentPageState extends State<StudentPage> {
               String studentId = data['studentId'];
               String studentName = data['studentName'];
               String studentDesignation = data['studentDesignation'];
-              String studentDept = data['studentDept']; // Added studentDept
-              String studentYear = data['studentYear']; // Added studentYear
+             
               String caption = data['caption'];
               String description = data['description'];
               String? imgURL = data['imageURL'];

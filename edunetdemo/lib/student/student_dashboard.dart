@@ -73,7 +73,7 @@ class _Student_DashboardState extends State<Student_Dashboard> {
   int _selectedIndex = 0;
 
   Future<void> _fetchDetails() async {
-    //studentId = currentUser!.email!;
+    studentId = currentUser!.email!;
     final postSnapshot = await _firestoreService.getStudent(
       studentId: studentId.toString(),
     );
@@ -110,12 +110,12 @@ class _Student_DashboardState extends State<Student_Dashboard> {
       mail = 'eg';
       dpURL = 'eg';
 
-      // ScaffoldMessenger.of(context).showSnackBar(
-      //   SnackBar(
-      //     content: Text('Account details not found'),
-      //     duration: Duration(seconds: 3),
-      //   ),
-      // );
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Account details not found'),
+          duration: Duration(seconds: 3),
+        ),
+      );
     }
   }
 

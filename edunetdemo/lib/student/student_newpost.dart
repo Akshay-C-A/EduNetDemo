@@ -72,14 +72,14 @@ class _StudentNewPostPageState extends State<StudentNewPostPage> {
     final imageURL = await _uploadImage();
     await _firestoreService.addStudentPosts(
      
-      studentId: '123',
-      studentName: 'John Doe', // Replace with the actual alumni name
+      studentId: widget.student.studentId,
+      studentName:  widget.student.student_name,// Replace with the actual alumni name
       studentDesignation:
-          'Software Engineer', // Replace with the actual alumni designation
+          widget.student.student_designation, // Replace with the actual alumni designation
       caption: _organisationNameController.text,
       description: _detailsController.text,
       imageURL: imageURL,
-      dpURL: ''
+      dpURL: widget.student.dpURL,
     );
     _resetForm();
     // Show a success message or navigate to the home page

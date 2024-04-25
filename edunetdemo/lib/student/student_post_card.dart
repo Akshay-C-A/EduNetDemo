@@ -1,3 +1,4 @@
+import 'package:edunetdemo/student/view_student_profile.dart';
 import 'package:flutter/material.dart';
 
 class StudentPostCard extends StatefulWidget {
@@ -50,11 +51,19 @@ class _PostCardState extends State<StudentPostCard> {
               children: [
                 Row(
                   children: [
-                    CircleAvatar(
-                      radius: 20,
-                      backgroundImage: NetworkImage(widget.dpURL), // Placeholder color
-                     
-                    ),
+                    GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => ViewProfile(
+                                          studentId: widget.studentId)));
+                            },
+                            child: CircleAvatar(
+                              radius: 20,
+                              backgroundImage: NetworkImage(widget.dpURL),
+                            ),
+                          ),
                     SizedBox(width: 10),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
