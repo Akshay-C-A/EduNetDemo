@@ -11,16 +11,16 @@ import 'package:path/path.dart' as path;
 
 // import 'package:shared_preferences/shared_preferences.dart';
 
-class ProfileForm extends StatefulWidget {
-  const ProfileForm({
+class StudentProfileForm extends StatefulWidget {
+  const StudentProfileForm({
     super.key,
   });
 
   @override
-  State<ProfileForm> createState() => _ProfileFormState();
+  State<StudentProfileForm> createState() => _StudentProfileFormState();
 }
 
-class _ProfileFormState extends State<ProfileForm> {
+class _StudentProfileFormState extends State<StudentProfileForm> {
   final FirestoreService _Student = FirestoreService();
   final currentUser = FirebaseAuth.instance.currentUser;
 

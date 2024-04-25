@@ -220,6 +220,7 @@ class _ViewProfileState extends State<ViewProfile> {
                                           size: 30,
                                         )),
                                   ],
+                                  
                                 ),
                               ],
                             ),
