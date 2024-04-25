@@ -1,28 +1,39 @@
 import 'package:flutter/material.dart';
 
 class StudentPostCard extends StatefulWidget {
-  final String type;
+  //data for likes
+  final String postId;
+  final List<String> likes;
+
+  //data for post
+  final String studentId;
   final String studentName;
   final String studentDesignation;
+  
   final String caption;
   final String description;
   final String imageURL;
+  final String dpURL;
 
   StudentPostCard({
-    required this.type,
+   required this.studentId,
     required this.studentName,
     required this.studentDesignation,
+    
     required this.caption,
     required this.description,
     required this.imageURL,
+    required this.dpURL,
+    required this.postId,
+    required this.likes,
   });
 
   @override
-  State<StudentPostCard> createState() => _AlumniPostCardState();
+  State<StudentPostCard> createState() => _PostCardState();
 }
 
-class _AlumniPostCardState extends State<StudentPostCard> {
-  bool isLiked = false;
+class _PostCardState extends State<StudentPostCard> {
+  bool isLoved = false;
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +52,8 @@ class _AlumniPostCardState extends State<StudentPostCard> {
                   children: [
                     CircleAvatar(
                       radius: 20,
-                      //backgroundImage: AssetImage('assets/images/profile.jpg'),
+                      backgroundImage: NetworkImage(widget.dpURL), // Placeholder color
+                     
                     ),
                     SizedBox(width: 10),
                     Column(
@@ -88,39 +100,43 @@ class _AlumniPostCardState extends State<StudentPostCard> {
           ),
           Padding(
             padding: EdgeInsets.all(10.0),
-            child: widget.imageURL!.isNotEmpty
-                ? Image.network(
-                    widget.imageURL,
-                    fit: BoxFit.cover,
-                  )
-                : Container(),
+           child: widget.imageURL!.isNotEmpty
+                      ? Image.network(
+                          widget.imageURL,
+                          fit: BoxFit.cover,
+                        )
+                      : Container(), 
           ),
           Padding(
-            // padding: EdgeInsets.all(10.0),
-            // child: Text(description[20]),
             padding: EdgeInsets.all(10.0),
-            child: Text(
-              widget.description.length > 50
-                  ? '${widget.description.substring(0, 100)}...'
-                  : widget.description,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
+            child: Text(widget.description),
           ),
           ButtonBar(
             alignment: MainAxisAlignment.spaceEvenly,
             children: [
               IconButton(
-                icon: Icon(
-                  isLiked ? Icons.favorite : Icons.favorite_border,
-                  color:
-                      isLiked ? const Color.fromARGB(255, 201, 55, 45) : null,
-                ),
                 onPressed: () {
                   setState(() {
-                    isLiked = !isLiked;
+                    isLoved = !isLoved;
                   });
                 },
+                icon: Stack(
+                  children: [
+                    Icon(
+                      Icons.favorite_border,
+                      color: isLoved ? Colors.red : Colors.black,
+                    ),
+                    Positioned.fill(
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: Icon(
+                          Icons.favorite,
+                          color: isLoved ? Colors.red : Colors.transparent,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
               IconButton(
                 icon: Icon(Icons.send),
@@ -137,3 +153,4 @@ class _AlumniPostCardState extends State<StudentPostCard> {
     );
   }
 }
+
