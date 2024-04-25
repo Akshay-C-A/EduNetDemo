@@ -223,6 +223,7 @@
 // }
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:edunetdemo/auth/login_check.dart';
 import 'package:edunetdemo/services/firestore.dart';
 import 'package:edunetdemo/student/student_dashboard.dart';
 import 'package:edunetdemo/student/student_edit-profile.dart';
@@ -263,6 +264,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
               onPressed: () async {
                 try {
                   await FirebaseAuth.instance.signOut();
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => MainPage()),
+                    (route) => false,
+                  );
                 } catch (e) {
                   print('Error signing out: $e');
                 }
