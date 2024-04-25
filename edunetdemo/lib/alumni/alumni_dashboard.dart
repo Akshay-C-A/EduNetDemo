@@ -4,6 +4,7 @@ import 'package:edunetdemo/alumni/alumni_newpost.dart';
 import 'package:edunetdemo/alumni/alumni_notification.dart';
 import 'package:edunetdemo/alumni/alumni_profile.dart';
 import 'package:edunetdemo/common_pages/alumni_page.dart';
+import 'package:edunetdemo/common_pages/search.dart';
 import 'package:edunetdemo/common_pages/student_page.dart';
 import 'package:edunetdemo/services/firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -151,6 +152,14 @@ class _Alumni_DashboardState extends State<Alumni_Dashboard> {
             appBar: AppBar(
               title: Text('Alumni'),
               actions: [
+                IconButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => SearchPage()));
+                    },
+                    icon: Icon(Icons.search)),
                 GestureDetector(
                   onTap: () {
                     Navigator.push(
