@@ -346,7 +346,7 @@ class FirestoreService {
 
   Stream<QuerySnapshot> getStudentProfilePosts({required String studentId}) {
     print(studentId);
-    final studentProfileStream = student
+    final studentProfileStream = user
         .doc(studentId)
         .collection('posts')
         .orderBy('timestamp', descending: true)
