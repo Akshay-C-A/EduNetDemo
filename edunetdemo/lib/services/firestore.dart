@@ -17,6 +17,20 @@ class FirestoreService {
     return userStream;
   }
 
+  Future<String> fetchUserDp(String userId) async {
+  try {
+    DocumentSnapshot alumniDoc = await user.doc(userId).get();
+    if (alumniDoc.exists) {
+      Map<String, dynamic> data = alumniDoc.data() as Map<String, dynamic>;
+      return data['dpURL'];
+    } else {
+      return '';
+    }
+  } catch (e) {
+    print('Error fetching alumni name: $e');
+    return '';
+  }
+}
 
   // Future<Alumni?> getAlumniByEmail(String email) async {
   //   final alumniSnapshot = await _firestore
