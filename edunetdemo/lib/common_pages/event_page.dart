@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:edunetdemo/event/event_postcard.dart';
 import 'package:edunetdemo/services/firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class EventPage extends StatefulWidget {
   const EventPage({super.key});
+
   @override
   State<EventPage> createState() => _EventPageState();
 }
@@ -12,8 +14,28 @@ class EventPage extends StatefulWidget {
 class _EventPageState extends State<EventPage> {
   final FirestoreService firestoreService = FirestoreService();
 
+  Future<void> _signOut() async {
+    try {
+      await FirebaseAuth.instance.signOut();
+      // Navigate to the sign-in screen or any other desired screen after sign-out
+      Navigator.pushReplacementNamed(context, '/sign_in');
+    } catch (e) {
+      print('Error signing out: $e');
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Event Page'),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.logout),
+            onPressed: _signOut,
+          ),
+        ],
+      ),
       body: StreamBuilder<QuerySnapshot>(
         stream: firestoreService.getEventPostsStream(),
         builder: (context, snapshot) {
@@ -36,7 +58,6 @@ class _EventPageState extends State<EventPage> {
               // Get each individual doc
               DocumentSnapshot document = eventPostList[index];
               // String docID = document.id;
-
               // Get note from each doc
               Map<String, dynamic> data =
                   document.data() as Map<String, dynamic>;
@@ -48,9 +69,10 @@ class _EventPageState extends State<EventPage> {
               String eventTitle = data['eventTitle'];
               String imageURL = data['imageURL'];
               String dpURL = data['dpURL'];
+
               // Display as a list title
               return EventPostCard(
-                communityName:'MuLearn',
+                communityName: 'MuLearn',
                 date: date,
                 venue: venue,
                 moderatorId: moderatorId,
