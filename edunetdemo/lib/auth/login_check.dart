@@ -26,7 +26,7 @@ class _MainPageState extends State<MainPage> {
     final sjcetPattern = RegExp(r'\b\w+@cs\.sjcetpalai\.ac\.in\b');
     // Pattern for emails with @edunet.in
     final edunetAdminPattern = RegExp(r'\b\w+@admin\.edunet\.com\b');
-    final edunetModPattern = RegExp(r'\b\w+@mod\.edunet\.com\b');
+    final edunetModPattern = RegExp(r'\b\w+@moderator\.edunet\.com\b');
 
     if (sjcetPattern.hasMatch(email)) {
       return checkYearPattern(email, currentYear);
