@@ -145,7 +145,7 @@ class _StudentPostCardState extends State<StudentPostCard> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => ViewProfile(
+                                      builder: (context) => ViewStudentProfile(
                                           studentId: widget.studentId)));
                             },
                             child: CircleAvatar(
