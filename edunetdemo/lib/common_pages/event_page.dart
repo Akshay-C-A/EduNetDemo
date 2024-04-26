@@ -1,83 +1,68 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:edunetdemo/event/event_postcard.dart';
+import 'package:edunetdemo/services/firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:edunetdemo/event/eventpostcard.dart';
- // Updated import
 
 class EventPage extends StatefulWidget {
-  const EventPage({Key? key}) : super(key: key);
-
+  const EventPage({super.key});
   @override
-  State<EventPage> createState() => PostCardListState();
+  State<EventPage> createState() => _EventPageState();
 }
 
-class PostCardListState extends State<EventPage> {
-  List<EventPostCard> events = [
-    EventPostCard(
-      location: 'Location 1',
-      time: '10:00 AM',
-      date: '2024-03-26',
-      photo: 'assets/image1.jpg',
-      details: 'Event details 1',
-      title: 'Event Title 1',
-    ),
-    EventPostCard(
-      location: 'Location 2',
-      time: '11:00 AM',
-      date: '2024-03-27',
-      photo: 'assets/image2.jpg',
-      details: 'Event details 2',
-      title: 'Event Title 2',
-    ),
-    EventPostCard(
-      location: 'Location 3',
-      time: '12:00 PM',
-      date: '2024-03-28',
-      photo: 'assets/image3.jpg',
-      details: 'Event details 3',
-      title: 'Event Title 3',
-    ),
-    EventPostCard(
-      location: 'Location 4',
-      time: '01:00 PM',
-      date: '2024-03-29',
-      photo: 'assets/image4.jpg',
-      details: 'Event details 4',
-      title: 'Event Title 4',
-    ),
-    EventPostCard(
-      location: 'Location 5',
-      time: '02:00 PM',
-      date: '2024-03-30',
-      photo: 'assets/image5.jpg',
-      details: 'Event details 5',
-      title: 'Event Title 5',
-    ),
-  ];
+class _EventPageState extends State<EventPage> {
+  final FirestoreService firestoreService = FirestoreService();
 
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Posts'),
-      ),
-      backgroundColor: Colors.grey[200],
-      // appBar: AppBar(
-      //   title: Text('Awesome Quotes'),
-      //   centerTitle: true,
-      //   backgroundColor: Colors.redAccent,
-      // ),
-      body: ListView.builder(
-        itemCount: events.length,
-        itemBuilder: (context, index) {
-          return Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: EventPostCard(
-              location: events[index].location,
-              time: events[index].time,
-              date: events[index].date,
-              photo: events[index].photo,
-              details: events[index].details,
-              title: events[index].title,
-            ),
+      body: StreamBuilder<QuerySnapshot>(
+        stream: firestoreService.getEventPostsStream(),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
+          }
+
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          }
+
+          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+            return Center(child: Text('No data available'));
+          }
+
+          List eventPostList = snapshot.data!.docs;
+          return ListView.builder(
+            itemCount: eventPostList.length,
+            itemBuilder: (context, index) {
+              // Get each individual doc
+              DocumentSnapshot document = eventPostList[index];
+              // String docID = document.id;
+
+              // Get note from each doc
+              Map<String, dynamic> data =
+                  document.data() as Map<String, dynamic>;
+              String venue = data['venue'];
+              String moderatorId = data['moderatorId'];
+              String date = data['date'];
+              String moderatorName = data['moderatorName'];
+              String otherDetails = data['otherDetails'];
+              String eventTitle = data['eventTitle'];
+              String imageURL = data['imageURL'];
+              String dpURL = data['dpURL'];
+              // Display as a list title
+              return EventPostCard(
+                communityName:'MuLearn',
+                date: date,
+                venue: venue,
+                moderatorId: moderatorId,
+                moderatorName: moderatorName,
+                otherDetails: otherDetails,
+                dpURL: dpURL,
+                postId: document.id,
+                imageURL: imageURL,
+                eventTitle: eventTitle,
+                likes: [],
+              );
+            },
           );
         },
       ),
