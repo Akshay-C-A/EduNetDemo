@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_final_fields, non_constant_identifier_names
 import 'package:edunetdemo/common_pages/alumni_page.dart';
 import 'package:edunetdemo/common_pages/event_page.dart';
+import 'package:edunetdemo/common_pages/search.dart';
 import 'package:edunetdemo/common_pages/student_page.dart';
 import 'package:edunetdemo/services/firestore.dart';
 import 'package:edunetdemo/student/student_newpost.dart';
@@ -55,7 +56,7 @@ class _Student_DashboardState extends State<Student_Dashboard> {
   late List<dynamic> skills = ['null'];
   late String studentId='56';
   late String about = 'eg';
-  late String studentDept = 'cs';
+  late String studentDept = 'computer science';
   late String studentYear = '3';
   late String? linkedIn = 'eg';
   late String? twitter = 'eg';
@@ -158,6 +159,14 @@ class _Student_DashboardState extends State<Student_Dashboard> {
             appBar: AppBar(
               title: Text('Student'),
               actions: [
+                IconButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => SearchPage()));
+                    },
+                    icon: Icon(Icons.search)),
                 GestureDetector(
                   onTap: () {
                     Navigator.push(

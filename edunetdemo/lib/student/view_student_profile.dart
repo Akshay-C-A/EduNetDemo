@@ -3,15 +3,15 @@ import 'package:edunetdemo/student/student_profile.dart';
 import 'package:flutter/material.dart';
 
 
-class ViewProfile extends StatefulWidget {
+class ViewStudentProfile extends StatefulWidget {
   final String studentId;
-  const ViewProfile({super.key, required this.studentId});
+  const ViewStudentProfile({super.key, required this.studentId});
 
   @override
-  State<ViewProfile> createState() => _ViewProfileState();
+  State<ViewStudentProfile> createState() => _ViewStudentProfileState();
 }
 
-class _ViewProfileState extends State<ViewProfile> {
+class _ViewStudentProfileState extends State<ViewStudentProfile> {
   final FirestoreService _firestoreService = FirestoreService();
 
   late String student_name = 'john doe';
@@ -19,7 +19,7 @@ class _ViewProfileState extends State<ViewProfile> {
   late List<dynamic> skills = ['null'];
   late String studentId;
   late String about = 'eg';
-  late String studentDept = 'cs';
+  late String studentDept = 'computer science';
   late String studentYear = '3';
   late String? linkedIn = 'eg';
   late String? twitter = 'eg';
@@ -65,7 +65,7 @@ class _ViewProfileState extends State<ViewProfile> {
      student_designation = 'CS Engineer';
       skills = ['null'];
       about = 'eg';
-      studentDept = 'cs';
+      studentDept = 'computer science';
       studentYear = '3';
       linkedIn = 'eg';
       twitter = 'eg';
@@ -173,6 +173,49 @@ class _ViewProfileState extends State<ViewProfile> {
                           ],
                         ),
                       ),
+                       SizedBox(height: 16),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: width * 0.08),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Department',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18,
+                                ),
+                              ),
+                              SizedBox(height: 5),
+                              Text(
+                                studentDept,
+                                style: TextStyle(fontSize: 16),
+                              ),
+                            ],
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Year',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18,
+                                ),
+                              ),
+                              SizedBox(height: 5),
+                              Text(
+                                studentYear,
+                                style: TextStyle(fontSize: 16),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
                       SizedBox(height: 16),
                       Padding(
                         padding: EdgeInsets.fromLTRB(

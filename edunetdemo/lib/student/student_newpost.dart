@@ -97,7 +97,6 @@ class _StudentNewPostPageState extends State<StudentNewPostPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 16.0),
               const Text(
                 'Details',
                 style: TextStyle(
