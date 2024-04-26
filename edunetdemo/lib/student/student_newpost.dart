@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:edunetdemo/services/firestore.dart';
+import 'package:edunetdemo/student/student_dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
@@ -7,24 +8,21 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:path/path.dart' as path;
 import 'package:firebase_storage/firebase_storage.dart';
 
+
 class StudentNewPostPage extends StatefulWidget {
-  const StudentNewPostPage({super.key});
+ final Student student;
+  const StudentNewPostPage({super.key, required this.student});
+
 
   @override
   State<StudentNewPostPage> createState() => _StudentNewPostPageState();
 }
 
 class _StudentNewPostPageState extends State<StudentNewPostPage> {
-  final _firestoreService = FirestoreService();
+  final FirestoreService _firestoreService = FirestoreService();
   final _detailsController = TextEditingController();
   final _organisationNameController = TextEditingController();
-  String _postType = 'Internship offers';
-  final List<String> _postTypes = [
-    'Internship offers',
-    'Placement offers',
-    'Technical events',
-    // 'My achievements'
-  ];
+  
   XFile? _selectedImage;
   final _picker = ImagePicker();
 
@@ -66,21 +64,23 @@ class _StudentNewPostPageState extends State<StudentNewPostPage> {
     _organisationNameController.clear();
     setState(() {
       _selectedImage = null;
-      _postType = 'Internship offers';
+      
     });
   }
 
   Future<void> _submitPost() async {
     final imageURL = await _uploadImage();
-    // await _firestoreService.addAlumniPosts(
-    //   type: _postType,
-    //   alumniName: 'John Doe', // Replace with the actual alumni name
-    //   alumniDesignation:
-    //       'Software Engineer', // Replace with the actual alumni designation
-    //   caption: _organisationNameController.text,
-    //   description: _detailsController.text,
-    //   imageURL: imageURL,
-    // );
+    await _firestoreService.addStudentPosts(
+     
+      studentId: widget.student.studentId,
+      studentName:  widget.student.student_name,// Replace with the actual alumni name
+      studentDesignation:
+          widget.student.student_designation, // Replace with the actual alumni designation
+      caption: _organisationNameController.text,
+      description: _detailsController.text,
+      imageURL: imageURL,
+      dpURL: widget.student.dpURL,
+    );
     _resetForm();
     // Show a success message or navigate to the home page
   }
@@ -97,37 +97,6 @@ class _StudentNewPostPageState extends State<StudentNewPostPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Post Type',
-                style: TextStyle(
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 8.0),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8.0),
-                  border: Border.all(color: Colors.grey),
-                ),
-                child: DropdownButton<String>(
-                  value: _postType,
-                  isExpanded: true,
-                  underline: const SizedBox.shrink(),
-                  items: _postTypes.map((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      _postType = newValue!;
-                    });
-                  },
-                ),
-              ),
               const SizedBox(height: 16.0),
               const Text(
                 'Details',

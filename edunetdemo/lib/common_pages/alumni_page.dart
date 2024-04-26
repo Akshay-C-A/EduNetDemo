@@ -1,8 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:edunetdemo/alumni/alumni_dashboard.dart';
 import 'package:edunetdemo/alumni/alumni_post_card.dart';
-import 'package:edunetdemo/alumni/alumni_profile.dart';
-import 'package:edunetdemo/alumni/alumni_profile_old.dart';
 import 'package:edunetdemo/services/firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -13,13 +10,6 @@ class AlumniPage extends StatefulWidget {
 }
 
 class _AlumniPageState extends State<AlumniPage> {
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    setState(() {});
-  }
-
   final FirestoreService firestoreService = FirestoreService();
 
   Widget build(BuildContext context) {

@@ -1,17 +1,241 @@
+// import 'package:cloud_firestore/cloud_firestore.dart';
+
+// import 'package:firebase_auth/firebase_auth.dart';
+// import 'package:flutter/material.dart';
+// import 'package:studentprofile/profile_form.dart';
+// import 'package:studentprofile/services/firestore.dart';
+// import 'package:studentprofile/student_dashboard.dart';
+// import 'package:studentprofile/student_edit-profile.dart';
+
+// class ProfileScreen extends StatefulWidget {
+//   final Student student;
+
+//   ProfileScreen({required this.student});
+
+//   @override
+//   State<ProfileScreen> createState() => _ProfileScreenState();
+// }
+
+// class _ProfileScreenState extends State<ProfileScreen> {
+//   Set<String> _selectedButton = {'Details'};
+
+//   void updateSelected(Set<String> newSelection) {
+//     setState(() {
+//       _selectedButton = newSelection;
+//     });
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     var height = MediaQuery.of(context).size.height;
+//     var width = MediaQuery.of(context).size.width;
+
+//     return SafeArea(
+//       child: Scaffold(
+//         appBar: AppBar(
+//           title: Text(widget.student.student_name),
+//           actions: [
+//             TextButton(
+//               onPressed: () async {
+//                 try {
+//                   await FirebaseAuth.instance.signOut();
+//                   // Navigate to the MainPage
+//                   //Navigator.pushAndRemoveUntil(
+//                     //context,
+//                     //MaterialPageRoute(builder: (context) => MainPage()),
+//                     //(route) => false,
+//                  // );
+//                 } catch (e) {
+//                   print('Error signing out: $e');
+//                 }
+//               },
+//               child: Text('LogOut'),
+//             )
+//           ],
+//         ),
+//         body: Stack(
+//           children: [
+//             Image.network(
+//               'https://marketplace.canva.com/EAE1oe3H6Sc/1/0/1600w/canva-black-elegant-minimalist-profile-linkedin-banner-nc0eALdRvKU.jpg',
+//               fit: BoxFit.cover,
+//             ),
+//             SingleChildScrollView(
+//               child: Container(
+//                 decoration: BoxDecoration(
+//                   gradient: LinearGradient(
+//                     colors: [Colors.transparent, Colors.white],
+//                     begin: Alignment.topCenter,
+//                     end: Alignment.bottomCenter,
+//                     stops: [0, .2],
+//                   ),
+//                 ),
+//                 child: Column(
+//                   children: [
+//                     SizedBox(height: height * .13),
+//                     Padding(
+//                       padding:
+//                           EdgeInsets.fromLTRB(width * .08, 0, width * .08, 0),
+//                       child: Row(
+//                         mainAxisAlignment: MainAxisAlignment.start,
+//                         children: [
+//                           Container(
+//                             width: 110,
+//                             height: 110,
+//                             decoration: BoxDecoration(
+//                               color: Colors.grey[300],
+//                               borderRadius: BorderRadius.circular(35),
+//                             ),
+//                             child: Padding(
+//                               padding: const EdgeInsets.all(8.0),
+//                               child: ClipRRect(
+//                                 borderRadius: BorderRadius.circular(28),
+//                                 child: Image.network(widget.student.dpURL,
+//                                     fit: BoxFit.cover),
+//                               ),
+//                             ),
+//                           ),
+//                           SizedBox(width: width * .05),
+//                           Expanded(
+//                             child: Column(
+//                               crossAxisAlignment: CrossAxisAlignment.start,
+//                               children: [
+//                                 Wrap(
+//                                   alignment: WrapAlignment.center,
+//                                   children: [
+//                                     Text(
+//                                       widget.student.student_name,
+//                                       style: TextStyle(
+//                                         fontWeight: FontWeight.bold,
+//                                         fontSize: 30,
+//                                       ),
+//                                       textAlign: TextAlign.start,
+//                                     ),
+//                                   ],
+//                                 ),
+//                                 SizedBox(height: 4),
+//                                 Text(widget.student.student_designation),
+//                               ],
+//                             ),
+//                           ),
+//                           IconButton(
+//                             onPressed: () {
+//                               Navigator.push(
+//                                 context,
+//                                MaterialPageRoute(
+//                                  builder: (context) => ProfileForm(),
+//                                 ),
+//                               );
+//                             },
+//                             icon: Icon(Icons.edit),
+//                           ),
+//                         ],
+//                       ),
+//                     ),
+//                     SizedBox(height: 16),
+//                     Padding(
+//                       padding: EdgeInsets.fromLTRB(
+//                           width * .08, width * 0.03, width * .08, 0),
+//                       child: Column(
+//                         crossAxisAlignment: CrossAxisAlignment.start,
+//                         children: [
+//                           Text(
+//                             widget.student.about,
+//                             style: TextStyle(
+//                               fontSize: 16,
+//                             ),
+//                           ),
+//                           SizedBox(height: width * 0.08),
+//                           Column(
+//                             children: [
+//                               Text(
+//                                 'Contact :',
+//                                 style: TextStyle(
+//                                   fontWeight: FontWeight.bold,
+//                                   fontSize: 20,
+//                                 ),
+//                               ),
+//                               SizedBox(height: 8),
+//                               Row(
+//                                 mainAxisAlignment:
+//                                     MainAxisAlignment.spaceAround,
+//                                 children: [
+//                                   IconButton(
+//                                       onPressed: () {},
+//                                       icon: Icon(
+//                                         Icons.phone,
+//                                         size: 30,
+//                                       )),
+//                                   IconButton(
+//                                       onPressed: () {},
+//                                       icon: Icon(
+//                                         Icons.email,
+//                                         size: 30,
+//                                       )),
+//                                   IconButton(
+//                                       onPressed: () {},
+//                                       icon: Icon(
+//                                         Icons.location_on,
+//                                         size: 30,
+//                                       )),
+//                                 ],
+//                               ),
+//                             ],
+//                           ),
+//                           SizedBox(height: width * 0.08),
+//                           Center(
+//                             child: SegmentedButton(
+//                               segments: <ButtonSegment<String>>[
+//                                 ButtonSegment(
+//                                     value: 'Details', label: Text('Details')),
+//                                 ButtonSegment(
+//                                     value: 'Posts', label: Text('Posts')),
+//                               ],
+//                               selected: _selectedButton,
+//                               onSelectionChanged: updateSelected,
+//                             ),
+//                           ),
+//                           SizedBox(height: width * 0.08),
+//                           if (_selectedButton.contains('Details'))
+//                             Column(
+//                               crossAxisAlignment: CrossAxisAlignment.start,
+//                               children: [
+                               
+//                                 SkillsSection(skills: widget.student.skills),
+//                               ],
+//                             )
+//                           else
+//                             PostsSection(
+//                               studentId: widget.student.studentId,
+//                               firestoreService: FirestoreService(),
+//                             ),
+//                         ],
+//                       ),
+//                     ),
+//                   ],
+//                 ),
+//               ),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
+
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:edunetdemo/alumni/alumni_dashboard.dart';
-import 'package:edunetdemo/alumni/alumni_edit-profile.dart';
 import 'package:edunetdemo/auth/login_check.dart';
-import 'package:edunetdemo/alumni/alumni_profile_form.dart';
 import 'package:edunetdemo/services/firestore.dart';
+import 'package:edunetdemo/student/student_dashboard.dart';
+import 'package:edunetdemo/student/student_edit-profile.dart';
+import 'package:edunetdemo/student/student_profile_form.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+
 
 class ProfileScreen extends StatefulWidget {
-  final Alumni alumni;
+  final Student student;
 
-  ProfileScreen({required this.alumni});
+  ProfileScreen({required this.student});
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -26,22 +250,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     });
   }
 
-  void _copyLink(String iconB) {
-    if (iconB == 'LinkedIn') {
-      Clipboard.setData(ClipboardData(text: widget.alumni.linkedIn.toString()));
-    } else if (iconB == 'Twitter') {
-      Clipboard.setData(ClipboardData(text: widget.alumni.twitter.toString()));
-    } else if (iconB == 'Mail') {
-      Clipboard.setData(ClipboardData(text: widget.alumni.mail.toString()));
-    }
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Link copied to clipboard'),
-        duration: Duration(seconds: 2),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
@@ -50,13 +258,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text(widget.alumni.alumni_name),
+          title: Text(widget.student.student_name),
           actions: [
             TextButton(
               onPressed: () async {
                 try {
                   await FirebaseAuth.instance.signOut();
-                  // Navigate to the MainPage
                   Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(builder: (context) => MainPage()),
@@ -106,7 +313,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               padding: const EdgeInsets.all(8.0),
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(28),
-                                child: Image.network(widget.alumni.dpURL,
+                                child: Image.network(widget.student.dpURL,
                                     fit: BoxFit.cover),
                               ),
                             ),
@@ -120,7 +327,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   alignment: WrapAlignment.center,
                                   children: [
                                     Text(
-                                      widget.alumni.alumni_name,
+                                      widget.student.student_name,
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 30,
@@ -130,7 +337,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   ],
                                 ),
                                 SizedBox(height: 4),
-                                Text(widget.alumni.alumni_designation),
+                                Text(widget.student.student_designation),
+                                SizedBox(height: 4),
+                                Text(
+                                    '${widget.student.studentDept} - ${widget.student.studentYear}'),
                               ],
                             ),
                           ),
@@ -139,7 +349,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => AlumniProfileForm(),
+                                  builder: (context) => StudentProfileForm(),
                                 ),
                               );
                             },
@@ -156,7 +366,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            widget.alumni.about,
+                            widget.student.about,
                             style: TextStyle(
                               fontSize: 16,
                             ),
@@ -177,32 +387,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     MainAxisAlignment.spaceAround,
                                 children: [
                                   IconButton(
-                                    onPressed: () {
-                                      _copyLink('LinkedIn');
-                                    },
-                                    icon: Image.asset(
-                                      'assets/Linkedin.png',
-                                      width: 25,
-                                    ),
-                                  ),
+                                      onPressed: () {},
+                                      icon: Icon(
+                                        Icons.phone,
+                                        size: 30,
+                                      )),
                                   IconButton(
-                                    onPressed: () {
-                                      _copyLink('Mail');
-                                    },
-                                    icon: Image.asset(
-                                      'assets/Mail.png',
-                                      width: 30,
-                                    ),
-                                  ),
+                                      onPressed: () {},
+                                      icon: Icon(
+                                        Icons.email,
+                                        size: 30,
+                                      )),
                                   IconButton(
-                                    onPressed: () {
-                                      _copyLink('Twitter');
-                                    },
-                                    icon: Image.asset(
-                                      'assets/X.png',
-                                      width: 25,
-                                    ),
-                                  ),
+                                      onPressed: () {},
+                                      icon: Icon(
+                                        Icons.location_on,
+                                        size: 30,
+                                      )),
                                 ],
                               ),
                             ],
@@ -225,14 +426,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                CompanySection(company: widget.alumni.company),
-                                SizedBox(height: width * 0.08),
-                                SkillsSection(skills: widget.alumni.skills),
+                                SkillsSection(skills: widget.student.skills),
                               ],
                             )
                           else
                             PostsSection(
-                              alumniId: widget.alumni.alumniId,
+                              studentId: widget.student.studentId,
                               firestoreService: FirestoreService(),
                             ),
                         ],
@@ -248,6 +447,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 }
+
+
+
 
 // SkillsSection
 class SkillsSection extends StatelessWidget {
@@ -318,50 +520,21 @@ class EmailSection extends StatelessWidget {
 }
 
 // CompanySection
-class CompanySection extends StatelessWidget {
-  final String company;
 
-  CompanySection({required this.company});
-
-  @override
-  Widget build(BuildContext context) {
-    var height = MediaQuery.of(context).size.height;
-    var width = MediaQuery.of(context).size.width;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Text(
-          'Company',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 18,
-          ),
-        ),
-        SizedBox(height: 5),
-        Text(
-          company,
-          style: TextStyle(
-            fontSize: 16,
-          ),
-        ),
-      ],
-    );
-  }
-}
 
 // PostsSection
 class PostsSection extends StatefulWidget {
-  final String alumniId;
+  final String studentId;
   final FirestoreService firestoreService;
   bool isView = false;
 
   PostsSection({
-    required this.alumniId,
+    required this.studentId,
     required this.firestoreService,
   });
 
   PostsSection.withView({
-    required this.alumniId,
+    required this.studentId,
     required this.firestoreService,
     required this.isView,
   });
@@ -379,8 +552,8 @@ class _PostsSectionState extends State<PostsSection> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         StreamBuilder<QuerySnapshot>(
-          stream: widget.firestoreService.getAlumniProfilePosts(
-            alumniId: widget.alumniId,
+          stream: widget.firestoreService.getStudentProfilePosts(
+            studentId: widget.studentId,
           ),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
@@ -395,7 +568,7 @@ class _PostsSectionState extends State<PostsSection> {
               return Center(child: Text('No data available'));
             }
 
-            List alumniProfilePostList = snapshot.data!.docs;
+            List studentProfilePostList = snapshot.data!.docs;
             return GridView.builder(
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
@@ -404,10 +577,10 @@ class _PostsSectionState extends State<PostsSection> {
                 crossAxisSpacing: 2.0,
                 mainAxisSpacing: 2.0,
               ),
-              itemCount: alumniProfilePostList.length,
+              itemCount: studentProfilePostList.length,
               itemBuilder: (BuildContext context, int index) {
                 // Get each individual doc
-                DocumentSnapshot document = alumniProfilePostList[index];
+                DocumentSnapshot document = studentProfilePostList[index];
                 // String docID = document.id;
 
                 // Get note from each doc
@@ -418,14 +591,14 @@ class _PostsSectionState extends State<PostsSection> {
                 // Delete post function
                 void deletePost() {
                   setState(() {
-                    alumniProfilePostList.removeAt(index);
+                    studentProfilePostList.removeAt(index);
                   });
                 }
 
                 return ProfileSquarePost(
                   imageURL: imgURL ?? '',
                   postId: document.id,
-                  alumniId: widget.alumniId,
+                  studentId: widget.studentId,
                   isView: widget.isView,
                 );
               },
@@ -440,13 +613,13 @@ class _PostsSectionState extends State<PostsSection> {
 class ProfileSquarePost extends StatefulWidget {
   final String imageURL;
   final String postId;
-  final String alumniId;
+  final String studentId;
   bool isView = false;
 
   ProfileSquarePost({
     required this.imageURL,
     required this.postId,
-    required this.alumniId,
+    required this.studentId,
     required this.isView,
   });
 
@@ -470,8 +643,8 @@ class _ProfileSquarePostState extends State<ProfileSquarePost> {
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
-                firestoreService.deletePost(
-                    alumniId: widget.alumniId, postId: widget.postId);
+                firestoreService.deleteStudentPost(
+                    studentId: widget.studentId, postId: widget.postId);
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text('Post Deleted'),
@@ -510,7 +683,7 @@ class _ProfileSquarePostState extends State<ProfileSquarePost> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => EditPostForm(
-                                alumniId: widget.alumniId,
+                                studentId: widget.studentId,
                                 postId: widget.postId)));
                   },
                   child: ListTile(

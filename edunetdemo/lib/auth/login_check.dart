@@ -1,9 +1,10 @@
 import 'package:edunetdemo/admin/admin_dashboard.dart';
 import 'package:edunetdemo/alumni/alumni_dashboard.dart';
 import 'package:edunetdemo/auth/login_page.dart';
-import 'package:edunetdemo/auth/profile_form.dart';
+import 'package:edunetdemo/alumni/alumni_profile_form.dart';
 import 'package:edunetdemo/event/event_dashboard.dart';
 import 'package:edunetdemo/student/student_dashboard.dart';
+import 'package:edunetdemo/student/student_profile_form.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:edunetdemo/services/firestore.dart';
@@ -85,7 +86,24 @@ class _MainPageState extends State<MainPage> {
             String userType = checkEmailPattern(userMail!);
 
             if (userType == 'Student') {
-              return Student_Dashboard();
+              return FutureBuilder(
+                future: _firestoreService.isFirstTime(userMail),
+                builder: (context, asnapshot) {
+                  if (asnapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else if (asnapshot.hasError) {
+                    return Center(
+                      child: Text('Error: ${asnapshot.error}'),
+                    );
+                  } else if (asnapshot.data == true) {
+                    return const StudentProfileForm();
+                  } else {
+                    return const Student_Dashboard();
+                  }
+                },
+              );
             } else if (userType == 'Alumni') {
               return FutureBuilder(
                 future: _firestoreService.isFirstTime(userMail),
@@ -99,7 +117,7 @@ class _MainPageState extends State<MainPage> {
                       child: Text('Error: ${asnapshot.error}'),
                     );
                   } else if (asnapshot.data == true) {
-                    return const ProfileForm();
+                    return const AlumniProfileForm();
                   } else {
                     return const Alumni_Dashboard();
                   }
