@@ -56,20 +56,24 @@ class _SearchPageState extends State<SearchPage> {
               }
 
               if (data['alumniName']
-                  .toString()
-                  .toLowerCase()
-                  .startsWith(name.toLowerCase())) {
+                      .toString()
+                      .toLowerCase()
+                      .startsWith(name.toLowerCase()) ??
+                  data['studentName']
+                      .toString()
+                      .toLowerCase()
+                      .startsWith(name.toLowerCase())) {
                 return GestureDetector(
                   onTap: () {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) =>
-                                ViewProfile(alumniId: data['alumniId'])));
+                                ViewProfile(alumniId: data['alumniId'] ?? data['studentId'])));
                   },
                   child: ListTile(
                     title: Text(
-                      data['alumniName'],
+                      data['alumniName'] ?? data['studentName'],
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
@@ -79,7 +83,7 @@ class _SearchPageState extends State<SearchPage> {
                       ),
                     ),
                     subtitle: Text(
-                      data['alumniDesignation'],
+                      data['alumniDesignation'] ?? data['studentDesignation'],
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(

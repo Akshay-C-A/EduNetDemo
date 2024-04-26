@@ -1,9 +1,7 @@
 
-import 'package:edunetdemo/common_pages/alumni_page.dart';
 import 'package:edunetdemo/common_pages/event_page.dart';
-import 'package:edunetdemo/common_pages/student_page.dart';
 import 'package:edunetdemo/event/event_newpost.dart';
-import 'package:edunetdemo/event/notification.dart';
+import 'package:edunetdemo/event/event_notification.dart';
 import 'package:flutter/material.dart';
 
 class EventDashboard extends StatefulWidget {
@@ -16,12 +14,10 @@ class EventDashboard extends StatefulWidget {
 class _EventDashboardState extends State<EventDashboard> {
     int _selectedIndex = 0;
 
-  static final List<Widget> _widgetOptions = <Widget>[
-    StudentPage(),
-    AlumniPage(),
-    EventNewPost(),
+  static List<Widget> _widgetOptions = <Widget>[
     EventPage(),
-    NotificationPage()
+    EventNewPostPage(),
+    EventNotificationPage()
   ];
   @override
   Widget build(BuildContext context) {
@@ -44,20 +40,12 @@ class _EventDashboardState extends State<EventDashboard> {
         unselectedItemColor: Colors.grey,
         items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.people),
-            label: 'Alumni',
+            icon: Icon(Icons.calendar_today),
+            label: 'Events',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.add),
             label: 'Post',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_today),
-            label: 'Events',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.notifications),
