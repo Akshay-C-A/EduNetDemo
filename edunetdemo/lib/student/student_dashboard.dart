@@ -104,7 +104,7 @@ class _Student_DashboardState extends State<Student_Dashboard> {
       student_designation = 'CS Engineer';
       skills = ['null'];
       about = 'eg';
-      studentDept = 'cs';
+      studentDept = 'computer science';
       studentYear = '3';
       linkedIn = 'eg';
       twitter = 'eg';
