@@ -4,7 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../alumni/alumni_dashboard.dart';
 
 class FirestoreService {
-
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   final CollectionReference user =
@@ -12,25 +11,24 @@ class FirestoreService {
 
   //To get all alumni list
   Stream<QuerySnapshot> getUserStream() {
-    final userStream =
-        user.orderBy('timestamp', descending: true).snapshots();
+    final userStream = user.orderBy('timestamp', descending: true).snapshots();
     return userStream;
   }
 
   Future<String> fetchUserDp(String userId) async {
-  try {
-    DocumentSnapshot alumniDoc = await user.doc(userId).get();
-    if (alumniDoc.exists) {
-      Map<String, dynamic> data = alumniDoc.data() as Map<String, dynamic>;
-      return data['dpURL'];
-    } else {
+    try {
+      DocumentSnapshot alumniDoc = await user.doc(userId).get();
+      if (alumniDoc.exists) {
+        Map<String, dynamic> data = alumniDoc.data() as Map<String, dynamic>;
+        return data['dpURL'];
+      } else {
+        return '';
+      }
+    } catch (e) {
+      print('Error fetching alumni name: $e');
       return '';
     }
-  } catch (e) {
-    print('Error fetching alumni name: $e');
-    return '';
   }
-}
 
   // Future<Alumni?> getAlumniByEmail(String email) async {
   //   final alumniSnapshot = await _firestore
@@ -73,13 +71,25 @@ class FirestoreService {
   Future<bool> isFirstTime(String? email) async {
     if (email != null) {
       final USER = await FirebaseAuth.instance.userChanges().first;
-      return USER?.displayName == null;
+      USER?.displayName == null;
+
+      if (getUser(email: email) == false) return false;
+      return true;
     } else {
       return false;
     }
   }
 
-
+  Future<bool> getUser({
+    required String email,
+  }) async {
+    print(email);
+    final postSnapshot = await user.doc(email).get();
+    if (postSnapshot == null)
+      return false;
+    else
+      return true;
+  }
 
 //----------------------------------------------------------------------------------------------------------------
 // ALUMNI SECTION
@@ -90,7 +100,6 @@ class FirestoreService {
   // get collection of alumni_posts
   final CollectionReference alumni =
       FirebaseFirestore.instance.collection('alumni');
-
 
 //To add alumni details
   Future<void> addAlumni({
@@ -261,11 +270,10 @@ class FirestoreService {
 
   final CollectionReference student_posts =
       FirebaseFirestore.instance.collection('student_posts');
-    final CollectionReference student =
+  final CollectionReference student =
       FirebaseFirestore.instance.collection('student');
 
-     Future<void> addStudentPosts({
-    
+  Future<void> addStudentPosts({
     required String studentId,
     required String studentName,
     required String studentDesignation,
@@ -276,14 +284,13 @@ class FirestoreService {
   }) {
     String unique = DateTime.now().toIso8601String();
     student_posts.doc('$studentId$unique').set({
-      
       'studentId': studentId,
       'studentName': studentName,
       'studentDesignation': studentDesignation,
       'caption': caption,
       'description': description,
       'imageURL': imageURL,
-      'dpURL' : dpURL,
+      'dpURL': dpURL,
       'likes': [],
       'timestamp': Timestamp.now(),
     });
@@ -300,7 +307,8 @@ class FirestoreService {
       'timestamp': Timestamp.now(),
     });
   }
-   //To add student details
+
+  //To add student details
   Future<void> addStudent({
     required String? studentMail,
     required String studentName,
@@ -329,7 +337,8 @@ class FirestoreService {
       'mail': mail,
     });
   }
-   // Update/Edit post data
+
+  // Update/Edit post data
   List StudentPostInstances({
     required String postId,
     required String studentId,
@@ -343,6 +352,7 @@ class FirestoreService {
 
     return [studentRef, studentPostRef];
   }
+
   Future<DocumentSnapshot> getStudent({
     required String studentId,
   }) async {
@@ -351,12 +361,11 @@ class FirestoreService {
     return postSnapshot;
   }
 
-   Stream<QuerySnapshot> getStudentPostsStream() {
+  Stream<QuerySnapshot> getStudentPostsStream() {
     final studentPostsStream =
         student_posts.orderBy('timestamp', descending: true).snapshots();
     return studentPostsStream;
   }
-
 
   Stream<QuerySnapshot> getStudentProfilePosts({required String studentId}) {
     print(studentId);
@@ -367,6 +376,7 @@ class FirestoreService {
         .snapshots();
     return studentProfileStream;
   }
+
   //To get a single student post
   Future<DocumentSnapshot> getStudentPost({
     required String studentId,
@@ -377,6 +387,7 @@ class FirestoreService {
     final postSnapshot = await studentRef.collection('posts').doc(postId).get();
     return postSnapshot;
   }
+
   //To delete data inside the profile posts and student_posts
   Future<void> deleteStudentPost({
     required String studentId,
@@ -393,7 +404,8 @@ class FirestoreService {
       print('Error deleting post: $e');
     }
   }
-   // Update/Edit post data
+
+  // Update/Edit post data
   Future<void> updateStudentPost({
     required String postId,
     required String studentId,
@@ -432,19 +444,16 @@ class FirestoreService {
 
     return [studentRef, studentPostRef];
   }
-  
-
 
 //------------------------------------------------------------------------------------------------------------------
 //EVENT SECTION
 
- // get collection of alumni_posts
+  // get collection of alumni_posts
   final CollectionReference event_posts =
       FirebaseFirestore.instance.collection('event_posts');
   // get collection of alumni_posts
   final CollectionReference event =
       FirebaseFirestore.instance.collection('event');
-
 
   // To add alumni post data from form to alumni and alumniPosts
   Future<void> addEventPosts({
@@ -506,5 +515,4 @@ class FirestoreService {
 
     return [eventRef, eventPostRef];
   }
-
 }
