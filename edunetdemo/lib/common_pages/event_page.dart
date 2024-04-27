@@ -14,28 +14,9 @@ class EventPage extends StatefulWidget {
 class _EventPageState extends State<EventPage> {
   final FirestoreService firestoreService = FirestoreService();
 
-  Future<void> _signOut() async {
-    try {
-      await FirebaseAuth.instance.signOut();
-      // Navigate to the sign-in screen or any other desired screen after sign-out
-      Navigator.pushReplacementNamed(context, '/sign_in');
-    } catch (e) {
-      print('Error signing out: $e');
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Event Page'),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.logout),
-            onPressed: _signOut,
-          ),
-        ],
-      ),
       body: StreamBuilder<QuerySnapshot>(
         stream: firestoreService.getEventPostsStream(),
         builder: (context, snapshot) {

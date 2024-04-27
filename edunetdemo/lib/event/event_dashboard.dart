@@ -1,8 +1,18 @@
-
 import 'package:edunetdemo/common_pages/event_page.dart';
 import 'package:edunetdemo/event/event_newpost.dart';
 import 'package:edunetdemo/event/event_notification.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
+Future<void> _signOut(BuildContext context) async {
+  try {
+    await FirebaseAuth.instance.signOut();
+    // Navigate to the sign-in screen or any other desired screen after sign-out
+    Navigator.pushReplacementNamed(context, '/sign_in');
+  } catch (e) {
+    print('Error signing out: $e');
+  }
+}
 
 class EventDashboard extends StatefulWidget {
   const EventDashboard({super.key});
@@ -12,21 +22,22 @@ class EventDashboard extends StatefulWidget {
 }
 
 class _EventDashboardState extends State<EventDashboard> {
-    int _selectedIndex = 0;
-
+  int _selectedIndex = 0;
   static List<Widget> _widgetOptions = <Widget>[
     EventPage(),
     EventNewPostPage(),
-    EventNotificationPage()
+    EventNotificationPage(),
+    ProfilePage(),
   ];
+
   @override
   Widget build(BuildContext context) {
-   return Scaffold(
-      // appBar: AppBar(
-      //   title: Text('Bottom Navigation Bar Example'),
-      // ),
+    return Scaffold(
       body: Center(
-        child: IndexedStack(index: _selectedIndex,children: _widgetOptions,),
+        child: IndexedStack(
+          index: _selectedIndex,
+          children: _widgetOptions,
+        ),
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
@@ -51,15 +62,34 @@ class _EventDashboardState extends State<EventDashboard> {
             icon: Icon(Icons.notifications),
             label: 'Notification',
           ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
         ],
       ),
     );
   }
 }
 
-
-
-
-
-
-
+class ProfilePage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Profile'),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton(
+              child: Text('Logout'),
+              onPressed: () => _signOut(context),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
