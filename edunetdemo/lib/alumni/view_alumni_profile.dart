@@ -3,15 +3,15 @@ import 'package:edunetdemo/services/firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class ViewProfile extends StatefulWidget {
+class ViewAlumniProfile extends StatefulWidget {
   final String alumniId;
-  const ViewProfile({super.key, required this.alumniId});
+  const ViewAlumniProfile({super.key, required this.alumniId});
 
   @override
-  State<ViewProfile> createState() => _ViewProfileState();
+  State<ViewAlumniProfile> createState() => _ViewAlumniProfileState();
 }
 
-class _ViewProfileState extends State<ViewProfile> {
+class _ViewAlumniProfileState extends State<ViewAlumniProfile> {
   final FirestoreService _firestoreService = FirestoreService();
 
   late String alumni_name = 'john doe';
