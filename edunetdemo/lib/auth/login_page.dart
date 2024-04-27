@@ -182,12 +182,17 @@
 //   }
 // }
 
+import 'package:edunetdemo/admin/admin_dashboard.dart';
+import 'package:edunetdemo/alumni/alumni_dashboard.dart';
 import 'package:edunetdemo/auth/login_check2.dart';
+import 'package:edunetdemo/event/event_dashboard.dart';
+import 'package:edunetdemo/student/student_dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 final GoogleSignIn _googleSignIn = GoogleSignIn();
+
 
 class LoginPage extends StatefulWidget {
   @override
@@ -202,7 +207,96 @@ class _LoginPageState extends State<LoginPage> {
   String? _emailError;
   String? _passwordError;
 
-  Future<UserCredential> signInWithGoogle() async {
+  // Future<UserCredential> signInWithGoogle() async {
+  //   // Sign out the previously authenticated Google account
+  //   await _googleSignIn.signOut();
+
+  //   // Trigger the authentication flow
+  //   final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+
+  //   // Obtain the auth details from the request
+  //   final GoogleSignInAuthentication? googleAuth =
+  //       await googleUser?.authentication;
+
+  //   // Create a new credential
+  //   final credential = GoogleAuthProvider.credential(
+  //     accessToken: googleAuth?.accessToken,
+  //     idToken: googleAuth?.idToken,
+  //   );
+
+  //   // Once signed in, return the UserCredential
+  //   return await FirebaseAuth.instance.signInWithCredential(credential);
+  // }
+      String checkYearPattern(String email, int currentYear) {
+    // Pattern for emails with year (e.g. 2025) before @cs.sjcetpalai.ac.in
+    final yearPattern = RegExp(r'\b\w+(\d{4})@cs\.sjcetpalai\.ac\.in\b');
+
+    final match = yearPattern.firstMatch(email);
+    if (match != null) {
+      final emailYear = int.parse(match.group(1)!);
+      if (emailYear >= currentYear) {
+        return 'Student';
+      } else {
+        return 'Alumni';
+      }
+    } else {
+      return 'null';
+    }
+  }
+
+    String checkEmailPattern(String email) {
+    final currentYear = DateTime.now().year;
+    // Pattern for emails with @cs.sjcetpalai.ac.in
+    final sjcetPattern = RegExp(r'\b\w+@cs\.sjcetpalai\.ac\.in\b');
+    // Pattern for emails with @edunet.in
+    final edunetAdminPattern = RegExp(r'\b\w+@admin\.edunet\.com\b');
+    final edunetModPattern = RegExp(r'\b\w+@moderator\.edunet\.com\b');
+
+    if (sjcetPattern.hasMatch(email)) {
+      return checkYearPattern(email, currentYear);
+    } else if (edunetAdminPattern.hasMatch(email)) {
+      return 'Admin';
+    } else if (edunetModPattern.hasMatch(email)) {
+      return 'Moderator';
+    } else {
+      return 'null';
+    }
+  }
+
+  void _navigateToPage(BuildContext context) {
+  final user = FirebaseAuth.instance.currentUser;
+  if (user != null) {
+    final userMail = user.email;
+    final userType = checkEmailPattern(userMail!);
+
+    if (userType == 'Student') {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => Student_Dashboard()),
+      );
+    } else if (userType == 'Alumni') {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => Alumni_Dashboard()),
+      );
+    } else if (userType == 'Admin') {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => AdminDashboard()),
+      );
+    } else if (userType == 'Moderator') {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => EventDashboard()),
+      );
+    } else {
+      // Handle other user types or invalid emails
+    }
+  }
+}
+
+  Future<void> signInWithGoogle() async {
+  try {
     // Sign out the previously authenticated Google account
     await _googleSignIn.signOut();
 
@@ -210,8 +304,7 @@ class _LoginPageState extends State<LoginPage> {
     final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
 
     // Obtain the auth details from the request
-    final GoogleSignInAuthentication? googleAuth =
-        await googleUser?.authentication;
+    final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
 
     // Create a new credential
     final credential = GoogleAuthProvider.credential(
@@ -220,8 +313,15 @@ class _LoginPageState extends State<LoginPage> {
     );
 
     // Once signed in, return the UserCredential
-    return await FirebaseAuth.instance.signInWithCredential(credential);
+    await FirebaseAuth.instance.signInWithCredential(credential);
+
+    // Navigate to the appropriate page after successful sign-in
+    _navigateToPage(context);
+  } catch (e) {
+    // Handle sign-in error
+    print('Error signing in with Google: $e');
   }
+}
 
   Future<void> signIn() async {
     setState(() {
