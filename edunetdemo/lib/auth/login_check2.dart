@@ -63,11 +63,10 @@ class _MainPageState extends State<MainPage> {
     await FirebaseAuth.instance.signOut();
   }
 
-
   bool _isFirstTime = false;
   String? _userType;
 
-   @override
+  @override
   void initState() {
     super.initState();
     _checkAuthState();
@@ -85,14 +84,17 @@ class _MainPageState extends State<MainPage> {
     setState(() {}); // Trigger a rebuild after setting the state
   }
 
-  @override
-  Widget build(BuildContext context) {
-    if (_userType == null) {
+  Widget _getPageWidget() {
+  if (_userType == null) {
       return LoginPage();
     } else if (_userType == 'Student') {
-      return _isFirstTime ? const StudentProfileForm() : const Student_Dashboard();
+      return _isFirstTime
+          ? const StudentProfileForm()
+          : const Student_Dashboard();
     } else if (_userType == 'Alumni') {
-      return _isFirstTime ? const AlumniProfileForm() : const Alumni_Dashboard();
+      return _isFirstTime
+          ? const AlumniProfileForm()
+          : const Alumni_Dashboard();
     } else if (_userType == 'Admin') {
       return const AdminDashboard();
     } else if (_userType == 'Moderator') {
@@ -101,6 +103,14 @@ class _MainPageState extends State<MainPage> {
       _signOutUser();
       return LoginPage();
     }
+}
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: _getPageWidget(),
+    );
+    
   }
 }
 
