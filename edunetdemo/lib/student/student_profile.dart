@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:edunetdemo/auth/login_check.dart';
+import 'package:edunetdemo/auth/login_check2.dart';
 import 'package:edunetdemo/services/firestore.dart';
 import 'package:edunetdemo/student/student_dashboard.dart';
 import 'package:edunetdemo/student/student_edit-profile.dart';

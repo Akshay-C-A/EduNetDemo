@@ -1,7 +1,7 @@
 
 // import 'package:edunetdemo/alumni/alumni_dashboard.dart';
 
-import 'package:edunetdemo/auth/login_check.dart';
+import 'package:edunetdemo/auth/login_check2.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
