@@ -71,10 +71,9 @@ class FirestoreService {
   Future<bool> isFirstTime(String? email) async {
     if (email != null) {
       final USER = await FirebaseAuth.instance.userChanges().first;
-      USER?.displayName == null;
 
-      if (getUser(email: email) == false) return false;
-      return true;
+      // if (getUser(email: email) == false) return false;
+      return USER?.displayName == null;
     } else {
       return false;
     }
