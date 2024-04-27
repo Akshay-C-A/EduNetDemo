@@ -220,6 +220,7 @@ class _ModeratorManagementPageState extends State<ModeratorManagementPage> {
     final moderatorDoc = await moderatorsCollection.doc(docId).get();
     final email = moderatorDoc.data()?['email'] as String;
 
+    // final signInMethods = await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
     final signInMethods = await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
     if (signInMethods.isNotEmpty) {
       final user = await FirebaseAuth.instance.currentUser;
@@ -243,6 +244,7 @@ class _ModeratorManagementPageState extends State<ModeratorManagementPage> {
     );
   }
 }
+
 
   @override
   Widget build(BuildContext context) {
