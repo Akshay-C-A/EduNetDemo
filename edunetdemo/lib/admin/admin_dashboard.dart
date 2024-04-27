@@ -71,6 +71,7 @@
 //   }
 // }
 
+import 'package:edunetdemo/auth/login_check2.dart';
 import 'package:edunetdemo/common_pages/event_page.dart';
 import 'package:edunetdemo/common_pages/search.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -112,6 +113,11 @@ class _AdminDashboardState extends State<AdminDashboard> {
           IconButton(
             onPressed: () {
               FirebaseAuth.instance.signOut();
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => MainPage()),
+                (route) => false,
+              );
             },
             icon: Icon(Icons.logout),
           ),
@@ -154,18 +160,21 @@ class ModeratorManagementPage extends StatefulWidget {
   const ModeratorManagementPage({Key? key}) : super(key: key);
 
   @override
-  _ModeratorManagementPageState createState() => _ModeratorManagementPageState();
+  _ModeratorManagementPageState createState() =>
+      _ModeratorManagementPageState();
 }
 
 class _ModeratorManagementPageState extends State<ModeratorManagementPage> {
-  final moderatorsCollection = FirebaseFirestore.instance.collection('moderators');
+  final moderatorsCollection =
+      FirebaseFirestore.instance.collection('moderators');
 
   Future<void> _addModerator(String name) async {
     final email = '${name.toLowerCase()}@moderator.edunet.com';
     final password = generatePassword(); // Implement password generation logic
 
     try {
-      final userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      final userCredential =
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -216,35 +225,35 @@ class _ModeratorManagementPageState extends State<ModeratorManagementPage> {
   // }
 
   Future<void> _deleteModerator(String docId) async {
-  try {
-    final moderatorDoc = await moderatorsCollection.doc(docId).get();
-    final email = moderatorDoc.data()?['email'] as String;
+    try {
+      final moderatorDoc = await moderatorsCollection.doc(docId).get();
+      final email = moderatorDoc.data()?['email'] as String;
 
-    // final signInMethods = await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
-    final signInMethods = await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
-    if (signInMethods.isNotEmpty) {
-      final user = await FirebaseAuth.instance.currentUser;
-      if (user != null) {
-        await user.delete();
+      // final signInMethods = await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
+      final signInMethods =
+          await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
+      if (signInMethods.isNotEmpty) {
+        final user = await FirebaseAuth.instance.currentUser;
+        if (user != null) {
+          await user.delete();
+        }
       }
+
+      await moderatorsCollection.doc(docId).delete();
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Moderator deleted successfully'),
+        ),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error deleting moderator: $e'),
+        ),
+      );
     }
-
-    await moderatorsCollection.doc(docId).delete();
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Moderator deleted successfully'),
-      ),
-    );
-  } catch (e) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Error deleting moderator: $e'),
-      ),
-    );
   }
-}
-
 
   @override
   Widget build(BuildContext context) {
@@ -254,7 +263,8 @@ class _ModeratorManagementPageState extends State<ModeratorManagementPage> {
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
               stream: moderatorsCollection.snapshots(),
-              builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              builder: (BuildContext context,
+                  AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.hasError) {
                   return Text('Error: ${snapshot.error}');
                 }
