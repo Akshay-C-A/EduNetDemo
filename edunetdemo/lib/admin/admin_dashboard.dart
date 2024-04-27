@@ -72,8 +72,10 @@
 // }
 
 import 'package:edunetdemo/auth/login_check2.dart';
+import 'package:edunetdemo/common_pages/alumni_page.dart';
 import 'package:edunetdemo/common_pages/event_page.dart';
 import 'package:edunetdemo/common_pages/search.dart';
+import 'package:edunetdemo/common_pages/student_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -93,6 +95,8 @@ class _AdminDashboardState extends State<AdminDashboard> {
   Widget build(BuildContext context) {
     List<Widget> widgetOptions = <Widget>[
       EventPage(),
+      StudentPage(),
+      AlumniPage(),
       ModeratorManagementPage(),
       ProfilePage(),
     ];
@@ -143,12 +147,16 @@ class _AdminDashboardState extends State<AdminDashboard> {
             label: 'Events',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.people),
-            label: 'Manage Moderators',
+            icon: Icon(Icons.person),
+            label: 'Student',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
-            label: 'Profile',
+            label: 'Alumni',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.people),
+            label: 'Moderators',
           ),
         ],
       ),
