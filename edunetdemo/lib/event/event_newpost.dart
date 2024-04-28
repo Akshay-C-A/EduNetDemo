@@ -6,6 +6,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:path/path.dart' as path;
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:intl/intl.dart';
+
 
 class EventNewPostPage extends StatefulWidget {
   @override
@@ -14,10 +16,18 @@ class EventNewPostPage extends StatefulWidget {
 
 class _EventNewPostPageState extends State<EventNewPostPage> {
   final FirestoreService _EventFirestoreService = FirestoreService();
-  final _detailsController = TextEditingController();
-  final _captionController = TextEditingController();
-  String _postType = 'Internship offer';
 
+  String _eventTitle = '';
+  String _eventDate = '';
+  String _eventVenue = '';
+  String? _otherDetails;
+  bool _submitted = false;
+
+  TextEditingController _dateController = TextEditingController();
+  TextEditingController _eventTitleController = TextEditingController();
+  TextEditingController _eventVenueController = TextEditingController();
+  TextEditingController _otherDetailsController = TextEditingController();
+  
   XFile? _selectedImage;
   final _picker = ImagePicker();
   bool _isLoading = false;
@@ -56,11 +66,14 @@ class _EventNewPostPageState extends State<EventNewPostPage> {
   }
 
   void _resetForm() {
-    _detailsController.clear();
-    _captionController.clear();
+    _dateController.clear();
+    _eventTitleController.clear();
+    _eventVenueController.clear();
+    _otherDetailsController.clear();
+
     setState(() {
       _selectedImage = null;
-      _postType = 'Internship offer';
+      // _postType = 'Internship offer';
     });
   }
 
@@ -71,13 +84,13 @@ class _EventNewPostPageState extends State<EventNewPostPage> {
 
     final imageURL = await _uploadImage();
     await _EventFirestoreService.addEventPosts(
-      EventTitle: 'Event Title 22', 
+      EventTitle: _eventTitleController.text, 
       moderatorId: 'mod123', 
       moderatorName: 'modmemms', 
-      Date: '21/21/2121', 
-      Venue: 'Event Venue 22', 
-      otherDetails: 'Other Details 22',
-      imageURL: 'https://png.pngtree.com/thumb_back/fh260/background/20230611/pngtree-two-cute-egg-cupids-sitting-in-sunlight-next-to-each-other-image_2914931.jpg',
+      Date: _dateController.text, 
+      Venue: _eventVenueController.text, 
+      otherDetails: _otherDetailsController.text,
+      imageURL: imageURL,
       dpURL: 'https://png.pngtree.com/thumb_back/fh260/background/20230611/pngtree-two-cute-egg-cupids-sitting-in-sunlight-next-to-each-other-image_2914931.jpg',
       
     );
@@ -113,69 +126,15 @@ class _EventNewPostPageState extends State<EventNewPostPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'Post Type',
-                      style: TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 8.0),
-                    // Container(
-                    //   padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                    //   decoration: BoxDecoration(
-                    //     borderRadius: BorderRadius.circular(8.0),
-                    //     border: Border.all(color: Colors.grey),
-                    //   ),
-                    //   child: DropdownButton<String>(
-                    //     value: _postType,
-                    //     isExpanded: true,
-                    //     underline: const SizedBox.shrink(),
-                    //     items: _postTypes.map((String value) {
-                    //       return DropdownMenuItem<String>(
-                    //         value: value,
-                    //         child: Text(value),
-                    //       );
-                    //     }).toList(),
-                    //     onChanged: (String? newValue) {
-                    //       setState(() {
-                    //         _postType = newValue!;
-                    //       });
-                    //     },
-                    //   ),
-                    // ),
                     const SizedBox(height: 16.0),
-                    const Text(
-                      'Details',
-                      style: TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    TextField(
-                      controller: _detailsController,
-                      decoration: const InputDecoration(
-                        hintText: 'Enter details',
-                        border: OutlineInputBorder(),
-                      ),
-                      maxLines: null,
-                    ),
-                    const SizedBox(height: 16.0),
-                    const Text(
-                      'Caption',
-                      style: TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    TextField(
-                      controller: _captionController,
-                      decoration: const InputDecoration(
-                        hintText: 'Enter organisation name',
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                    const SizedBox(height: 16.0),
+                     _buildTextField('Event Title', (value) => _eventTitle = value!,_eventTitleController),
+                      SizedBox(height: 16.0),
+                      _buildTextFieldWithCalendarIcon('Event Date', (value) => _eventDate = value!),
+                      SizedBox(height: 16.0),
+                      _buildTextField('Event Venue', (value) => _eventVenue = value!,_eventVenueController),
+                      SizedBox(height: 16.0),
+                      _buildTextField('Other Details', (value) => _otherDetails = value,_otherDetailsController),
+                      SizedBox(height: 16.0),
                     const Text(
                       'Photo',
                       style: TextStyle(
@@ -237,5 +196,85 @@ class _EventNewPostPageState extends State<EventNewPostPage> {
               ),
             ),
     );
+  }
+
+  Widget _buildTextField(String label, Function(String?) onSaved, TextEditingController t_controller) {
+    bool showError = _submitted && (label == 'Event Title' ? _eventTitle.isEmpty : (label == 'Event Date' ? _eventDate.isEmpty : label == 'Event Venue' ? _eventVenue.isEmpty : false));
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        TextFormField(
+          controller: t_controller,
+          decoration: InputDecoration(
+            hintText: 'Enter $label',
+            border: OutlineInputBorder(),
+            errorBorder: showError ? OutlineInputBorder(borderSide: BorderSide(color: Colors.red)) : OutlineInputBorder(),
+            errorText: showError ? 'This field is required' : null,
+          ),
+          onSaved: onSaved,
+          validator: (value) {
+            if (_submitted && (value == null || value.isEmpty) && (label == 'Event Title' || label == 'Event Date' || label == 'Event Venue')) {
+              return 'This field is required';
+            }
+            return null;
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTextFieldWithCalendarIcon(String label, Function(String?) onSaved) {
+    bool showError = _submitted && _eventDate.isEmpty;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        TextFormField(
+          controller: _dateController,
+          decoration: InputDecoration(
+            hintText: 'Enter $label',
+            border: OutlineInputBorder(),
+            errorBorder: showError ? OutlineInputBorder(borderSide: BorderSide(color: Colors.red)) : OutlineInputBorder(),
+            errorText: showError ? 'This field is required' : null,
+            suffixIcon: label == 'Event Date'
+                ? IconButton(
+                    onPressed: _pickDate,
+                    icon: Icon(Icons.calendar_today),
+                  )
+                : null,
+          ),
+          onSaved: onSaved,
+          validator: (value) {
+            if (_submitted && value!.isEmpty && label == 'Event Date') {
+              return 'This field is required';
+            }
+            return null;
+          },
+        ),
+      ],
+    );
+  }
+
+  void _pickDate() async {
+    final DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+    );
+
+    if (pickedDate != null) {
+      setState(() {
+        _eventDate = DateFormat('dd/MM/yyyy').format(pickedDate);
+        _dateController.text = _eventDate;
+      });
+    }
   }
 }
