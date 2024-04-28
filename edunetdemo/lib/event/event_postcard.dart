@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:edunetdemo/alumni/view_alumni_profile.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/widgets.dart';
 import 'package:share_plus/share_plus.dart';
@@ -15,26 +14,27 @@ import 'package:http/http.dart' as http;
 
 class EventPostCard extends StatefulWidget {
   //data for likes
+ 
   final String postId;
   final List<String> likes;
-
-  //data for post
-  final String alumnId;
-  final String type;
-  final String alumniName;
-  final String alumniDesignation;
-  final String caption;
-  final String description;
+  final String communityName;
+  final String venue;
+  final String moderatorId;
+  final String date;
+  final String moderatorName;
+  final String otherDetails;
+  final String eventTitle;
   final String imageURL;
   final String dpURL;
 
   EventPostCard({
-    required this.type,
-    required this.alumnId,
-    required this.alumniName,
-    required this.alumniDesignation,
-    required this.caption,
-    required this.description,
+    required this.venue,
+    required this.moderatorId,
+    required this.moderatorName,
+    required this.otherDetails,
+    required this.eventTitle,
+    required this.date,
+    required this.communityName,
     required this.imageURL,
     required this.dpURL,
     required this.postId,
@@ -76,19 +76,6 @@ class _EventPostCardState extends State<EventPostCard> {
   bool isExpanded = false;
   bool showLikeIcon = false;
 
-  Color getButtonColor(String type) {
-    switch (type) {
-      case 'Placement offer':
-        return Color.fromARGB(255, 7, 156, 183);
-      case 'Internship offer':
-        return Color.fromARGB(255, 158, 79, 189);
-      case 'Technical event':
-        return Color.fromARGB(255, 155, 50, 85);
-      default:
-        return Colors.blue;
-    }
-  }
-
   @override
   void initState() {
     super.initState();
@@ -100,24 +87,24 @@ class _EventPostCardState extends State<EventPostCard> {
       isLiked = !isLiked;
     });
 
-    List ref = firestoreService.alumniPostInstances(
-        postId: widget.postId, alumniId: widget.alumnId);
-    DocumentReference alumniPost = ref[0];
-    DocumentReference alumniProfile = ref[1];
+    List ref = firestoreService.eventPostInstances(
+        postId: widget.postId, moderatorId: widget.moderatorId);
+    DocumentReference eventPost = ref[0];
+    DocumentReference moderatorProfile = ref[1];
 
     if (isLiked) {
-      alumniPost.update({
+      eventPost.update({
         'likes': FieldValue.arrayUnion([currentUser!.email])
       });
-      alumniProfile.update({
+      moderatorProfile.update({
         'likes': FieldValue.arrayUnion([currentUser!.email])
       });
     } else {
-      alumniPost.update({
-        'likes': FieldValue.arrayRemove([currentUser!.email])
+      eventPost.update({
+        'likes': FieldValue.arrayUnion([currentUser!.email])
       });
-      alumniProfile.update({
-        'likes': FieldValue.arrayRemove([currentUser!.email])
+      moderatorProfile.update({
+        'likes': FieldValue.arrayUnion([currentUser!.email])
       });
     }
   }
@@ -152,13 +139,13 @@ class _EventPostCardState extends State<EventPostCard> {
                       Row(
                         children: [
                           GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => ViewAlumniProfile(
-                                          alumniId: widget.alumnId)));
-                            },
+                            // onTap: () {
+                            //   Navigator.push(
+                            //       context,
+                            //       MaterialPageRoute(
+                            //           builder: (context) => ViewAlumniProfile(
+                            //               alumniId: widget.moderatorId)));
+                            // },
                             child: CircleAvatar(
                               radius: 20,
                               backgroundImage: NetworkImage(widget.dpURL),
@@ -169,44 +156,44 @@ class _EventPostCardState extends State<EventPostCard> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                widget.alumniName,
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              SizedBox(height: 4),
-                              Text(
-                                widget.alumniDesignation,
-                                style:
-                                    TextStyle(fontSize: 12, color: Colors.grey),
-                              ),
+                          widget.communityName, // Changed
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(height: 4),
+                        Text(
+                          '${widget.moderatorName}', // Changed
+                          style: TextStyle(fontSize: 12, color: Colors.grey),
+                        ),
                             ],
                           ),
                         ],
-                      ),
-                      // Container for displaying post type
-                      Container(
-                        padding:
-                            EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                        decoration: BoxDecoration(
-                          color: getButtonColor(widget.type),
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        child: Text(
-                          widget.type,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
                       ),
                     ],
                   ),
                 ),
                 Padding(
                   padding: EdgeInsets.all(10.0),
-                  child: Text(
-                    widget.caption,
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
+                  child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Event     :    ${widget.eventTitle}',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 4),
+                 Text(
+                  'Date      :    ${widget.date}',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 4),
+                 Text(
+                  'Venue   :     ${widget.venue}',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 4),
+                
+              ],
+            ),
                 ),
                 Padding(
                   padding: EdgeInsets.all(10.0),
@@ -226,9 +213,9 @@ class _EventPostCardState extends State<EventPostCard> {
                       });
                     },
                     child: Text(
-                      isExpanded || widget.description.length <= 100
-                          ? widget.description
-                          : '${widget.description!.substring(0, 100)}...',
+                      isExpanded || widget.otherDetails.length <= 100
+                          ? widget.otherDetails
+                          : '${widget.otherDetails!.substring(0, 100)}...',
                       maxLines: isExpanded ? null : 2,
                       overflow: isExpanded
                           ? TextOverflow.clip
@@ -236,6 +223,34 @@ class _EventPostCardState extends State<EventPostCard> {
                     ),
                   ),
                 ),
+                Row(
+              mainAxisAlignment: MainAxisAlignment.start, // Align to the left
+              children: [
+                SizedBox(
+                  height: 40, // Set the desired height
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.green,
+                        width: 2.0,
+                      ),
+                      borderRadius: BorderRadius.circular(10.0), // Reduce the curve size
+                    ),
+                    // Add horizontal padding
+                    child: TextButton(
+                      onPressed: () {},
+                      child: Text(
+                        "Enroll",
+                        style: TextStyle(
+                          color: Colors.green,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
                 ButtonBar(
                   alignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -274,7 +289,7 @@ class _EventPostCardState extends State<EventPostCard> {
                             await Share.shareXFiles(
                               [XFile(tempFile.path)],
                               text:
-                                  '${widget.alumniName} shared a post:\n\n${widget.caption}\n\n${widget.description}',
+                                  '${widget.communityName} shared a post:\n\n${widget.eventTitle}\n\n${widget.eventTitle}\n\n${widget.venue}\n\n${widget.otherDetails}',
                             );
                           },
                         ),
