@@ -451,8 +451,8 @@ class FirestoreService {
   final CollectionReference event_posts =
       FirebaseFirestore.instance.collection('event_posts');
   // get collection of alumni_posts
-  final CollectionReference event =
-      FirebaseFirestore.instance.collection('event');
+  final CollectionReference moderator =
+      FirebaseFirestore.instance.collection('moderator');
 
   // To add alumni post data from form to alumni and alumniPosts
   Future<void> addEventPosts({
@@ -480,8 +480,8 @@ class FirestoreService {
     });
 
     //Adding post to alumni user data
-    DocumentReference Event = event.doc(moderatorId);
-    return Event.collection('posts').doc('$moderatorId$unique').set({
+    DocumentReference Moderator = moderator.doc(moderatorId);
+    return Moderator.collection('posts').doc('$moderatorId$unique').set({
       'eventTitle': EventTitle,
       'moderatorId': moderatorId,
       'moderatorName': moderatorName,
@@ -493,7 +493,7 @@ class FirestoreService {
     });
   }
 
-  // To get the data for event posts
+  // To get the data for moderator posts
   Stream<QuerySnapshot> getEventPostsStream() {
     final eventPostsStream =
         event_posts.orderBy('timestamp', descending: true).snapshots();
@@ -509,9 +509,9 @@ class FirestoreService {
     DocumentReference eventRef = event_posts.doc(postId);
 
     // Update the post in the alumni user data
-    DocumentReference eventPostRef =
-        event.doc(moderatorId).collection('posts').doc(postId);
+    DocumentReference moderatorPostRef =
+        moderator.doc(moderatorId).collection('posts').doc(postId);
 
-    return [eventRef, eventPostRef];
+    return [eventRef, moderatorPostRef];
   }
 }
