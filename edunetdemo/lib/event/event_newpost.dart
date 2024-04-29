@@ -84,6 +84,7 @@ class _EventNewPostPageState extends State<EventNewPostPage> {
 
     final imageURL = await _uploadImage();
     await _EventFirestoreService.addEventPosts(
+      communityName: 'µ Learn',
       EventTitle: _eventTitleController.text, 
       moderatorId: 'mod123', 
       moderatorName: 'modmemms', 
@@ -91,7 +92,7 @@ class _EventNewPostPageState extends State<EventNewPostPage> {
       Venue: _eventVenueController.text, 
       otherDetails: _otherDetailsController.text,
       imageURL: imageURL,
-      dpURL: 'https://png.pngtree.com/thumb_back/fh260/background/20230611/pngtree-two-cute-egg-cupids-sitting-in-sunlight-next-to-each-other-image_2914931.jpg',
+      dpURL: '',
       
     );
 

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:edunetdemo/common_pages/event_search.dart';
 import 'package:edunetdemo/event/event_postcard.dart';
 import 'package:edunetdemo/services/firestore.dart';
 import 'package:edunetdemo/services/notification_services.dart';
@@ -18,6 +19,10 @@ class _EventPageState extends State<EventPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(child: Icon(Icons.search),onPressed: () {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => EventSearchPage()));
+      }),
       body: StreamBuilder<QuerySnapshot>(
         stream: firestoreService.getEventPostsStream(),
         builder: (context, snapshot) {
@@ -43,6 +48,7 @@ class _EventPageState extends State<EventPage> {
               // Get note from each doc
               Map<String, dynamic> data =
                   document.data() as Map<String, dynamic>;
+                  
               String venue = data['venue'];
               String moderatorId = data['moderatorId'];
               String date = data['date'];

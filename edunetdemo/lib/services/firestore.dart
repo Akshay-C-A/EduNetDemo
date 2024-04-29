@@ -490,6 +490,7 @@ class FirestoreService {
 
   // To add alumni post data from form to alumni and alumniPosts
   Future<void> addEventPosts({
+    required String communityName,
     required String EventTitle,
     required String moderatorId,
     required String moderatorName,
@@ -501,6 +502,7 @@ class FirestoreService {
   }) {
     String unique = DateTime.now().toIso8601String();
     event_posts.doc('$moderatorId$unique').set({
+      'communityName' : communityName,
       'eventTitle': EventTitle,
       'moderatorId': moderatorId,
       'moderatorName': moderatorName,
