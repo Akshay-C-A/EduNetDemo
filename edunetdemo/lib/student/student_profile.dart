@@ -6,6 +6,7 @@ import 'package:edunetdemo/student/student_edit-profile.dart';
 import 'package:edunetdemo/student/student_profile_form.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 
 class ProfileScreen extends StatefulWidget {
@@ -24,6 +25,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
     setState(() {
       _selectedButton = newSelection;
     });
+  }
+
+  void _copyLink(String iconB) {
+    if (iconB == 'LinkedIn') {
+      Clipboard.setData(ClipboardData(text: widget.student.linkedIn.toString()));
+    } else if (iconB == 'Twitter') {
+      Clipboard.setData(ClipboardData(text: widget.student.twitter.toString()));
+    } else if (iconB == 'Mail') {
+      Clipboard.setData(ClipboardData(text: widget.student.mail.toString()));
+    }
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Link copied to clipboard'),
+        duration: Duration(seconds: 2),
+      ),
+    );
   }
 
   @override
@@ -203,23 +220,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     MainAxisAlignment.spaceAround,
                                 children: [
                                   IconButton(
-                                      onPressed: () {},
-                                      icon: Icon(
-                                        Icons.phone,
-                                        size: 30,
-                                      )),
+                                    onPressed: () {
+                                      _copyLink('LinkedIn');
+                                    },
+                                    icon: Image.asset(
+                                      'assets/Linkedin.png',
+                                      width: 25,
+                                    ),
+                                  ),
                                   IconButton(
-                                      onPressed: () {},
-                                      icon: Icon(
-                                        Icons.email,
-                                        size: 30,
-                                      )),
+                                    onPressed: () {
+                                      _copyLink('Mail');
+                                    },
+                                    icon: Image.asset(
+                                      'assets/Mail.png',
+                                      width: 30,
+                                    ),
+                                  ),
                                   IconButton(
-                                      onPressed: () {},
-                                      icon: Icon(
-                                        Icons.location_on,
-                                        size: 30,
-                                      )),
+                                    onPressed: () {
+                                      _copyLink('Twitter');
+                                    },
+                                    icon: Image.asset(
+                                      'assets/X.png',
+                                      width: 25,
+                                    ),
+                                  ),
                                 ],
                               ),
                             ],
