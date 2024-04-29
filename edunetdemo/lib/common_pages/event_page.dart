@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:edunetdemo/event/event_postcard.dart';
 import 'package:edunetdemo/services/firestore.dart';
+import 'package:edunetdemo/services/notification_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -50,10 +51,26 @@ class _EventPageState extends State<EventPage> {
               String eventTitle = data['eventTitle'];
               String imageURL = data['imageURL'];
               String dpURL = data['dpURL'];
+              String communityName = data['communityName'];
+              bool notified = data['notified'] ?? true;
+
+              if (notified == false) {
+                NotificationService().showNotification(
+                  title: communityName,
+                  body: otherDetails,
+                );
+                List ref = firestoreService.eventPostInstances(
+                    postId: document.id, moderatorId: moderatorId);
+                DocumentReference eventPost = ref[0];
+                DocumentReference moderatorProfile = ref[1];
+
+                eventPost.update({'notified': true});
+                moderatorProfile.update({'notified': true});
+              }
 
               // Display as a list title
               return EventPostCard(
-                communityName: 'MuLearn',
+                communityName: communityName,
                 date: date,
                 venue: venue,
                 moderatorId: moderatorId,

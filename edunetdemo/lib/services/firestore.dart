@@ -160,6 +160,7 @@ class FirestoreService {
       'dpURL': dpURL,
       'likes': [],
       'timestamp': Timestamp.now(),
+      'notified': false,
     });
 
     //Adding post to alumni user data
@@ -173,6 +174,7 @@ class FirestoreService {
       'description': description,
       'imageURL': imageURL,
       'timestamp': Timestamp.now(),
+      'notified': false,
     });
   }
 
@@ -292,6 +294,7 @@ class FirestoreService {
       'dpURL': dpURL,
       'likes': [],
       'timestamp': Timestamp.now(),
+      'notified': false,
     });
 
     //Adding post to student user data
@@ -304,6 +307,7 @@ class FirestoreService {
       'description': description,
       'imageURL': imageURL,
       'timestamp': Timestamp.now(),
+      'notified': false,
     });
   }
 
@@ -454,7 +458,7 @@ class FirestoreService {
   final CollectionReference moderator =
       FirebaseFirestore.instance.collection('moderator');
 
-   //To add student details
+  //To add student details
   Future<void> addModerator({
     required String? moderatorMail,
     required String moderatorName,
@@ -476,7 +480,7 @@ class FirestoreService {
     });
   }
 
-    Future<DocumentSnapshot> getModerator({
+  Future<DocumentSnapshot> getModerator({
     required String moderatorId,
   }) async {
     print(moderatorId);
@@ -507,6 +511,7 @@ class FirestoreService {
       'dpURL': dpURL,
       'likes': [],
       'timestamp': Timestamp.now(),
+      'notified': false,
     });
 
     //Adding post to alumni user data
@@ -520,6 +525,7 @@ class FirestoreService {
       'otherDetails': otherDetails,
       'imageURL': imageURL,
       'timestamp': Timestamp.now(),
+      'notified': false,
     });
   }
 

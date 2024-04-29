@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:edunetdemo/alumni/alumni_post_card.dart';
 import 'package:edunetdemo/services/firestore.dart';
+import 'package:edunetdemo/services/notification_services.dart';
 import 'package:flutter/material.dart';
 
 class AlumniPage extends StatefulWidget {
@@ -48,6 +49,21 @@ class _AlumniPageState extends State<AlumniPage> {
               String description = data['description'];
               String? imgURL = data['imageURL'];
               String? dpURL = data['dpURL'];
+              bool notified = data['notified'] ?? true;
+
+              if (notified == false) {
+                NotificationService().showNotification(
+                  title: alumniName,
+                  body: description,
+                );
+                List ref = firestoreService.alumniPostInstances(
+                    postId: document.id, alumniId: alumniId);
+                DocumentReference alumniPost = ref[0];
+                DocumentReference alumniProfile = ref[1];
+
+                alumniPost.update({'notified': true});
+                alumniProfile.update({'notified': true});
+              }
 
               // Display as a list title
               return AlumniPostCard(

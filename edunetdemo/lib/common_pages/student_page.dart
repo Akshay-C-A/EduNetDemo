@@ -79,6 +79,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:edunetdemo/services/firestore.dart';
+import 'package:edunetdemo/services/notification_services.dart';
 import 'package:edunetdemo/student/student_post_card.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -131,12 +132,26 @@ class _StudentPageState extends State<StudentPage> {
               String description = data['description'];
               String? imgURL = data['imageURL'];
               String? dpURL = data['dpURL'];
+              bool notified = data['notified'] ?? true;
+
+              if (notified == false) {
+                NotificationService().showNotification(
+                  title: studentName,
+                  body: description,
+                );
+                List ref = firestoreService.studentPostInstances(
+                    postId: document.id, studentId: studentId);
+                DocumentReference studentPost = ref[0];
+                DocumentReference studentProfile = ref[1];
+
+                studentPost.update({'notified': true});
+                studentProfile.update({'notified': true});
+              }
 
               return StudentPostCard(
                 studentId: studentId,
                 studentName: studentName,
                 studentDesignation: studentDesignation,
-                
                 caption: caption,
                 description: description,
                 imageURL: imgURL ?? '',
