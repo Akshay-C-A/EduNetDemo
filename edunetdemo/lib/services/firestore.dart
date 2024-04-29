@@ -454,6 +454,36 @@ class FirestoreService {
   final CollectionReference moderator =
       FirebaseFirestore.instance.collection('moderator');
 
+   //To add student details
+  Future<void> addModerator({
+    required String? moderatorMail,
+    required String moderatorName,
+    required String about,
+    String? dpURL,
+    String? linkedIn,
+    String? twitter,
+    String? mail,
+  }) {
+    return moderator.doc('$moderatorMail').set({
+      'moderatorMail': moderatorMail,
+      'moderatorId': moderatorMail,
+      'moderatorName': moderatorName,
+      'about': about,
+      'dpURL': dpURL,
+      'linkedIn': linkedIn,
+      'twitter': twitter,
+      'mail': mail,
+    });
+  }
+
+    Future<DocumentSnapshot> getModerator({
+    required String moderatorId,
+  }) async {
+    print(moderatorId);
+    final postSnapshot = await moderator.doc(moderatorId).get();
+    return postSnapshot;
+  }
+
   // To add alumni post data from form to alumni and alumniPosts
   Future<void> addEventPosts({
     required String EventTitle,
@@ -513,5 +543,53 @@ class FirestoreService {
         moderator.doc(moderatorId).collection('posts').doc(postId);
 
     return [eventRef, moderatorPostRef];
+  }
+
+  //To delete data inside the profile posts and student_posts
+  Future<void> deleteEventPost({
+    required String moderatorId,
+    required String postId,
+  }) async {
+    try {
+      // Delete the document in student profile
+      await moderator.doc(moderatorId).collection('posts').doc(postId).delete();
+      // Delete the post in student_posts
+      await event_posts.doc(postId).delete();
+
+      print('Post deleted successfully');
+    } catch (e) {
+      print('Error deleting post: $e');
+    }
+  }
+
+  // Update/Edit post data
+  Future<void> updateEventPost({
+    required String postId,
+    required String moderatorId,
+    required String Date,
+    required String Venue,
+    required String otherDetails,
+    required String EventTitle,
+  }) async {
+    // Update the post in the alumni_posts collection
+    await event_posts.doc(postId).update({
+      'eventTitle': EventTitle,
+      'date': Date,
+      'venue': Venue,
+      'otherDetails': otherDetails,
+      'timestamp': Timestamp.now(),
+      'edited': true,
+    });
+
+    // Update the post in the alumni user data
+    DocumentReference moderatorRef = moderator.doc(moderatorId);
+    await moderatorRef.collection('posts').doc(postId).update({
+      'eventTitle': EventTitle,
+      'date': Date,
+      'venue': Venue,
+      'otherDetails': otherDetails,
+      'timestamp': Timestamp.now(),
+      'edited': true,
+    });
   }
 }
