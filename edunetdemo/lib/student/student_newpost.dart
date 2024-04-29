@@ -21,7 +21,7 @@ class StudentNewPostPage extends StatefulWidget {
 class _StudentNewPostPageState extends State<StudentNewPostPage> {
   final FirestoreService _firestoreService = FirestoreService();
   final _detailsController = TextEditingController();
-  final _organisationNameController = TextEditingController();
+  final _captionController = TextEditingController();
   
   XFile? _selectedImage;
   final _picker = ImagePicker();
@@ -61,7 +61,7 @@ class _StudentNewPostPageState extends State<StudentNewPostPage> {
 
   void _resetForm() {
     _detailsController.clear();
-    _organisationNameController.clear();
+    _captionController.clear();
     setState(() {
       _selectedImage = null;
       
@@ -76,7 +76,7 @@ class _StudentNewPostPageState extends State<StudentNewPostPage> {
       studentName:  widget.student.student_name,// Replace with the actual alumni name
       studentDesignation:
           widget.student.student_designation, // Replace with the actual alumni designation
-      caption: _organisationNameController.text,
+      caption: _captionController.text,
       description: _detailsController.text,
       imageURL: imageURL,
       dpURL: widget.student.dpURL,
@@ -95,6 +95,22 @@ class _StudentNewPostPageState extends State<StudentNewPostPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
+                'Caption',
+                style: TextStyle(
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              TextField(
+                controller: _captionController,
+                decoration: const InputDecoration(
+                  hintText: 'Add your caption',
+                  border: OutlineInputBorder(),
+                ),
+                maxLines: null,
+              ),
+              const SizedBox(height: 16.0),
+              const Text(
                 'Details',
                 style: TextStyle(
                   fontSize: 18.0,
@@ -105,22 +121,6 @@ class _StudentNewPostPageState extends State<StudentNewPostPage> {
                 controller: _detailsController,
                 decoration: const InputDecoration(
                   hintText: 'Enter details',
-                  border: OutlineInputBorder(),
-                ),
-                maxLines: null,
-              ),
-              const SizedBox(height: 16.0),
-              const Text(
-                'Organisation Name',
-                style: TextStyle(
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              TextField(
-                controller: _organisationNameController,
-                decoration: const InputDecoration(
-                  hintText: 'Enter organisation name',
                   border: OutlineInputBorder(),
                 ),
               ),
