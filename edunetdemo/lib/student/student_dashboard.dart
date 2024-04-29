@@ -1,7 +1,7 @@
 // ignore_for_file: prefer_final_fields, non_constant_identifier_names
 import 'package:edunetdemo/common_pages/alumni_page.dart';
 import 'package:edunetdemo/common_pages/event_page.dart';
-import 'package:edunetdemo/common_pages/search.dart';
+import 'package:edunetdemo/common_pages/user_search.dart';
 import 'package:edunetdemo/common_pages/student_page.dart';
 import 'package:edunetdemo/services/firestore.dart';
 import 'package:edunetdemo/student/student_newpost.dart';
@@ -164,7 +164,7 @@ class _Student_DashboardState extends State<Student_Dashboard> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => SearchPage()));
+                              builder: (context) => UserSearchPage()));
                     },
                     icon: Icon(Icons.search)),
                 GestureDetector(

@@ -74,7 +74,7 @@
 import 'package:edunetdemo/auth/login_check2.dart';
 import 'package:edunetdemo/common_pages/alumni_page.dart';
 import 'package:edunetdemo/common_pages/event_page.dart';
-import 'package:edunetdemo/common_pages/search.dart';
+import 'package:edunetdemo/common_pages/user_search.dart';
 import 'package:edunetdemo/common_pages/student_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -109,7 +109,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => SearchPage()),
+                MaterialPageRoute(builder: (context) => UserSearchPage()),
               );
             },
             icon: Icon(Icons.search),

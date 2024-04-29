@@ -3,14 +3,14 @@ import 'package:edunetdemo/alumni/view_alumni_profile.dart';
 import 'package:edunetdemo/student/view_student_profile.dart';
 import 'package:flutter/material.dart';
 
-class SearchPage extends StatefulWidget {
-  const SearchPage({super.key});
+class UserSearchPage extends StatefulWidget {
+  const UserSearchPage({super.key});
 
   @override
-  State<SearchPage> createState() => _SearchPageState();
+  State<UserSearchPage> createState() => _UserSearchPageState();
 }
 
-class _SearchPageState extends State<SearchPage> {
+class _UserSearchPageState extends State<UserSearchPage> {
   String name = '';
 
   @override

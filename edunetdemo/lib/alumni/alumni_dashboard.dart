@@ -4,7 +4,7 @@ import 'package:edunetdemo/alumni/alumni_newpost.dart';
 import 'package:edunetdemo/alumni/alumni_notification.dart';
 import 'package:edunetdemo/alumni/alumni_profile.dart';
 import 'package:edunetdemo/common_pages/alumni_page.dart';
-import 'package:edunetdemo/common_pages/search.dart';
+import 'package:edunetdemo/common_pages/user_search.dart';
 import 'package:edunetdemo/common_pages/student_page.dart';
 import 'package:edunetdemo/services/firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -157,7 +157,7 @@ class _Alumni_DashboardState extends State<Alumni_Dashboard> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => SearchPage()));
+                              builder: (context) => UserSearchPage()));
                     },
                     icon: Icon(Icons.search)),
                 GestureDetector(
