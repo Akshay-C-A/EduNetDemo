@@ -66,13 +66,14 @@ class _PostedEventsState extends State<PostedEvents> {
               String date = data['date'];
               String venue = data['venue'];
               String imageURL = data['imageURL'];
-              
+
               // Display as a list title
               return EventNotificationCard(
                 title: eventTitle,
                 date: date,
                 venue: venue,
                 imageUrl: imageURL,
+                postId: document.id,
                 // details: postedEvents[index]['details'],
               );
             },
@@ -88,9 +89,11 @@ class EventNotificationCard extends StatelessWidget {
   final String date;
   final String venue;
   final String imageUrl;
+  final String postId;
 
   const EventNotificationCard({
     super.key,
+    required this.postId,
     required this.title,
     required this.date,
     required this.venue,
@@ -104,7 +107,10 @@ class EventNotificationCard extends StatelessWidget {
         // Navigate to the PostedEvent screen
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => EventParticipation()),
+          MaterialPageRoute(
+              builder: (context) => EventParticipation(
+                    postId: postId,
+                  )),
         );
       },
       child: Card(
