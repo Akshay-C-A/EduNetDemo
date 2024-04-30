@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 class EventPage extends StatefulWidget {
   EventPage({super.key});
   bool isAdmin = false;
-  EventPage.forAdmin({super.key, required isAdmin});
+  EventPage.forAdmin(Map map, {super.key, required isAdmin});
 
   @override
   State<EventPage> createState() => _EventPageState();
@@ -90,7 +90,7 @@ class _EventPageState extends State<EventPage> {
                 postId: document.id,
                 imageURL: imageURL,
                 eventTitle: eventTitle,
-                likes: [],
+                likes: List<String>.from(data['likes'] ?? []),
               );
             },
           );
