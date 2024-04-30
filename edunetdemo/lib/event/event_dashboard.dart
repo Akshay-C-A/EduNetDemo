@@ -1,6 +1,7 @@
 import 'package:edunetdemo/common_pages/event_page.dart';
 import 'package:edunetdemo/event/event_newpost.dart';
 import 'package:edunetdemo/event/event_notification.dart';
+import 'package:edunetdemo/event/event_posted.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -28,6 +29,7 @@ class _EventDashboardState extends State<EventDashboard> {
     EventNewPostPage(),
     EventNotificationPage(),
     ProfilePage(),
+    PostedEvents(),
   ];
 
   @override
@@ -65,6 +67,10 @@ class _EventDashboardState extends State<EventDashboard> {
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
             label: 'Profile',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.alarm),
+            label: 'Event Posted',
           ),
         ],
       ),
