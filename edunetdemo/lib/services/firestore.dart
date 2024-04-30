@@ -89,6 +89,51 @@ class FirestoreService {
     else
       return true;
   }
+//----------------------------------------------------------------------------------------------------------------
+// ADMIN SECTION
+// get collection of alumni_posts
+  final CollectionReference announcement =
+      FirebaseFirestore.instance.collection('announcement');
+  // get collection of alumni_posts
+  final CollectionReference admin =
+      FirebaseFirestore.instance.collection('admin');
+
+  // To add alumni post data from form to alumni and alumniPosts
+  Future<void> addAdminAnnouncement({
+    required String type,
+    required String alumniId,
+    required String alumniDesignation,
+    required String caption,
+    required String description,
+    String? imageURL,
+  }) {
+    String unique = DateTime.now().toIso8601String();
+    alumni_posts.doc('$alumniId$unique').set({
+      'type': type,
+      'alumniId': alumniId,
+      'alumniDesignation': alumniDesignation,
+      'caption': caption,
+      'description': description,
+      'imageURL': imageURL,
+      'likes': [],
+      'timestamp': Timestamp.now(),
+      'notified': false,
+    });
+
+    //Adding post to alumni user data
+    DocumentReference AlumniName = user.doc(alumniId);
+    return AlumniName.collection('posts').doc('$alumniId$unique').set({
+      'type': type,
+      'alumniId': alumniId,
+      'alumniDesignation': alumniDesignation,
+      'caption': caption,
+      'description': description,
+      'imageURL': imageURL,
+      'timestamp': Timestamp.now(),
+      'notified': false,
+    });
+  }
+
 
 //----------------------------------------------------------------------------------------------------------------
 // ALUMNI SECTION
@@ -599,5 +644,15 @@ class FirestoreService {
       'timestamp': Timestamp.now(),
       'edited': true,
     });
+  }
+
+  Stream<QuerySnapshot> getModeratorProfilePosts({required String moderatorId}) {
+    print(moderatorId);
+    final moderatorProfileStream = user
+        .doc(moderatorId)
+        .collection('posts')
+        .orderBy('timestamp', descending: true)
+        .snapshots();
+    return moderatorProfileStream;
   }
 }

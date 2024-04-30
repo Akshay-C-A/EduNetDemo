@@ -1,12 +1,12 @@
 import 'package:edunetdemo/services/firestore.dart';
 import 'package:flutter/material.dart';
 
-class ModeratorEditProfileForm extends StatefulWidget {
+class EditModeratorProfileForm extends StatefulWidget {
   @override
-  _ModeratorEditProfileFormState createState() => _ModeratorEditProfileFormState();
+  _EditModeratorProfileFormState createState() => _EditModeratorProfileFormState();
 }
 
-class _ModeratorEditProfileFormState extends State<ModeratorEditProfileForm> {
+class _EditModeratorProfileFormState extends State<EditModeratorProfileForm> {
   final _formKey = GlobalKey<FormState>();
   TextEditingController _nameController = TextEditingController();
   TextEditingController _emailController = TextEditingController();
@@ -98,20 +98,20 @@ class _ModeratorEditProfileFormState extends State<ModeratorEditProfileForm> {
   }
 }
 
-class ModeratorEditPostForm extends StatefulWidget {
-  final String moderatorId;
+class EditEventPostForm extends StatefulWidget {
+  final String alumniId;
   final String postId;
-  const ModeratorEditPostForm({
+  const EditEventPostForm({
     super.key,
-    required this.moderatorId,
+    required this.alumniId,
     required this.postId,
   });
 
   @override
-  State<ModeratorEditPostForm> createState() => _ModeratorEditPostFormState();
+  State<EditEventPostForm> createState() => _EditPostFormState();
 }
 
-class _ModeratorEditPostFormState extends State<ModeratorEditPostForm> {
+class _EditPostFormState extends State<EditEventPostForm> {
   final _firestoreService = FirestoreService();
   late final TextEditingController _detailsController;
   late final TextEditingController _captionController;
@@ -134,7 +134,7 @@ class _ModeratorEditPostFormState extends State<ModeratorEditPostForm> {
 
   Future<void> _fetchPost() async {
     final postSnapshot = await _firestoreService.getAlumniPost(
-      alumniId: widget.moderatorId,
+      alumniId: widget.alumniId,
       postId: widget.postId,
     );
 
@@ -169,7 +169,7 @@ class _ModeratorEditPostFormState extends State<ModeratorEditPostForm> {
     await _firestoreService.updateAlumniPost(
       postId: widget.postId,
       type: _postType,
-      alumniId: widget.moderatorId,
+      alumniId: widget.alumniId,
       caption: _captionController.text,
       description: _detailsController.text,
     );

@@ -1,23 +1,43 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:edunetdemo/alumni/alumni_dashboard.dart';
-import 'package:edunetdemo/alumni/alumni_edit-profile.dart';
 import 'package:edunetdemo/auth/login_check2.dart';
-import 'package:edunetdemo/alumni/alumni_profile_form.dart';
+import 'package:edunetdemo/event/event_edit-profile.dart';
+import 'package:edunetdemo/event/moderator_profile_form.dart';
 import 'package:edunetdemo/services/firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class ModeratorProfileScreen extends StatefulWidget {
-  final Alumni alumni;
+class Moderator {
+  String moderatorId;
+  String communityName;
+  String about;
+  String? linkedIn;
+  String? twitter;
+  String? mail;
+  String dpURL;
 
-  ModeratorProfileScreen({required this.alumni});
+  Moderator({
+    required this.moderatorId,
+    required this.communityName,
+    required this.about,
+    this.linkedIn,
+    this.twitter,
+    this.mail,
+    required this.dpURL,
+  });
+}
+
+class ModeratorProfileScreen extends StatefulWidget {
+  final Moderator moderator;
+
+  ModeratorProfileScreen({required this.moderator});
 
   @override
   State<ModeratorProfileScreen> createState() => _ModeratorProfileScreenState();
 }
 
 class _ModeratorProfileScreenState extends State<ModeratorProfileScreen> {
+  FirestoreService firestoreService = FirestoreService();
   Set<String> _selectedButton = {'Details'};
 
   void updateSelected(Set<String> newSelection) {
@@ -28,11 +48,13 @@ class _ModeratorProfileScreenState extends State<ModeratorProfileScreen> {
 
   void _copyLink(String iconB) {
     if (iconB == 'LinkedIn') {
-      Clipboard.setData(ClipboardData(text: widget.alumni.linkedIn.toString()));
+      Clipboard.setData(
+          ClipboardData(text: widget.moderator.linkedIn.toString()));
     } else if (iconB == 'Twitter') {
-      Clipboard.setData(ClipboardData(text: widget.alumni.twitter.toString()));
+      Clipboard.setData(
+          ClipboardData(text: widget.moderator.twitter.toString()));
     } else if (iconB == 'Mail') {
-      Clipboard.setData(ClipboardData(text: widget.alumni.mail.toString()));
+      Clipboard.setData(ClipboardData(text: widget.moderator.mail.toString()));
     }
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -50,7 +72,7 @@ class _ModeratorProfileScreenState extends State<ModeratorProfileScreen> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text(widget.alumni.alumni_name),
+          title: Text(widget.moderator.communityName),
           actions: [
             TextButton(
               onPressed: () async {
@@ -106,7 +128,7 @@ class _ModeratorProfileScreenState extends State<ModeratorProfileScreen> {
                               padding: const EdgeInsets.all(8.0),
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(28),
-                                child: Image.network(widget.alumni.dpURL,
+                                child: Image.network(widget.moderator.dpURL,
                                     fit: BoxFit.cover),
                               ),
                             ),
@@ -120,7 +142,7 @@ class _ModeratorProfileScreenState extends State<ModeratorProfileScreen> {
                                   alignment: WrapAlignment.center,
                                   children: [
                                     Text(
-                                      widget.alumni.alumni_name,
+                                      widget.moderator.communityName,
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 30,
@@ -130,7 +152,6 @@ class _ModeratorProfileScreenState extends State<ModeratorProfileScreen> {
                                   ],
                                 ),
                                 SizedBox(height: 4),
-                                Text(widget.alumni.alumni_designation),
                               ],
                             ),
                           ),
@@ -139,7 +160,7 @@ class _ModeratorProfileScreenState extends State<ModeratorProfileScreen> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => AlumniProfileForm(),
+                                  builder: (context) => ModeratorProfileForm(),
                                 ),
                               );
                             },
@@ -156,7 +177,7 @@ class _ModeratorProfileScreenState extends State<ModeratorProfileScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            widget.alumni.about,
+                            widget.moderator.about,
                             style: TextStyle(
                               fontSize: 16,
                             ),
@@ -208,33 +229,10 @@ class _ModeratorProfileScreenState extends State<ModeratorProfileScreen> {
                             ],
                           ),
                           SizedBox(height: width * 0.08),
-                          Center(
-                            child: SegmentedButton(
-                              segments: <ButtonSegment<String>>[
-                                ButtonSegment(
-                                    value: 'Details', label: Text('Details')),
-                                ButtonSegment(
-                                    value: 'Posts', label: Text('Posts')),
-                              ],
-                              selected: _selectedButton,
-                              onSelectionChanged: updateSelected,
-                            ),
+                          PostsSection(
+                            moderatorId: widget.moderator.moderatorId,
+                            firestoreService: FirestoreService(),
                           ),
-                          SizedBox(height: width * 0.08),
-                          if (_selectedButton.contains('Details'))
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                CompanySection(company: widget.alumni.company),
-                                SizedBox(height: width * 0.08),
-                                SkillsSection(skills: widget.alumni.skills),
-                              ],
-                            )
-                          else
-                            PostsSection(
-                              alumniId: widget.alumni.alumniId,
-                              firestoreService: FirestoreService(),
-                            ),
                         ],
                       ),
                     ),
@@ -249,119 +247,19 @@ class _ModeratorProfileScreenState extends State<ModeratorProfileScreen> {
   }
 }
 
-// SkillsSection
-class SkillsSection extends StatelessWidget {
-  final List<dynamic> skills;
-
-  SkillsSection({required this.skills});
-
-  @override
-  Widget build(BuildContext context) {
-    var height = MediaQuery.of(context).size.height;
-    var width = MediaQuery.of(context).size.width;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Skills',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 18,
-          ),
-        ),
-        SizedBox(height: 5),
-        Wrap(
-          spacing: 8.0,
-          runSpacing: 8.0,
-          children: skills
-              .map((skill) => Chip(
-                    label: Text(skill),
-                  ))
-              .toList(),
-        ),
-      ],
-    );
-  }
-}
-
-// EmailSection
-class EmailSection extends StatelessWidget {
-  final String email;
-
-  EmailSection({required this.email});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Email',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 18,
-            ),
-          ),
-          SizedBox(height: 5),
-          Text(
-            email,
-            style: TextStyle(
-              fontSize: 16,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-// CompanySection
-class CompanySection extends StatelessWidget {
-  final String company;
-
-  CompanySection({required this.company});
-
-  @override
-  Widget build(BuildContext context) {
-    var height = MediaQuery.of(context).size.height;
-    var width = MediaQuery.of(context).size.width;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Text(
-          'Company',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 18,
-          ),
-        ),
-        SizedBox(height: 5),
-        Text(
-          company,
-          style: TextStyle(
-            fontSize: 16,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
 // PostsSection
 class PostsSection extends StatefulWidget {
-  final String alumniId;
+  final String moderatorId;
   final FirestoreService firestoreService;
   bool isView = false;
 
   PostsSection({
-    required this.alumniId,
+    required this.moderatorId,
     required this.firestoreService,
   });
 
   PostsSection.withView({
-    required this.alumniId,
+    required this.moderatorId,
     required this.firestoreService,
     required this.isView,
   });
@@ -379,8 +277,8 @@ class _PostsSectionState extends State<PostsSection> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         StreamBuilder<QuerySnapshot>(
-          stream: widget.firestoreService.getAlumniProfilePosts(
-            alumniId: widget.alumniId,
+          stream: widget.firestoreService.getModeratorProfilePosts(
+            moderatorId: widget.moderatorId,
           ),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
@@ -425,7 +323,7 @@ class _PostsSectionState extends State<PostsSection> {
                 return ProfileSquarePost(
                   imageURL: imgURL ?? '',
                   postId: document.id,
-                  alumniId: widget.alumniId,
+                  alumniId: widget.moderatorId,
                   isView: widget.isView,
                 );
               },
@@ -509,7 +407,7 @@ class _ProfileSquarePostState extends State<ProfileSquarePost> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => EditPostForm(
+                            builder: (context) => EditEventPostForm(
                                 alumniId: widget.alumniId,
                                 postId: widget.postId)));
                   },

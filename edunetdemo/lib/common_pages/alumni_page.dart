@@ -5,7 +5,9 @@ import 'package:edunetdemo/services/notification_services.dart';
 import 'package:flutter/material.dart';
 
 class AlumniPage extends StatefulWidget {
-  const AlumniPage({super.key});
+  AlumniPage({super.key});
+  bool isAdmin = false;
+  AlumniPage.forAdmin({super.key, required isAdmin});
   @override
   State<AlumniPage> createState() => _AlumniPageState();
 }

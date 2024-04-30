@@ -7,7 +7,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class EventPage extends StatefulWidget {
-  const EventPage({super.key});
+  EventPage({super.key});
+  bool isAdmin = false;
+  EventPage.forAdmin({super.key, required isAdmin});
 
   @override
   State<EventPage> createState() => _EventPageState();
@@ -19,10 +21,12 @@ class _EventPageState extends State<EventPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(child: Icon(Icons.search),onPressed: () {
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => EventSearchPage()));
-      }),
+      floatingActionButton: FloatingActionButton(
+          child: Icon(Icons.search),
+          onPressed: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => EventSearchPage()));
+          }),
       body: StreamBuilder<QuerySnapshot>(
         stream: firestoreService.getEventPostsStream(),
         builder: (context, snapshot) {
@@ -48,7 +52,7 @@ class _EventPageState extends State<EventPage> {
               // Get note from each doc
               Map<String, dynamic> data =
                   document.data() as Map<String, dynamic>;
-                  
+
               String venue = data['venue'];
               String moderatorId = data['moderatorId'];
               String date = data['date'];
