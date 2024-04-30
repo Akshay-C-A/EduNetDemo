@@ -66,7 +66,7 @@ class _PostedEventsState extends State<PostedEvents> {
               String date = data['date'];
               String venue = data['venue'];
               String imageURL = data['imageURL'];
-
+              
               // Display as a list title
               return EventNotificationCard(
                 title: eventTitle,

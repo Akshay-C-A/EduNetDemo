@@ -102,10 +102,10 @@ class _EventPostCardState extends State<EventPostCard> {
       });
     } else {
       eventPost.update({
-        'likes': FieldValue.arrayUnion([currentUser!.email])
+        'likes': FieldValue.arrayRemove([currentUser!.email])
       });
       moderatorProfile.update({
-        'likes': FieldValue.arrayUnion([currentUser!.email])
+        'likes': FieldValue.arrayRemove([currentUser!.email])
       });
     }
   }
@@ -241,7 +241,15 @@ class _EventPostCardState extends State<EventPostCard> {
                         ),
                         // Add horizontal padding
                         child: TextButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            firestoreService.enrollStudent(
+                                studentId: 'studentId',
+                                studentName: 'studentName',
+                                department: 'department',
+                                batch: 'batch',
+                                studentMail: 'studentMail',
+                                postId: widget.postId);
+                          },
                           child: Text(
                             "Enroll",
                             style: TextStyle(

@@ -60,8 +60,6 @@ class _EventSearchPageState extends State<EventSearchPage> {
               //   isAlumni = true;
               // }
 
-              String userName = data['studentId'] ?? data['alumniId'];
-
               if (name.isEmpty) {
                 return GestureDetector(
                   onTap: () {
@@ -99,11 +97,15 @@ class _EventSearchPageState extends State<EventSearchPage> {
                 );
               }
 
-              if (data['studentName']
+              if (data['eventTitle']
                       .toString()
                       .toLowerCase()
                       .startsWith(name.toLowerCase()) ||
                   data['communityName']
+                      .toString()
+                      .toLowerCase()
+                      .startsWith(name.toLowerCase()) ||
+                  data['date']
                       .toString()
                       .toLowerCase()
                       .startsWith(name.toLowerCase())) {

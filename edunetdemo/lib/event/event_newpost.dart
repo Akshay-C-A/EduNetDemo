@@ -8,7 +8,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
 
-
 class EventNewPostPage extends StatefulWidget {
   @override
   State<EventNewPostPage> createState() => _EventNewPostPageState();
@@ -27,7 +26,7 @@ class _EventNewPostPageState extends State<EventNewPostPage> {
   TextEditingController _eventTitleController = TextEditingController();
   TextEditingController _eventVenueController = TextEditingController();
   TextEditingController _otherDetailsController = TextEditingController();
-  
+
   XFile? _selectedImage;
   final _picker = ImagePicker();
   bool _isLoading = false;
@@ -84,16 +83,15 @@ class _EventNewPostPageState extends State<EventNewPostPage> {
 
     final imageURL = await _uploadImage();
     await _EventFirestoreService.addEventPosts(
-      communityName: 'µ Learn',
-      EventTitle: _eventTitleController.text, 
-      moderatorId: 'mod123', 
-      moderatorName: 'modmemms', 
-      Date: _dateController.text, 
-      Venue: _eventVenueController.text, 
+      communityName: 'GDSC',
+      EventTitle: _eventTitleController.text,
+      moderatorId: 'mod123',
+      moderatorName: 'modmemms',
+      Date: _dateController.text,
+      Venue: _eventVenueController.text,
       otherDetails: _otherDetailsController.text,
       imageURL: imageURL,
       dpURL: '',
-      
     );
 
     setState(() {
@@ -128,14 +126,20 @@ class _EventNewPostPageState extends State<EventNewPostPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 16.0),
-                     _buildTextField('Event Title', (value) => _eventTitle = value!,_eventTitleController),
-                      SizedBox(height: 16.0),
-                      _buildTextFieldWithCalendarIcon('Event Date', (value) => _eventDate = value!),
-                      SizedBox(height: 16.0),
-                      _buildTextField('Event Venue', (value) => _eventVenue = value!,_eventVenueController),
-                      SizedBox(height: 16.0),
-                      _buildTextField('Other Details', (value) => _otherDetails = value,_otherDetailsController),
-                      SizedBox(height: 16.0),
+                    _buildTextField('Event Title',
+                        (value) => _eventTitle = value!, _eventTitleController),
+                    SizedBox(height: 16.0),
+                    _buildTextFieldWithCalendarIcon(
+                        'Event Date', (value) => _eventDate = value!),
+                    SizedBox(height: 16.0),
+                    _buildTextField('Event Venue',
+                        (value) => _eventVenue = value!, _eventVenueController),
+                    SizedBox(height: 16.0),
+                    _buildTextField(
+                        'Other Details',
+                        (value) => _otherDetails = value,
+                        _otherDetailsController),
+                    SizedBox(height: 16.0),
                     const Text(
                       'Photo',
                       style: TextStyle(
@@ -199,8 +203,16 @@ class _EventNewPostPageState extends State<EventNewPostPage> {
     );
   }
 
-  Widget _buildTextField(String label, Function(String?) onSaved, TextEditingController t_controller) {
-    bool showError = _submitted && (label == 'Event Title' ? _eventTitle.isEmpty : (label == 'Event Date' ? _eventDate.isEmpty : label == 'Event Venue' ? _eventVenue.isEmpty : false));
+  Widget _buildTextField(String label, Function(String?) onSaved,
+      TextEditingController t_controller) {
+    bool showError = _submitted &&
+        (label == 'Event Title'
+            ? _eventTitle.isEmpty
+            : (label == 'Event Date'
+                ? _eventDate.isEmpty
+                : label == 'Event Venue'
+                    ? _eventVenue.isEmpty
+                    : false));
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -213,12 +225,18 @@ class _EventNewPostPageState extends State<EventNewPostPage> {
           decoration: InputDecoration(
             hintText: 'Enter $label',
             border: OutlineInputBorder(),
-            errorBorder: showError ? OutlineInputBorder(borderSide: BorderSide(color: Colors.red)) : OutlineInputBorder(),
+            errorBorder: showError
+                ? OutlineInputBorder(borderSide: BorderSide(color: Colors.red))
+                : OutlineInputBorder(),
             errorText: showError ? 'This field is required' : null,
           ),
           onSaved: onSaved,
           validator: (value) {
-            if (_submitted && (value == null || value.isEmpty) && (label == 'Event Title' || label == 'Event Date' || label == 'Event Venue')) {
+            if (_submitted &&
+                (value == null || value.isEmpty) &&
+                (label == 'Event Title' ||
+                    label == 'Event Date' ||
+                    label == 'Event Venue')) {
               return 'This field is required';
             }
             return null;
@@ -228,7 +246,8 @@ class _EventNewPostPageState extends State<EventNewPostPage> {
     );
   }
 
-  Widget _buildTextFieldWithCalendarIcon(String label, Function(String?) onSaved) {
+  Widget _buildTextFieldWithCalendarIcon(
+      String label, Function(String?) onSaved) {
     bool showError = _submitted && _eventDate.isEmpty;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -242,7 +261,9 @@ class _EventNewPostPageState extends State<EventNewPostPage> {
           decoration: InputDecoration(
             hintText: 'Enter $label',
             border: OutlineInputBorder(),
-            errorBorder: showError ? OutlineInputBorder(borderSide: BorderSide(color: Colors.red)) : OutlineInputBorder(),
+            errorBorder: showError
+                ? OutlineInputBorder(borderSide: BorderSide(color: Colors.red))
+                : OutlineInputBorder(),
             errorText: showError ? 'This field is required' : null,
             suffixIcon: label == 'Event Date'
                 ? IconButton(
