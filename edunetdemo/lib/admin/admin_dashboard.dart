@@ -94,7 +94,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
   @override
   Widget build(BuildContext context) {
     List<Widget> widgetOptions = <Widget>[
-      EventPage.forAdmin(isAdmin: true),
+      EventPage(),
       StudentPage(),
       AlumniPage(),
       ModeratorManagementPage(),
