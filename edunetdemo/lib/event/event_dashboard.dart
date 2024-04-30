@@ -1,3 +1,4 @@
+import 'package:edunetdemo/auth/login_check2.dart';
 import 'package:edunetdemo/common_pages/event_page.dart';
 import 'package:edunetdemo/event/event_newpost.dart';
 import 'package:edunetdemo/event/event_notification.dart';
@@ -9,7 +10,11 @@ Future<void> _signOut(BuildContext context) async {
   try {
     await FirebaseAuth.instance.signOut();
     // Navigate to the sign-in screen or any other desired screen after sign-out
-    Navigator.pushReplacementNamed(context, '/sign_in');
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => MainPage()),
+      (route) => false,
+    );
   } catch (e) {
     print('Error signing out: $e');
   }
