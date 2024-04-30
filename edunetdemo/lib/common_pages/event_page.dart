@@ -80,6 +80,7 @@ class _EventPageState extends State<EventPage> {
 
               // Display as a list title
               return EventPostCard(
+                isAdmin: widget.isAdmin,
                 communityName: communityName,
                 date: date,
                 venue: venue,

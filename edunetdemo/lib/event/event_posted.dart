@@ -1,6 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:edunetdemo/event/event_participation.dart';
+import 'package:edunetdemo/services/firestore.dart';
 import 'package:flutter/material.dart';
-
 
 class PostedEvents extends StatefulWidget {
   const PostedEvents({super.key});
@@ -10,6 +11,8 @@ class PostedEvents extends StatefulWidget {
 }
 
 class _PostedEventsState extends State<PostedEvents> {
+  FirestoreService firestoreService = FirestoreService();
+
   final List<Map<String, dynamic>> postedEvents = [
     {
       'title': 'Flutter Meetup',
@@ -33,22 +36,52 @@ class _PostedEventsState extends State<PostedEvents> {
       appBar: AppBar(
         title: Text('Posted Events'),
       ),
-      body: ListView.builder(
-        itemCount: postedEvents.length,
-        itemBuilder: (context, index) {
-          return EventNotificationCard(
-            title: postedEvents[index]['title'],
-            date: postedEvents[index]['date'],
-            venue: postedEvents[index]['venue'],
-            imageUrl: postedEvents[index]['imageUrl'],
-            // details: postedEvents[index]['details'],
+      body: StreamBuilder<QuerySnapshot>(
+        stream: firestoreService.getEventPostsStream(),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
+          }
+
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          }
+
+          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+            return Center(child: Text('No Events Posted'));
+          }
+
+          List eventPostList = snapshot.data!.docs;
+          return ListView.builder(
+            itemCount: eventPostList.length,
+            itemBuilder: (context, index) {
+              // Get each individual doc
+              DocumentSnapshot document = eventPostList[index];
+              // String docID = document.id;
+              // Get note from each doc
+              Map<String, dynamic> data =
+                  document.data() as Map<String, dynamic>;
+
+              String eventTitle = data['eventTitle'];
+              String date = data['date'];
+              String venue = data['venue'];
+              String imageURL = data['imageURL'];
+
+              // Display as a list title
+              return EventNotificationCard(
+                title: eventTitle,
+                date: date,
+                venue: venue,
+                imageUrl: imageURL,
+                // details: postedEvents[index]['details'],
+              );
+            },
           );
         },
       ),
     );
   }
 }
-
 
 class EventNotificationCard extends StatelessWidget {
   final String title;

@@ -89,6 +89,7 @@ class FirestoreService {
     else
       return true;
   }
+
 //----------------------------------------------------------------------------------------------------------------
 // ADMIN SECTION
 // get collection of alumni_posts
@@ -133,7 +134,6 @@ class FirestoreService {
       'notified': false,
     });
   }
-
 
 //----------------------------------------------------------------------------------------------------------------
 // ALUMNI SECTION
@@ -547,7 +547,7 @@ class FirestoreService {
   }) {
     String unique = DateTime.now().toIso8601String();
     event_posts.doc('$moderatorId$unique').set({
-      'communityName' : communityName,
+      'communityName': communityName,
       'eventTitle': EventTitle,
       'moderatorId': moderatorId,
       'moderatorName': moderatorName,
@@ -646,7 +646,8 @@ class FirestoreService {
     });
   }
 
-  Stream<QuerySnapshot> getModeratorProfilePosts({required String moderatorId}) {
+  Stream<QuerySnapshot> getModeratorProfilePosts(
+      {required String moderatorId}) {
     print(moderatorId);
     final moderatorProfileStream = user
         .doc(moderatorId)
@@ -654,5 +655,34 @@ class FirestoreService {
         .orderBy('timestamp', descending: true)
         .snapshots();
     return moderatorProfileStream;
+  }
+
+  Future<void> enrollStudent({
+    required String studentId,
+    required String studentName,
+    required String department,
+    required String batch,
+    required String studentMail,
+    required String postId,
+  }) {
+    CollectionReference participants =
+        event_posts.doc(postId).collection('participants');
+    return participants.add({
+      'studentId': studentId,
+      'studentName': studentName,
+      'department': department,
+      'batch': batch,
+      'mail': studentMail,
+    });
+  }
+
+  // To get the data for participant details
+  Stream<QuerySnapshot> getEventParticipantsStream({required String postId}) {
+    final eventParticipantsStream = event_posts
+        .doc(postId)
+        .collection('participants')
+        .orderBy('timestamp', descending: true)
+        .snapshots();
+    return eventParticipantsStream;
   }
 }

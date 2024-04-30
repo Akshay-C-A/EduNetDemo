@@ -14,7 +14,7 @@ import 'package:http/http.dart' as http;
 
 class EventPostCard extends StatefulWidget {
   //data for likes
- 
+  final bool isAdmin;
   final String postId;
   final List<String> likes;
   final String communityName;
@@ -28,6 +28,7 @@ class EventPostCard extends StatefulWidget {
   final String dpURL;
 
   EventPostCard({
+    required this.isAdmin,
     required this.venue,
     required this.moderatorId,
     required this.moderatorName,
@@ -156,14 +157,15 @@ class _EventPostCardState extends State<EventPostCard> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                          widget.communityName, // Changed
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        SizedBox(height: 4),
-                        Text(
-                          '${widget.moderatorName}', // Changed
-                          style: TextStyle(fontSize: 12, color: Colors.grey),
-                        ),
+                                widget.communityName, // Changed
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              SizedBox(height: 4),
+                              Text(
+                                '${widget.moderatorName}', // Changed
+                                style:
+                                    TextStyle(fontSize: 12, color: Colors.grey),
+                              ),
                             ],
                           ),
                         ],
@@ -174,26 +176,25 @@ class _EventPostCardState extends State<EventPostCard> {
                 Padding(
                   padding: EdgeInsets.all(10.0),
                   child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Event     :    ${widget.eventTitle}',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 4),
-                 Text(
-                  'Date      :    ${widget.date}',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 4),
-                 Text(
-                  'Venue   :     ${widget.venue}',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 4),
-                
-              ],
-            ),
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Event     :    ${widget.eventTitle}',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(height: 4),
+                      Text(
+                        'Date      :    ${widget.date}',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(height: 4),
+                      Text(
+                        'Venue   :     ${widget.venue}',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(height: 4),
+                    ],
+                  ),
                 ),
                 Padding(
                   padding: EdgeInsets.all(10.0),
@@ -224,33 +225,35 @@ class _EventPostCardState extends State<EventPostCard> {
                   ),
                 ),
                 Row(
-              mainAxisAlignment: MainAxisAlignment.start, // Align to the left
-              children: [
-                SizedBox(
-                  height: 40, // Set the desired height
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.green,
-                        width: 2.0,
-                      ),
-                      borderRadius: BorderRadius.circular(10.0), // Reduce the curve size
-                    ),
-                    // Add horizontal padding
-                    child: TextButton(
-                      onPressed: () {},
-                      child: Text(
-                        "Enroll",
-                        style: TextStyle(
-                          color: Colors.green,
-                          fontWeight: FontWeight.w600,
+                  mainAxisAlignment:
+                      MainAxisAlignment.start, // Align to the left
+                  children: [
+                    SizedBox(
+                      height: 40, // Set the desired height
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.green,
+                            width: 2.0,
+                          ),
+                          borderRadius: BorderRadius.circular(
+                              10.0), // Reduce the curve size
+                        ),
+                        // Add horizontal padding
+                        child: TextButton(
+                          onPressed: () {},
+                          child: Text(
+                            "Enroll",
+                            style: TextStyle(
+                              color: Colors.green,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
                         ),
                       ),
                     ),
-                  ),
+                  ],
                 ),
-              ],
-            ),
                 ButtonBar(
                   alignment: MainAxisAlignment.spaceEvenly,
                   children: [

@@ -151,6 +151,7 @@ class _StudentPageState extends State<StudentPage> {
               }
 
               return StudentPostCard(
+                isAdmin: widget.isAdmin,
                 studentId: studentId,
                 studentName: studentName,
                 studentDesignation: studentDesignation,

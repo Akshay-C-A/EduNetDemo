@@ -69,6 +69,7 @@ class _AlumniPageState extends State<AlumniPage> {
 
               // Display as a list title
               return AlumniPostCard(
+                isAdmin: widget.isAdmin,
                 type: type,
                 alumnId: alumniId,
                 alumniName: alumniName,
