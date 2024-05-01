@@ -158,6 +158,10 @@ class _AdminDashboardState extends State<AdminDashboard> {
             icon: Icon(Icons.people),
             label: 'Moderators',
           ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.add),
+            label: 'Add Post',
+          ),
         ],
       ),
     );
