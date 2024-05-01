@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import '../alumni/alumni_dashboard.dart';
+// import '../alumni/alumni_dashboard.dart';
 
 class FirestoreService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -100,40 +100,40 @@ class FirestoreService {
       FirebaseFirestore.instance.collection('admin');
 
   // To add alumni post data from form to alumni and alumniPosts
-  Future<void> addAdminAnnouncement({
-    required String type,
-    required String alumniId,
-    required String alumniDesignation,
-    required String caption,
-    required String description,
-    String? imageURL,
-  }) {
-    String unique = DateTime.now().toIso8601String();
-    alumni_posts.doc('$alumniId$unique').set({
-      'type': type,
-      'alumniId': alumniId,
-      'alumniDesignation': alumniDesignation,
-      'caption': caption,
-      'description': description,
-      'imageURL': imageURL,
-      'likes': [],
-      'timestamp': Timestamp.now(),
-      'notified': false,
-    });
+Future<void> addAdminAnnouncement({
+  required String type,
+  required String adminId,
+  required String adminName,
+  required String caption,
+  required String description,
+  String? imageURL,
+}) {
+  String unique = DateTime.now().toIso8601String();
+  announcement.doc('$adminId$unique').set({
+    'type': type,
+    'adminId': adminId,
+    'adminName': adminName,
+    'caption': caption,
+    'description': description,
+    'imageURL': imageURL,
+    'likes': [],
+    'timestamp': Timestamp.now(),
+    'notified': false,
+  });
 
-    //Adding post to alumni user data
-    DocumentReference AlumniName = user.doc(alumniId);
-    return AlumniName.collection('posts').doc('$alumniId$unique').set({
-      'type': type,
-      'alumniId': alumniId,
-      'alumniDesignation': alumniDesignation,
-      'caption': caption,
-      'description': description,
-      'imageURL': imageURL,
-      'timestamp': Timestamp.now(),
-      'notified': false,
-    });
-  }
+  // Adding announcement to admin user data
+  DocumentReference adminRef = admin.doc(adminId);
+  return adminRef.collection('announcements').doc('$adminId$unique').set({
+    'type': type,
+    'adminId': adminId,
+    'adminName': adminName,
+    'caption': caption,
+    'description': description,
+    'imageURL': imageURL,
+    'timestamp': Timestamp.now(),
+    'notified': false,
+  });
+}
 
 //----------------------------------------------------------------------------------------------------------------
 // ALUMNI SECTION

@@ -1,30 +1,34 @@
 import 'dart:io';
-import 'package:edunetdemo/alumni/alumni_dashboard.dart';
 import 'package:edunetdemo/services/firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:path/path.dart' as path;
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:path/path.dart' as path;
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
-class AlumniNewPostPage extends StatefulWidget {
-  final Alumni alumni;
-  const AlumniNewPostPage({super.key, required this.alumni});
+class AdminAnnouncementPage extends StatefulWidget {
+  final String adminId;
+  final String adminName;
+
+  const AdminAnnouncementPage({
+    super.key,
+    required this.adminId,
+    required this.adminName,
+  });
 
   @override
-  State<AlumniNewPostPage> createState() => _AlumniNewPostPageState();
+  State<AdminAnnouncementPage> createState() => _AdminAnnouncementPageState();
 }
 
-class _AlumniNewPostPageState extends State<AlumniNewPostPage> {
-  final FirestoreService _AlumniFirestoreService = FirestoreService();
+class _AdminAnnouncementPageState extends State<AdminAnnouncementPage> {
+  final FirestoreService _firestoreService = FirestoreService();
   final _detailsController = TextEditingController();
   final _captionController = TextEditingController();
-  String _postType = 'Internship offer';
+  String _postType = 'Important Notice';
   final List<String> _postTypes = [
-    'Internship offer',
-    'Placement offer',
-    'Technical event',
+    'Important Notice',
+    'Event Announcement',
+    'General Announcement',
   ];
   XFile? _selectedImage;
   final _picker = ImagePicker();
@@ -35,7 +39,7 @@ class _AlumniNewPostPageState extends State<AlumniNewPostPage> {
 
     final storageRef = FirebaseStorage.instance.ref();
     final fileName = path.basename(_selectedImage!.path);
-    final imageRef = storageRef.child('alumni_posts/$fileName');
+    final imageRef = storageRef.child('admin_announcements/$fileName');
 
     try {
       await imageRef.putFile(File(_selectedImage!.path));
@@ -68,41 +72,39 @@ class _AlumniNewPostPageState extends State<AlumniNewPostPage> {
     _captionController.clear();
     setState(() {
       _selectedImage = null;
-      _postType = 'Internship offer';
+      _postType = 'Important Notice';
     });
   }
 
-  Future<void> _submitPost() async {
-    setState(() {
-      _isLoading = true;
-    });
+Future<void> _submitAnnouncement() async {
+  setState(() {
+    _isLoading = true;
+  });
 
-    final imageURL = await _uploadImage();
-    await _AlumniFirestoreService.addAlumniPosts(
-      type: _postType,
-      alumniId: widget.alumni.alumniId,
-      alumniName: widget.alumni.alumni_name,
-      alumniDesignation: widget.alumni.alumni_designation,
-      caption: _captionController.text,
-      description: _detailsController.text,
-      imageURL: imageURL,
-      dpURL: widget.alumni.dpURL,
-    );
+  final imageURL = await _uploadImage();
+  await _firestoreService.addAdminAnnouncement(
+    type: _postType,
+    adminId: widget.adminId,
+    adminName: widget.adminName,
+    caption: _captionController.text,
+    description: _detailsController.text,
+    imageURL: imageURL,
+  );
 
-    setState(() {
-      _isLoading = false;
-    });
+  setState(() {
+    _isLoading = false;
+  });
 
-    // Show a success message
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('New post added'),
-        duration: Duration(seconds: 2),
-      ),
-    );
+  // Show a success message
+  ScaffoldMessenger.of(context).showSnackBar(
+    const SnackBar(
+      content: Text('New announcement added'),
+      duration: Duration(seconds: 2),
+    ),
+  );
 
-    _resetForm();
-  }
+  _resetForm();
+}
 
   @override
   Widget build(BuildContext context) {
@@ -121,7 +123,7 @@ class _AlumniNewPostPageState extends State<AlumniNewPostPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      'Post Type',
+                      'Announcement Type',
                       style: TextStyle(
                         fontSize: 18.0,
                         fontWeight: FontWeight.bold,
@@ -178,7 +180,7 @@ class _AlumniNewPostPageState extends State<AlumniNewPostPage> {
                     TextField(
                       controller: _captionController,
                       decoration: const InputDecoration(
-                        hintText: 'Enter organisation name',
+                        hintText: 'Enter caption',
                         border: OutlineInputBorder(),
                       ),
                     ),
@@ -231,7 +233,7 @@ class _AlumniNewPostPageState extends State<AlumniNewPostPage> {
                         ),
                         const SizedBox(width: 16.0),
                         ElevatedButton(
-                          onPressed: _submitPost,
+                          onPressed: _submitAnnouncement,
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.greenAccent,
                           ),
