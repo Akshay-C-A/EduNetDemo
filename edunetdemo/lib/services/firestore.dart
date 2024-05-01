@@ -501,7 +501,7 @@ class FirestoreService {
       FirebaseFirestore.instance.collection('event_posts');
   // get collection of alumni_posts
   final CollectionReference moderator =
-      FirebaseFirestore.instance.collection('moderator');
+      FirebaseFirestore.instance.collection('moderators');
 
   //To add student details
   Future<void> addModerator({
@@ -649,7 +649,7 @@ class FirestoreService {
   Stream<QuerySnapshot> getModeratorProfilePosts(
       {required String moderatorId}) {
     print(moderatorId);
-    final moderatorProfileStream = user
+    final moderatorProfileStream = moderator
         .doc(moderatorId)
         .collection('posts')
         .orderBy('timestamp', descending: true)
@@ -665,24 +665,36 @@ class FirestoreService {
     required String studentMail,
     required String postId,
   }) {
-    CollectionReference participants =
-        event_posts.doc(postId).collection('participants');
-    return participants.add({
+    return event_posts
+        .doc(postId)
+        .collection('participants')
+        .doc(studentId)
+        .set({
       'studentId': studentId,
       'studentName': studentName,
       'department': department,
       'batch': batch,
       'mail': studentMail,
+      'isVerified': false,
     });
   }
 
   // To get the data for participant details
   Stream<QuerySnapshot> getEventParticipantsStream({required String postId}) {
-    final eventParticipantsStream = event_posts
+    print(postId);
+    final moderatorProfileStream =
+        event_posts.doc(postId).collection('participants').snapshots();
+    return moderatorProfileStream;
+  }
+
+  Future<void> verifyStudent(
+      {required String studentId, required String postId}) {
+    return event_posts
         .doc(postId)
         .collection('participants')
-        .orderBy('timestamp', descending: true)
-        .snapshots();
-    return eventParticipantsStream;
+        .doc(studentId)
+        .update({
+      'isVerified': true,
+    });
   }
 }
