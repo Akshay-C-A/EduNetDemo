@@ -19,6 +19,7 @@ class AlumniPostCard extends StatefulWidget {
   final List<String> likes;
 
   //data for post
+  final bool isAdmin;
   final String alumnId;
   final String type;
   final String alumniName;
@@ -29,6 +30,7 @@ class AlumniPostCard extends StatefulWidget {
   final String dpURL;
 
   AlumniPostCard({
+    required this.isAdmin,
     required this.type,
     required this.alumnId,
     required this.alumniName,

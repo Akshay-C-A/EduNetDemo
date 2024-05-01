@@ -40,6 +40,47 @@ class _EventDashboardState extends State<EventDashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('MODERATOR'),
+        actions: [
+          // IconButton(
+          //     onPressed: () {
+          //       Navigator.push(
+          //           context,
+          //           MaterialPageRoute(
+          //               builder: (context) => UserSearchPage()));
+          //     },
+          //     icon: Icon(Icons.search)),
+          GestureDetector(
+            onTap: () {
+              // Navigator.push(
+              //     context,
+              //     MaterialPageRoute(
+              //       builder: (context) => ProfileScreen(
+              //           alumni: Alumni(
+              //         alumni_name: alumni_name,
+              //         alumniId: alumniId,
+              //         alumni_designation: alumni_designation,
+              //         skills: skills,
+              //         about: about,
+              //         company: company,
+              //         linkedIn: linkedIn,
+              //         twitter: twitter,
+              //         mail: mail,
+              //         dpURL: dpURL,
+              //       )),
+              //     ));
+            },
+            child: Padding(
+              padding: const EdgeInsets.only(right: 16.0),
+              child: CircleAvatar(
+                // backgroundImage: NetworkImage(dpURL),
+                radius: 20.0,
+              ),
+            ),
+          ),
+        ],
+      ),
       body: Center(
         child: IndexedStack(
           index: _selectedIndex,

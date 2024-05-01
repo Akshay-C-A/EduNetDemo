@@ -80,13 +80,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:edunetdemo/services/firestore.dart';
 import 'package:edunetdemo/services/notification_services.dart';
+import 'package:edunetdemo/student/student_dashboard.dart';
 import 'package:edunetdemo/student/student_post_card.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-
 class StudentPage extends StatefulWidget {
-  const StudentPage({super.key});
+  StudentPage({super.key});
+  bool isAdmin = false;
+  StudentPage.forAdmin({super.key, required isAdmin});
   @override
   State<StudentPage> createState() => _StudentPageState();
 }
@@ -127,7 +129,7 @@ class _StudentPageState extends State<StudentPage> {
               String studentId = data['studentId'];
               String studentName = data['studentName'];
               String studentDesignation = data['studentDesignation'];
-             
+
               String caption = data['caption'];
               String description = data['description'];
               String? imgURL = data['imageURL'];
@@ -149,6 +151,7 @@ class _StudentPageState extends State<StudentPage> {
               }
 
               return StudentPostCard(
+                isAdmin: widget.isAdmin,
                 studentId: studentId,
                 studentName: studentName,
                 studentDesignation: studentDesignation,

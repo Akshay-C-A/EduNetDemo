@@ -91,6 +91,51 @@ class FirestoreService {
   }
 
 //----------------------------------------------------------------------------------------------------------------
+// ADMIN SECTION
+// get collection of alumni_posts
+  final CollectionReference announcement =
+      FirebaseFirestore.instance.collection('announcement');
+  // get collection of alumni_posts
+  final CollectionReference admin =
+      FirebaseFirestore.instance.collection('admin');
+
+  // To add alumni post data from form to alumni and alumniPosts
+  Future<void> addAdminAnnouncement({
+    required String type,
+    required String alumniId,
+    required String alumniDesignation,
+    required String caption,
+    required String description,
+    String? imageURL,
+  }) {
+    String unique = DateTime.now().toIso8601String();
+    alumni_posts.doc('$alumniId$unique').set({
+      'type': type,
+      'alumniId': alumniId,
+      'alumniDesignation': alumniDesignation,
+      'caption': caption,
+      'description': description,
+      'imageURL': imageURL,
+      'likes': [],
+      'timestamp': Timestamp.now(),
+      'notified': false,
+    });
+
+    //Adding post to alumni user data
+    DocumentReference AlumniName = user.doc(alumniId);
+    return AlumniName.collection('posts').doc('$alumniId$unique').set({
+      'type': type,
+      'alumniId': alumniId,
+      'alumniDesignation': alumniDesignation,
+      'caption': caption,
+      'description': description,
+      'imageURL': imageURL,
+      'timestamp': Timestamp.now(),
+      'notified': false,
+    });
+  }
+
+//----------------------------------------------------------------------------------------------------------------
 // ALUMNI SECTION
 
   // get collection of alumni_posts
@@ -456,7 +501,7 @@ class FirestoreService {
       FirebaseFirestore.instance.collection('event_posts');
   // get collection of alumni_posts
   final CollectionReference moderator =
-      FirebaseFirestore.instance.collection('moderator');
+      FirebaseFirestore.instance.collection('moderators');
 
   //To add student details
   Future<void> addModerator({
@@ -502,7 +547,7 @@ class FirestoreService {
   }) {
     String unique = DateTime.now().toIso8601String();
     event_posts.doc('$moderatorId$unique').set({
-      'communityName' : communityName,
+      'communityName': communityName,
       'eventTitle': EventTitle,
       'moderatorId': moderatorId,
       'moderatorName': moderatorName,
@@ -598,6 +643,58 @@ class FirestoreService {
       'otherDetails': otherDetails,
       'timestamp': Timestamp.now(),
       'edited': true,
+    });
+  }
+
+  Stream<QuerySnapshot> getModeratorProfilePosts(
+      {required String moderatorId}) {
+    print(moderatorId);
+    final moderatorProfileStream = moderator
+        .doc(moderatorId)
+        .collection('posts')
+        .orderBy('timestamp', descending: true)
+        .snapshots();
+    return moderatorProfileStream;
+  }
+
+  Future<void> enrollStudent({
+    required String studentId,
+    required String studentName,
+    required String department,
+    required String batch,
+    required String studentMail,
+    required String postId,
+  }) {
+    return event_posts
+        .doc(postId)
+        .collection('participants')
+        .doc(studentId)
+        .set({
+      'studentId': studentId,
+      'studentName': studentName,
+      'department': department,
+      'batch': batch,
+      'mail': studentMail,
+      'isVerified': false,
+    });
+  }
+
+  // To get the data for participant details
+  Stream<QuerySnapshot> getEventParticipantsStream({required String postId}) {
+    print(postId);
+    final moderatorProfileStream =
+        event_posts.doc(postId).collection('participants').snapshots();
+    return moderatorProfileStream;
+  }
+
+  Future<void> verifyStudent(
+      {required String studentId, required String postId}) {
+    return event_posts
+        .doc(postId)
+        .collection('participants')
+        .doc(studentId)
+        .update({
+      'isVerified': true,
     });
   }
 }

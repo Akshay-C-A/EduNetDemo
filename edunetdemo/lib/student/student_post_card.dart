@@ -21,7 +21,7 @@ class StudentPostCard extends StatefulWidget {
 
   //data for post
   final String studentId;
-  
+  final bool isAdmin;
   final String studentName;
   final String studentDesignation;
   final String caption;
@@ -30,6 +30,7 @@ class StudentPostCard extends StatefulWidget {
   final String dpURL;
 
   StudentPostCard({
+    required this.isAdmin,
     required this.studentId,
     required this.studentName,
     required this.studentDesignation,
@@ -75,8 +76,6 @@ class _StudentPostCardState extends State<StudentPostCard> {
 
   bool isExpanded = false;
   bool showLikeIcon = false;
-
-  
 
   @override
   void initState() {
