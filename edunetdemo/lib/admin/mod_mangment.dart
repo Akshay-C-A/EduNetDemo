@@ -27,9 +27,10 @@ class _ModeratorManagementPageState extends State<ModeratorManagementPage> {
         password: password,
       );
 
-      await moderatorsCollection.doc(userCredential.user!.uid).set({
-        'name': name,
-        'email': email,
+      await moderatorsCollection.doc(email).set({
+        'moderatorName': name,
+        'moderatorMail': email,
+        'moderatorId': email,
       });
 
       ScaffoldMessenger.of(context).showSnackBar(
@@ -125,8 +126,8 @@ class _ModeratorManagementPageState extends State<ModeratorManagementPage> {
                   itemCount: snapshot.data!.docs.length,
                   itemBuilder: (BuildContext context, int index) {
                     final moderatorDoc = snapshot.data!.docs[index];
-                    final name = moderatorDoc['name'];
-                    final email = moderatorDoc['email'];
+                    final name = moderatorDoc['moderatorName'];
+                    final email = moderatorDoc['moderatorMail'];
 
                     return ListTile(
                       title: Text(name),
