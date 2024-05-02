@@ -101,40 +101,40 @@ class FirestoreService {
       FirebaseFirestore.instance.collection('admin');
 
   // To add alumni post data from form to alumni and alumniPosts
-Future<void> addAdminAnnouncement({
-  required String type,
-  required String adminId,
-  required String adminName,
-  required String caption,
-  required String description,
-  String? imageURL,
-}) {
-  String unique = DateTime.now().toIso8601String();
-  announcement.doc('$adminId$unique').set({
-    'type': type,
-    'adminId': adminId,
-    'adminName': adminName,
-    'caption': caption,
-    'description': description,
-    'imageURL': imageURL,
-    'likes': [],
-    'timestamp': Timestamp.now(),
-    'notified': false,
-  });
+  Future<void> addAdminAnnouncement({
+    required String type,
+    required String adminId,
+    required String adminName,
+    required String caption,
+    required String description,
+    String? imageURL,
+  }) {
+    String unique = DateTime.now().toIso8601String();
+    announcement.doc('$adminId$unique').set({
+      'type': type,
+      'adminId': adminId,
+      'adminName': adminName,
+      'caption': caption,
+      'description': description,
+      'imageURL': imageURL,
+      'likes': [],
+      'timestamp': Timestamp.now(),
+      'notified': false,
+    });
 
-  // Adding announcement to admin user data
-  DocumentReference adminRef = admin.doc(adminId);
-  return adminRef.collection('announcements').doc('$adminId$unique').set({
-    'type': type,
-    'adminId': adminId,
-    'adminName': adminName,
-    'caption': caption,
-    'description': description,
-    'imageURL': imageURL,
-    'timestamp': Timestamp.now(),
-    'notified': false,
-  });
-}
+    // Adding announcement to admin user data
+    DocumentReference adminRef = admin.doc(adminId);
+    return adminRef.collection('announcements').doc('$adminId$unique').set({
+      'type': type,
+      'adminId': adminId,
+      'adminName': adminName,
+      'caption': caption,
+      'description': description,
+      'imageURL': imageURL,
+      'timestamp': Timestamp.now(),
+      'notified': false,
+    });
+  }
 
 //----------------------------------------------------------------------------------------------------------------
 // ALUMNI SECTION
@@ -660,31 +660,56 @@ Future<void> addAdminAnnouncement({
 
   Future<void> enrollStudent({
     required String studentId,
-    required String studentName,
-    required String department,
-    required String batch,
-    required String studentMail,
+    required String moderatorId,
     required String postId,
-  }) {
-    return event_posts
-        .doc(postId)
-        .collection('participants')
-        .doc(studentId)
-        .set({
-      'studentId': studentId,
-      'studentName': studentName,
-      'department': department,
-      'batch': batch,
-      'mail': studentMail,
-      'isVerified': false,
-    });
+  }) async {
+    try {
+      print('Enrolling Started');
+      final studentSnapshot = await getStudent(studentId: studentId);
+
+      if (studentSnapshot.exists) {
+        Map<String, dynamic> studentData =
+            studentSnapshot.data() as Map<String, dynamic>;
+        print('Data fetched');
+        final batch = studentData['batch'] ?? '';
+        final studentMail = studentData['studentMail'] ?? '';
+        final studentName = studentData['studentName'] ?? '';
+        final department = studentData['studentDept'] ?? '';
+
+        await moderator
+            .doc(moderatorId)
+            .collection('posts')
+            .doc(postId)
+            .collection('participants')
+            .doc(studentId)
+            .set({
+          'studentId': studentId,
+          'moderatorId': moderatorId,
+          'batch': batch,
+          'studentMail': studentMail,
+          'studentName': studentName,
+          'department': department,
+          'isVerified': false,
+        });
+        print('data inserted');
+      } else {
+        print('Student document does not exist');
+      }
+    } catch (e) {
+      print('Error enrolling student: $e');
+    }
   }
 
   // To get the data for participant details
-  Stream<QuerySnapshot> getEventParticipantsStream({required String postId}) {
+  Stream<QuerySnapshot> getEventParticipantsStream(
+      {required String postId, required String moderatorId}) {
     print(postId);
-    final moderatorProfileStream =
-        event_posts.doc(postId).collection('participants').snapshots();
+    final moderatorProfileStream = moderator
+        .doc(moderatorId)
+        .collection('posts')
+        .doc(postId)
+        .collection('participants')
+        .snapshots();
     return moderatorProfileStream;
   }
 

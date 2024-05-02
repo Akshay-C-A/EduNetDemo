@@ -13,8 +13,10 @@ class Student {
 }
 
 class EventParticipation extends StatefulWidget {
+  final String moderatorId;
   final String postId;
-  const EventParticipation({super.key, required this.postId});
+  const EventParticipation(
+      {super.key, required this.postId, required this.moderatorId});
 
   @override
   State<EventParticipation> createState() => _EventParticipationState();
@@ -40,7 +42,7 @@ class _EventParticipationState extends State<EventParticipation> {
           Container(
             child: StreamBuilder<QuerySnapshot>(
                 stream: firestoreService.getEventParticipantsStream(
-                    postId: widget.postId),
+                    moderatorId: widget.moderatorId, postId: widget.postId),
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {
                     return Text('Error: ${snapshot.error}');
@@ -77,7 +79,7 @@ class _EventParticipationState extends State<EventParticipation> {
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
               stream: firestoreService.getEventParticipantsStream(
-                  postId: widget.postId),
+                  moderatorId: widget.moderatorId, postId: widget.postId),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
                   return Text('Error: ${snapshot.error}');
