@@ -159,6 +159,13 @@ class _Student_DashboardState extends State<Student_Dashboard> {
             appBar: AppBar(
               title: Text('Student'),
               actions: [
+                
+                IconButton(
+                    onPressed: () {
+                      
+                    },
+                    icon: Icon(Icons.announcement_rounded)),
+                
                 IconButton(
                     onPressed: () {
                       Navigator.push(
