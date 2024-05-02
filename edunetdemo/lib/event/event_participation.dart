@@ -24,6 +24,7 @@ class EventParticipation extends StatefulWidget {
 
 class _EventParticipationState extends State<EventParticipation> {
   FirestoreService firestoreService = FirestoreService();
+  bool _verifyLoading = false;
   // List to store enrolled students
   List<Student> enrolledStudents = [
     Student(name: 'John Doe', age: 20, email: 'john@example.com'),
@@ -111,6 +112,7 @@ class _EventParticipationState extends State<EventParticipation> {
                     bool isVerified = data['isVerified'] ?? false;
                     String studentId = data['studentId'];
                     // Display as a list title
+
                     return Card(
                       child: ListTile(
                         leading: Text('${index + 1}'),
@@ -124,11 +126,28 @@ class _EventParticipationState extends State<EventParticipation> {
                               )
                             : ElevatedButton(
                                 onPressed: () {
+                                  setState(() {
+                                    _verifyLoading = true;
+                                  });
                                   firestoreService.verifyStudent(
                                       studentId: studentId,
                                       postId: widget.postId);
+                                  setState(() {
+                                    _verifyLoading = false;
+                                  });
                                 },
-                                child: Text('Verify')),
+                                child: _verifyLoading
+                                    ? SizedBox(
+                                        width:
+                                            24.0, // Adjust the width and height as per your requirements
+                                        height: 24.0,
+                                        child: CircularProgressIndicator(
+                                          color: Colors.green,
+                                          // strokeWidth:
+                                          //     3.0, // Increase or decrease this value to adjust the circle's thickness
+                                        ),
+                                      )
+                                    : Text('Verify')),
                       ),
                     );
                   },

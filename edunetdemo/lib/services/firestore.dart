@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:edunetdemo/services/email_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 // import '../alumni/alumni_dashboard.dart';
@@ -13,21 +14,6 @@ class FirestoreService {
   Stream<QuerySnapshot> getUserStream() {
     final userStream = user.orderBy('timestamp', descending: true).snapshots();
     return userStream;
-  }
-
-  Future<String> fetchUserDp(String userId) async {
-    try {
-      DocumentSnapshot alumniDoc = await user.doc(userId).get();
-      if (alumniDoc.exists) {
-        Map<String, dynamic> data = alumniDoc.data() as Map<String, dynamic>;
-        return data['dpURL'];
-      } else {
-        return '';
-      }
-    } catch (e) {
-      print('Error fetching alumni name: $e');
-      return '';
-    }
   }
 
   // Future<Alumni?> getAlumniByEmail(String email) async {
@@ -55,18 +41,18 @@ class FirestoreService {
   //     return null;
   //   }
   // }
+  Future<bool> isFirstTimeGoogle(String userId) async {
+    final documentSnapshot =
+        await FirebaseFirestore.instance.collection('users').doc(userId).get();
 
-  // Future<bool> isFirstTime(String email) async {
-  //   DocumentReference isUser = alumni.doc(email);
+    if (documentSnapshot.exists == false) {
+      final Map<String, dynamic> documentData =
+          documentSnapshot.data() as Map<String, dynamic>;
 
-  //   try {
-  //     DocumentSnapshot doc = await isUser.get();
-  //     return doc.exists;
-  //   } catch (error) {
-  //     print('Error getting document: $error');
-  //     rethrow;
-  //   }
-  // }
+      return documentData['about'] ?? false;
+    } else
+      return false;
+  }
 
   Future<bool> isFirstTime(String? email) async {
     if (email != null) {
@@ -715,6 +701,7 @@ class FirestoreService {
 
   Future<void> verifyStudent(
       {required String studentId, required String postId}) {
+        EmailService().sendEmail(studentName: studentName, studentEmail: studentEmail, eventTitle: eventTitle, communityMail: communityMail, communityName: communityName)
     return event_posts
         .doc(postId)
         .collection('participants')
