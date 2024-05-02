@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 class EventPage extends StatefulWidget {
   EventPage({super.key});
   bool isAdmin = false;
-  EventPage.forAdmin(Map map, {super.key, required isAdmin});
+  EventPage.forAdmin({super.key, required isAdmin});
 
   @override
   State<EventPage> createState() => _EventPageState();

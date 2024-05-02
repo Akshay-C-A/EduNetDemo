@@ -23,12 +23,18 @@ class _AdminDashboardState extends State<AdminDashboard> {
   @override
   Widget build(BuildContext context) {
     List<Widget> widgetOptions = <Widget>[
-      EventPage(),
-      StudentPage(),
-      AlumniPage(),
+      EventPage.forAdmin(isAdmin: true),
+      StudentPage.forAdmin(
+        isAdmin: true,
+      ),
+      AlumniPage.forAdmin(
+        isAdmin: true,
+      ),
       ModeratorManagementPage(),
-      AdminAnnouncementPage(adminId: currentUser?.email ?? '',
-        adminName: currentUser?.displayName ?? '',),
+      AdminAnnouncementPage(
+        adminId: currentUser?.email ?? '',
+        adminName: currentUser?.displayName ?? '',
+      ),
     ];
 
     return Scaffold(
@@ -97,4 +103,3 @@ class _AdminDashboardState extends State<AdminDashboard> {
     );
   }
 }
-
