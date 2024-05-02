@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:edunetdemo/event/view_moderator_profile.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/widgets.dart';
 import 'package:share_plus/share_plus.dart';
@@ -141,13 +142,13 @@ class _EventPostCardState extends State<EventPostCard> {
                       Row(
                         children: [
                           GestureDetector(
-                            // onTap: () {
-                            //   Navigator.push(
-                            //       context,
-                            //       MaterialPageRoute(
-                            //           builder: (context) => ViewAlumniProfile(
-                            //               alumniId: widget.moderatorId)));
-                            // },
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => ViewModeratorProfile(
+                                          moderatorId: widget.moderatorId)));
+                            },
                             child: CircleAvatar(
                               radius: 20,
                               backgroundImage: NetworkImage(widget.dpURL),

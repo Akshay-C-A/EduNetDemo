@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:edunetdemo/auth/login_check2.dart';
-import 'package:edunetdemo/event/event_edit-profile.dart';
+import 'package:edunetdemo/event/moderator_edit-profile.dart';
 import 'package:edunetdemo/event/moderator_profile_form.dart';
 import 'package:edunetdemo/services/firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -10,6 +10,7 @@ import 'package:flutter/services.dart';
 class Moderator {
   String moderatorId;
   String communityName;
+  String moderatorName;
   String about;
   String? linkedIn;
   String? twitter;
@@ -19,6 +20,7 @@ class Moderator {
   Moderator({
     required this.moderatorId,
     required this.communityName,
+    required this.moderatorName,
     required this.about,
     this.linkedIn,
     this.twitter,
@@ -37,7 +39,6 @@ class ModeratorProfileScreen extends StatefulWidget {
 }
 
 class _ModeratorProfileScreenState extends State<ModeratorProfileScreen> {
-  FirestoreService firestoreService = FirestoreService();
   Set<String> _selectedButton = {'Details'};
 
   void updateSelected(Set<String> newSelection) {
@@ -48,11 +49,9 @@ class _ModeratorProfileScreenState extends State<ModeratorProfileScreen> {
 
   void _copyLink(String iconB) {
     if (iconB == 'LinkedIn') {
-      Clipboard.setData(
-          ClipboardData(text: widget.moderator.linkedIn.toString()));
+      Clipboard.setData(ClipboardData(text: widget.moderator.linkedIn.toString()));
     } else if (iconB == 'Twitter') {
-      Clipboard.setData(
-          ClipboardData(text: widget.moderator.twitter.toString()));
+      Clipboard.setData(ClipboardData(text: widget.moderator.twitter.toString()));
     } else if (iconB == 'Mail') {
       Clipboard.setData(ClipboardData(text: widget.moderator.mail.toString()));
     }
@@ -152,6 +151,7 @@ class _ModeratorProfileScreenState extends State<ModeratorProfileScreen> {
                                   ],
                                 ),
                                 SizedBox(height: 4),
+                                Text(widget.moderator.moderatorName),
                               ],
                             ),
                           ),
@@ -229,10 +229,22 @@ class _ModeratorProfileScreenState extends State<ModeratorProfileScreen> {
                             ],
                           ),
                           SizedBox(height: width * 0.08),
-                          PostsSection(
-                            moderatorId: widget.moderator.moderatorId,
-                            firestoreService: FirestoreService(),
+                          Center(
+                            child: SegmentedButton(
+                              segments: <ButtonSegment<String>>[
+                                
+                                ButtonSegment(
+                                    value: 'Posts', label: Text('Posts')),
+                              ],
+                              selected: _selectedButton,
+                              onSelectionChanged: updateSelected,
+                            ),
                           ),
+                          SizedBox(height: width * 0.08),
+                            PostsSection(
+                              moderatorId: widget.moderator.moderatorId,
+                              firestoreService: FirestoreService(),
+                            ),
                         ],
                       ),
                     ),
@@ -246,6 +258,45 @@ class _ModeratorProfileScreenState extends State<ModeratorProfileScreen> {
     );
   }
 }
+
+// SkillsSection
+
+
+// EmailSection
+class EmailSection extends StatelessWidget {
+  final String email;
+
+  EmailSection({required this.email});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Email',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
+            ),
+          ),
+          SizedBox(height: 5),
+          Text(
+            email,
+            style: TextStyle(
+              fontSize: 16,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// CompanySection
+
 
 // PostsSection
 class PostsSection extends StatefulWidget {
@@ -293,7 +344,7 @@ class _PostsSectionState extends State<PostsSection> {
               return Center(child: Text('No data available'));
             }
 
-            List alumniProfilePostList = snapshot.data!.docs;
+            List moderatorProfilePostList = snapshot.data!.docs;
             return GridView.builder(
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
@@ -302,10 +353,10 @@ class _PostsSectionState extends State<PostsSection> {
                 crossAxisSpacing: 2.0,
                 mainAxisSpacing: 2.0,
               ),
-              itemCount: alumniProfilePostList.length,
+              itemCount: moderatorProfilePostList.length,
               itemBuilder: (BuildContext context, int index) {
                 // Get each individual doc
-                DocumentSnapshot document = alumniProfilePostList[index];
+                DocumentSnapshot document = moderatorProfilePostList[index];
                 // String docID = document.id;
 
                 // Get note from each doc
@@ -314,16 +365,12 @@ class _PostsSectionState extends State<PostsSection> {
                 String? imgURL = data['imageURL'];
 
                 // Delete post function
-                void deletePost() {
-                  setState(() {
-                    alumniProfilePostList.removeAt(index);
-                  });
-                }
+                
 
                 return ProfileSquarePost(
                   imageURL: imgURL ?? '',
                   postId: document.id,
-                  alumniId: widget.moderatorId,
+                  moderatorId: widget.moderatorId,
                   isView: widget.isView,
                 );
               },
@@ -338,13 +385,13 @@ class _PostsSectionState extends State<PostsSection> {
 class ProfileSquarePost extends StatefulWidget {
   final String imageURL;
   final String postId;
-  final String alumniId;
+  final String moderatorId;
   bool isView = false;
 
   ProfileSquarePost({
     required this.imageURL,
     required this.postId,
-    required this.alumniId,
+    required this.moderatorId,
     required this.isView,
   });
 
@@ -369,7 +416,7 @@ class _ProfileSquarePostState extends State<ProfileSquarePost> {
               onPressed: () {
                 Navigator.of(context).pop();
                 firestoreService.deleteEventPost(
-                    moderatorId: widget.alumniId, postId: widget.postId);
+                    moderatorId: widget.moderatorId, postId: widget.postId);
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text('Post Deleted'),
@@ -407,8 +454,8 @@ class _ProfileSquarePostState extends State<ProfileSquarePost> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => EditEventPostForm(
-                                alumniId: widget.alumniId,
+                            builder: (context) => ModeratorEditPostForm(
+                                moderatorId: widget.moderatorId,
                                 postId: widget.postId)));
                   },
                   child: ListTile(
