@@ -114,7 +114,7 @@ class _EventDashboardState extends State<EventDashboard> {
                              about: about,
     ),),
     EventNotificationPage(),
-    PostedEvents(),
+    PostedEvents(moderatorId: moderatorId,),
   ];
     return FutureBuilder(
       future: _fetchDetails(),
