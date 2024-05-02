@@ -9,6 +9,8 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
 
 class EventNewPostPage extends StatefulWidget {
+  const EventNewPostPage({super.key,});
+
   @override
   State<EventNewPostPage> createState() => _EventNewPostPageState();
 }
@@ -85,7 +87,7 @@ class _EventNewPostPageState extends State<EventNewPostPage> {
     await _EventFirestoreService.addEventPosts(
       communityName: 'GDSC',
       EventTitle: _eventTitleController.text,
-      moderatorId: 'mod123',
+      moderatorId: 'melby@moderator.edunet.com',
       moderatorName: 'modmemms',
       Date: _dateController.text,
       Venue: _eventVenueController.text,
