@@ -1,11 +1,11 @@
-import 'package:edunetdemo/alumni/alumni_profile.dart';
+import 'package:edunetdemo/event/moderator_profile.dart';
 import 'package:edunetdemo/services/firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class ViewModeratorProfile extends StatefulWidget {
-  final String alumniId;
-  const ViewModeratorProfile({super.key, required this.alumniId});
+  final String moderatorId;
+  const ViewModeratorProfile({super.key, required this.moderatorId});
 
   @override
   State<ViewModeratorProfile> createState() => _ViewModeratorProfileState();
@@ -14,18 +14,17 @@ class ViewModeratorProfile extends StatefulWidget {
 class _ViewModeratorProfileState extends State<ViewModeratorProfile> {
   final FirestoreService _firestoreService = FirestoreService();
 
-  late String alumni_name = 'john doe';
-  late String alumni_designation = 'CS Engineer';
-  late List<dynamic> skills = ['null'];
-  late String alumniId;
+  late String moderatorId = '56';
+  late String moderatorName = 'john doe';
+  late String communityName = 'Mulearn';
   late String about = 'eg';
-  late String company = 'eg';
   late String? linkedIn = 'eg';
   late String? twitter = 'eg';
   late String? mail = 'eg';
-  late String dpURL = 'eg';
+  String dpURL = '';
 
   Map<String, dynamic>? _postData;
+
 
   @override
   void initState() {
@@ -34,9 +33,9 @@ class _ViewModeratorProfileState extends State<ViewModeratorProfile> {
   }
 
   Future<void> _fetchDetails() async {
-    alumniId = widget.alumniId;
-    final postSnapshot = await _firestoreService.getAlumni(
-      alumniId: alumniId,
+    moderatorId = widget.moderatorId;
+    final postSnapshot = await _firestoreService.getModerator(
+      moderatorId: moderatorId,
     );
 
     Map<String, dynamic>? postData;
@@ -47,28 +46,22 @@ class _ViewModeratorProfileState extends State<ViewModeratorProfile> {
       postData = null;
     }
 
-    if (postData != null) {
-      alumni_name = postData['alumniName'] as String;
-      alumni_designation = postData['alumniDesignation'] as String;
-      alumniId = widget.alumniId;
-      skills = (postData['skills'] as List<dynamic>).cast<String>();
+   if (postData != null) {
+      moderatorId = widget.moderatorId;
+      communityName = postData['communityName'] as String;
+      moderatorName = postData['moderatorName'] as String;
       about = postData['about'] as String;
-      company = postData['company'] as String;
-      linkedIn = postData['linkedIn'] as String;
-      twitter = postData['twitter'] as String;
-      mail = postData['mail'] as String;
+      linkedIn = postData['linkedIn'] as String?;
+      twitter = postData['twitter'] as String?;
+      mail = postData['mail'] as String?;
       dpURL = postData['dpURL'] as String;
     } else {
-      alumni_name = 'john doe';
-      alumni_designation = 'CS Engineer';
-      skills = ['null'];
+      communityName = 'Mulearn';
       about = 'eg';
-      company = 'eg';
       linkedIn = 'eg';
       twitter = 'eg';
       mail = 'eg';
       dpURL = 'eg';
-
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Account details not found'),
@@ -169,7 +162,7 @@ class _ViewModeratorProfileState extends State<ViewModeratorProfile> {
                                     alignment: WrapAlignment.center,
                                     children: [
                                       Text(
-                                        alumni_name,
+                                        communityName,
                                         style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 30,
@@ -179,7 +172,7 @@ class _ViewModeratorProfileState extends State<ViewModeratorProfile> {
                                     ],
                                   ),
                                   SizedBox(height: 4),
-                                  Text(alumni_designation),
+                                  Text(moderatorName),
                                 ],
                               ),
                             ),
@@ -249,8 +242,7 @@ class _ViewModeratorProfileState extends State<ViewModeratorProfile> {
                             Center(
                               child: SegmentedButton(
                                 segments: <ButtonSegment<String>>[
-                                  ButtonSegment(
-                                      value: 'Details', label: Text('Details')),
+                                  
                                   ButtonSegment(
                                       value: 'Posts', label: Text('Posts')),
                                 ],
@@ -259,18 +251,8 @@ class _ViewModeratorProfileState extends State<ViewModeratorProfile> {
                               ),
                             ),
                             SizedBox(height: width * 0.08),
-                            if (_selectedButton.contains('Details'))
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  CompanySection(company: company),
-                                  SizedBox(height: width * 0.08),
-                                  SkillsSection(skills: skills),
-                                ],
-                              )
-                            else
                               PostsSection.withView(
-                                alumniId: widget.alumniId,
+                                moderatorId: widget.moderatorId,
                                 firestoreService: FirestoreService(),
                                 isView: true,
                               ),

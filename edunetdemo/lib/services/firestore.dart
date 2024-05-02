@@ -507,7 +507,6 @@ Future<void> addAdminAnnouncement({
   //To add student details
   Future<void> addModerator({
     required String? moderatorMail,
-    required String moderatorName,
     required String about,
     String? dpURL,
     String? linkedIn,
@@ -517,7 +516,23 @@ Future<void> addAdminAnnouncement({
     return moderator.doc('$moderatorMail').set({
       'moderatorMail': moderatorMail,
       'moderatorId': moderatorMail,
-      'moderatorName': moderatorName,
+      'about': about,
+      'dpURL': dpURL,
+      'linkedIn': linkedIn,
+      'twitter': twitter,
+      'mail': mail,
+    });
+  }
+
+  Future<void> updateModerator({
+    required String? moderatorMail,
+    required String about,
+    String? dpURL,
+    String? linkedIn,
+    String? twitter,
+    String? mail,
+  }) {
+    return moderator.doc('$moderatorMail').update({
       'about': about,
       'dpURL': dpURL,
       'linkedIn': linkedIn,
@@ -679,6 +694,18 @@ Future<void> addAdminAnnouncement({
       'isVerified': false,
     });
   }
+
+  //To get a single student post
+  Future<DocumentSnapshot> getModeratorPost({
+    required String moderatorId,
+    required String postId,
+  }) async {
+    print(moderatorId);
+    final moderatorRef = moderator.doc(moderatorId);
+    final postSnapshot = await moderatorRef.collection('posts').doc(postId).get();
+    return postSnapshot;
+  }
+
 
   // To get the data for participant details
   Stream<QuerySnapshot> getEventParticipantsStream({required String postId}) {

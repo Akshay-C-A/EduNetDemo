@@ -1,5 +1,7 @@
 import 'package:edunetdemo/services/firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+
 
 class ModeratorEditProfileForm extends StatefulWidget {
   @override
@@ -113,8 +115,10 @@ class ModeratorEditPostForm extends StatefulWidget {
 
 class _ModeratorEditPostFormState extends State<ModeratorEditPostForm> {
   final _firestoreService = FirestoreService();
-  late final TextEditingController _detailsController;
-  late final TextEditingController _captionController;
+  late final TextEditingController _dateController;
+  late final TextEditingController _eventTitleController;
+  late final TextEditingController _eventVenueController;
+  late final TextEditingController _otherDetailsController;
 
   Map<String, dynamic>? _postData;
 
@@ -122,40 +126,35 @@ class _ModeratorEditPostFormState extends State<ModeratorEditPostForm> {
   void initState() {
     super.initState();
     _fetchPost();
+    _dateController = TextEditingController();
+    _eventTitleController = TextEditingController();
+    _eventVenueController = TextEditingController();
+    _otherDetailsController = TextEditingController();
   }
 
-  String _postType = 'Internship offer';
-  final List<String> _postTypes = [
-    'Internship offer',
-    'Placement offer',
-    'Technical event',
-    // 'My achievements'
-  ];
-
   Future<void> _fetchPost() async {
-    final postSnapshot = await _firestoreService.getAlumniPost(
-      alumniId: widget.moderatorId,
+    final postSnapshot = await _firestoreService.getModeratorPost(
+      moderatorId: widget.moderatorId,
       postId: widget.postId,
     );
 
     if (postSnapshot.exists) {
       setState(() {
         _postData = postSnapshot.data() as Map<String, dynamic>;
-        _detailsController =
-            TextEditingController(text: _postData!['description'] as String);
-        _captionController =
-            TextEditingController(text: _postData!['caption'] as String);
-        _postType = _postData!['type'] as String;
+        _dateController =
+            TextEditingController(text: _postData!['date'] as String);
+        _eventTitleController =
+            TextEditingController(text: _postData!['eventTitle'] as String);
+        _eventVenueController =
+            TextEditingController(text: _postData!['eventVenue'] as String);
+        _otherDetailsController =
+            TextEditingController(text: _postData!['otherDetails'] as String);
       });
     } else {
-      // Handle the case when the post is not found
       setState(() {
         _postData = null;
-        _detailsController = TextEditingController();
-        _captionController = TextEditingController();
       });
 
-      // Show a snackbar or dialog to inform the user
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Post not found'),
@@ -166,12 +165,13 @@ class _ModeratorEditPostFormState extends State<ModeratorEditPostForm> {
   }
 
   Future<void> _updatePost() async {
-    await _firestoreService.updateAlumniPost(
+    await _firestoreService.updateEventPost(
       postId: widget.postId,
-      type: _postType,
-      alumniId: widget.moderatorId,
-      caption: _captionController.text,
-      description: _detailsController.text,
+      moderatorId: widget.moderatorId,
+      Date: _dateController.text,
+      Venue: _eventVenueController.text,
+      otherDetails: _otherDetailsController.text,
+      EventTitle: _eventTitleController.text,
     );
 
     Navigator.pop(context);
@@ -179,8 +179,10 @@ class _ModeratorEditPostFormState extends State<ModeratorEditPostForm> {
 
   @override
   void dispose() {
-    _detailsController.dispose();
-    _captionController.dispose();
+    _dateController.dispose();
+    _eventTitleController.dispose();
+    _eventVenueController.dispose();
+    _otherDetailsController.dispose();
     super.dispose();
   }
 
@@ -196,84 +198,106 @@ class _ModeratorEditPostFormState extends State<ModeratorEditPostForm> {
           builder: (context, snapshot) {
             return snapshot.connectionState == ConnectionState.waiting
                 ? CircularProgressIndicator()
-                : Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                : SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 16.0),
+                    _buildTextField('Event Title', _eventTitleController),
+                    SizedBox(height: 16.0),
+                    _buildTextFieldWithCalendarIcon('Event Date'),
+                    SizedBox(height: 16.0),
+                    _buildTextField('Event Venue', _eventVenueController),
+                    SizedBox(height: 16.0),
+                    _buildTextField('Other Details', _otherDetailsController),
+                    SizedBox(height: 16.0),
+                    const SizedBox(height: 16.0),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        const Text(
-                          'Post Type',
-                          style: TextStyle(
-                            fontSize: 18.0,
-                            fontWeight: FontWeight.bold,
+                        ElevatedButton(
+                          onPressed: () {},
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.redAccent,
                           ),
+                          child: const Text('Clear'),
                         ),
-                        const SizedBox(height: 8.0),
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8.0),
-                            border: Border.all(color: Colors.grey),
+                        const SizedBox(width: 16.0),
+                        ElevatedButton(
+                          onPressed: _updatePost,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.greenAccent,
                           ),
-                          child: DropdownButton<String>(
-                            value: _postType,
-                            isExpanded: true,
-                            underline: const SizedBox.shrink(),
-                            items: _postTypes.map((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(value),
-                              );
-                            }).toList(),
-                            onChanged: (String? newValue) {
-                              setState(() {
-                                _postType = newValue!;
-                              });
-                            },
-                          ),
-                        ),
-                        const SizedBox(height: 16.0),
-                        const Text(
-                          'Details',
-                          style: TextStyle(
-                            fontSize: 18.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        TextField(
-                          controller: _detailsController,
-                          decoration: const InputDecoration(
-                            border: OutlineInputBorder(),
-                          ),
-                          maxLines: null,
-                        ),
-                        const SizedBox(height: 16.0),
-                        const Text(
-                          'Caption',
-                          style: TextStyle(
-                            fontSize: 18.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        TextField(
-                          controller: _captionController,
-                          decoration: const InputDecoration(
-                            border: OutlineInputBorder(),
-                          ),
-                        ),
-                        const SizedBox(height: 16.0),
-                        Center(
-                          child: TextButton(
-                            onPressed: _updatePost,
-                            child: const Text('Update'),
-                          ),
+                          child: const Text('Submit'),
                         ),
                       ],
                     ),
-                  );
+                  ],
+                ),
+              ),
+            );
           },
         ),
       ),
     );
+  }
+
+  Widget _buildTextField(String label, TextEditingController controller) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        TextFormField(
+          controller: controller,
+          decoration: InputDecoration(
+            hintText: 'Enter $label',
+            border: OutlineInputBorder(),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTextFieldWithCalendarIcon(String label) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        TextFormField(
+          controller: _dateController,
+          decoration: InputDecoration(
+            hintText: 'Enter $label',
+            border: OutlineInputBorder(),
+            suffixIcon: IconButton(
+              onPressed: _pickDate,
+              icon: Icon(Icons.calendar_today),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  void _pickDate() async {
+    final DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+    );
+
+    if (pickedDate != null) {
+      setState(() {
+        _dateController.text = DateFormat('dd/MM/yyyy').format(pickedDate);
+      });
+    }
   }
 }

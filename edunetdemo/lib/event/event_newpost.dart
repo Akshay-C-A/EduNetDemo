@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:edunetdemo/event/moderator_profile.dart';
 import 'package:edunetdemo/services/firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -9,6 +10,8 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
 
 class EventNewPostPage extends StatefulWidget {
+  final Moderator moderator;
+  const EventNewPostPage({super.key, required this.moderator});
   @override
   State<EventNewPostPage> createState() => _EventNewPostPageState();
 }
@@ -83,15 +86,15 @@ class _EventNewPostPageState extends State<EventNewPostPage> {
 
     final imageURL = await _uploadImage();
     await _EventFirestoreService.addEventPosts(
-      communityName: 'GDSC',
+      communityName: widget.moderator.communityName,
       EventTitle: _eventTitleController.text,
-      moderatorId: 'mod123',
-      moderatorName: 'modmemms',
+      moderatorId: widget.moderator.moderatorId,
+      moderatorName: widget.moderator.moderatorName,
       Date: _dateController.text,
       Venue: _eventVenueController.text,
       otherDetails: _otherDetailsController.text,
       imageURL: imageURL,
-      dpURL: '',
+      dpURL: widget.moderator.dpURL,
     );
 
     setState(() {
