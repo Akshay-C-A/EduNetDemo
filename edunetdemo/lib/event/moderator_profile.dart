@@ -49,9 +49,11 @@ class _ModeratorProfileScreenState extends State<ModeratorProfileScreen> {
 
   void _copyLink(String iconB) {
     if (iconB == 'LinkedIn') {
-      Clipboard.setData(ClipboardData(text: widget.moderator.linkedIn.toString()));
+      Clipboard.setData(
+          ClipboardData(text: widget.moderator.linkedIn.toString()));
     } else if (iconB == 'Twitter') {
-      Clipboard.setData(ClipboardData(text: widget.moderator.twitter.toString()));
+      Clipboard.setData(
+          ClipboardData(text: widget.moderator.twitter.toString()));
     } else if (iconB == 'Mail') {
       Clipboard.setData(ClipboardData(text: widget.moderator.mail.toString()));
     }
@@ -230,21 +232,19 @@ class _ModeratorProfileScreenState extends State<ModeratorProfileScreen> {
                           ),
                           SizedBox(height: width * 0.08),
                           Center(
-                            child: SegmentedButton(
-                              segments: <ButtonSegment<String>>[
-                                
-                                ButtonSegment(
-                                    value: 'Posts', label: Text('Posts')),
-                              ],
-                              selected: _selectedButton,
-                              onSelectionChanged: updateSelected,
+                            child: Text(
+                              'Posts',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                              ),
                             ),
                           ),
                           SizedBox(height: width * 0.08),
-                            PostsSection(
-                              moderatorId: widget.moderator.moderatorId,
-                              firestoreService: FirestoreService(),
-                            ),
+                          PostsSection(
+                            moderatorId: widget.moderator.moderatorId,
+                            firestoreService: FirestoreService(),
+                          ),
                         ],
                       ),
                     ),
@@ -258,45 +258,6 @@ class _ModeratorProfileScreenState extends State<ModeratorProfileScreen> {
     );
   }
 }
-
-// SkillsSection
-
-
-// EmailSection
-class EmailSection extends StatelessWidget {
-  final String email;
-
-  EmailSection({required this.email});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Email',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 18,
-            ),
-          ),
-          SizedBox(height: 5),
-          Text(
-            email,
-            style: TextStyle(
-              fontSize: 16,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-// CompanySection
-
 
 // PostsSection
 class PostsSection extends StatefulWidget {
@@ -365,7 +326,6 @@ class _PostsSectionState extends State<PostsSection> {
                 String? imgURL = data['imageURL'];
 
                 // Delete post function
-                
 
                 return ProfileSquarePost(
                   imageURL: imgURL ?? '',

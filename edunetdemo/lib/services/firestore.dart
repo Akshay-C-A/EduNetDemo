@@ -518,6 +518,7 @@ class FirestoreService {
     String? twitter,
     String? mail,
   }) {
+    print('Updating');
     return moderator.doc('$moderatorMail').update({
       'about': about,
       'dpURL': dpURL,
@@ -726,15 +727,16 @@ class FirestoreService {
     return moderatorProfileStream;
   }
 
-  Future<void> verifyStudent(
-      {required String studentId,
-      required String postId,
-      required String studentName,
-      required String studentEmail,
-      required String eventTitle,
-      required String communityMail,
-      required String communityName,
-      required String moderatorId,}) {
+  Future<void> verifyStudent({
+    required String studentId,
+    required String postId,
+    required String studentName,
+    required String studentEmail,
+    required String eventTitle,
+    required String communityMail,
+    required String communityName,
+    required String moderatorId,
+  }) {
     EmailService().sendEmail(
         studentName: studentName,
         studentEmail: studentEmail,

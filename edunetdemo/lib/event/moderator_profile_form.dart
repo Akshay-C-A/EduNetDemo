@@ -23,20 +23,11 @@ class _ModeratorProfileFormState extends State<ModeratorProfileForm> {
   final _ModeratorFirestoreService = FirestoreService();
   final currentUser = FirebaseAuth.instance.currentUser;
 
-  
   final _aboutController = TextEditingController();
   final _link1Controller = TextEditingController();
   final _link2Controller = TextEditingController();
   final _link3Controller = TextEditingController();
- 
 
-  // String _postType = 'Internship offers';
-  // final List<String> _postTypes = [
-  //   'Internship offers',
-  //   'Placement offers',
-  //   'Technical events',
-  //   // 'My achievements'
-  // ];
   XFile? _selectedImage;
   final _picker = ImagePicker();
   bool _isLoading = false;
@@ -51,6 +42,7 @@ class _ModeratorProfileFormState extends State<ModeratorProfileForm> {
     try {
       await imageRef.putFile(File(_selectedImage!.path));
       final downloadURL = await imageRef.getDownloadURL();
+      print(downloadURL);
       return downloadURL;
     } catch (e) {
       print('Error uploading image: $e');
@@ -75,7 +67,6 @@ class _ModeratorProfileFormState extends State<ModeratorProfileForm> {
   }
 
   void _resetForm() {
-    
     _aboutController.clear();
     _link1Controller.clear();
     _link2Controller.clear();
@@ -90,19 +81,16 @@ class _ModeratorProfileFormState extends State<ModeratorProfileForm> {
     setState(() {
       _isLoading = true;
     });
-    
+
     final imageURL = await _uploadImage();
     await _ModeratorFirestoreService.updateModerator(
-      
       moderatorMail: currentUser!.email,
       about: _aboutController.text,
-      dpURL: imageURL ??'',
+      dpURL: imageURL,
       linkedIn: _link1Controller.text,
       twitter: _link2Controller.text,
       mail: _link3Controller.text,
     );
-
-    //await FirebaseAuth.instance.currentUser!.updateDisplayName(_nameController.text);
 
     setState(() {
       _isLoading = false;
@@ -120,7 +108,7 @@ class _ModeratorProfileFormState extends State<ModeratorProfileForm> {
     // final prefs = await SharedPreferences.getInstance();
     // await prefs.setBool('hasCompletedProfileForm', true);
 
-    Navigator.push(
+    Navigator.pushReplacement(
         context, MaterialPageRoute(builder: (context) => EventDashboard()));
   }
 
@@ -141,37 +129,6 @@ class _ModeratorProfileFormState extends State<ModeratorProfileForm> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // const Text(
-                    //   'Post Type',
-                    //   style: TextStyle(
-                    //     fontSize: 18.0,
-                    //     fontWeight: FontWeight.bold,
-                    //   ),
-                    // ),
-                    // const SizedBox(height: 8.0),
-                    // Container(
-                    //   padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                    //   decoration: BoxDecoration(
-                    //     borderRadius: BorderRadius.circular(8.0),
-                    //     border: Border.all(color: Colors.grey),
-                    //   ),
-                    //   child: DropdownButton<String>(
-                    //     value: _postType,
-                    //     isExpanded: true,
-                    //     underline: const SizedBox.shrink(),
-                    //     items: _postTypes.map((String value) {
-                    //       return DropdownMenuItem<String>(
-                    //         value: value,
-                    //         child: Text(value),
-                    //       );
-                    //     }).toList(),
-                    //     onChanged: (String? newValue) {
-                    //       setState(() {
-                    //         _postType = newValue!;
-                    //       });
-                    //     },
-                    //   ),
-                    // ),
                     const SizedBox(height: 16.0),
                     const Text(
                       'About',
