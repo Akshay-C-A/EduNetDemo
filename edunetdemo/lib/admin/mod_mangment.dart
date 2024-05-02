@@ -27,9 +27,10 @@ class _ModeratorManagementPageState extends State<ModeratorManagementPage> {
         password: password,
       );
 
-      await moderatorsCollection.doc(userCredential.user!.uid).set({
-        'name': name,
-        'email': email,
+      await moderatorsCollection.doc(email).set({
+        'ModeratorName': name,
+        'ModeratorMail': email,
+        'ModeratorId': email,
       });
 
       ScaffoldMessenger.of(context).showSnackBar(
