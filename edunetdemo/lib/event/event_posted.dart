@@ -4,8 +4,10 @@ import 'package:edunetdemo/services/firestore.dart';
 import 'package:flutter/material.dart';
 
 class PostedEvents extends StatefulWidget {
-  final String? moderatorId;
-  const PostedEvents({super.key, required this.moderatorId});
+  final String moderatorId;
+  final String communityName;
+  const PostedEvents(
+      {super.key, required this.moderatorId, required this.communityName});
 
   @override
   State<PostedEvents> createState() => _PostedEventsState();
@@ -58,7 +60,8 @@ class _PostedEventsState extends State<PostedEvents> {
                 venue: venue,
                 imageUrl: imageURL,
                 postId: document.id,
-                moderatorId: widget.moderatorId!,
+                moderatorId: widget.moderatorId,
+                communityName: widget.communityName,
                 // details: postedEvents[index]['details'],
               );
             },
@@ -76,6 +79,7 @@ class EventNotificationCard extends StatelessWidget {
   final String imageUrl;
   final String postId;
   final String moderatorId;
+  final String communityName;
 
   const EventNotificationCard({
     super.key,
@@ -85,6 +89,7 @@ class EventNotificationCard extends StatelessWidget {
     required this.date,
     required this.venue,
     required this.imageUrl,
+    required this.communityName,
   });
 
   @override
@@ -96,8 +101,10 @@ class EventNotificationCard extends StatelessWidget {
           context,
           MaterialPageRoute(
               builder: (context) => EventParticipation(
-                moderatorId:moderatorId,
+                    eventTitle: title,
+                    moderatorId: moderatorId,
                     postId: postId,
+                    communityName: communityName,
                   )),
         );
       },

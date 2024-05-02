@@ -708,10 +708,10 @@ class FirestoreService {
   }) async {
     print(moderatorId);
     final moderatorRef = moderator.doc(moderatorId);
-    final postSnapshot = await moderatorRef.collection('posts').doc(postId).get();
+    final postSnapshot =
+        await moderatorRef.collection('posts').doc(postId).get();
     return postSnapshot;
   }
-
 
   // To get the data for participant details
   Stream<QuerySnapshot> getEventParticipantsStream(
@@ -727,9 +727,23 @@ class FirestoreService {
   }
 
   Future<void> verifyStudent(
-      {required String studentId, required String postId}) {
-        EmailService().sendEmail(studentName: studentName, studentEmail: studentEmail, eventTitle: eventTitle, communityMail: communityMail, communityName: communityName)
-    return event_posts
+      {required String studentId,
+      required String postId,
+      required String studentName,
+      required String studentEmail,
+      required String eventTitle,
+      required String communityMail,
+      required String communityName,
+      required String moderatorId,}) {
+    EmailService().sendEmail(
+        studentName: studentName,
+        studentEmail: studentEmail,
+        eventTitle: eventTitle,
+        communityMail: communityMail,
+        communityName: communityName);
+    return moderator
+        .doc(moderatorId)
+        .collection('posts')
         .doc(postId)
         .collection('participants')
         .doc(studentId)

@@ -72,11 +72,6 @@ class _EventDashboardState extends State<EventDashboard> {
       moderatorId = currentUser!.email!;
       communityName = postData['communityName'] as String;
       moderatorName = postData['moderatorName'] as String;
-      about = postData['about'] as String;
-      linkedIn = postData['linkedIn'] as String?;
-      twitter = postData['twitter'] as String?;
-      mail = postData['mail'] as String?;
-      dpURL = postData['dpURL'] as String;
     } else {
       communityName = 'Mulearn';
       about = 'eg';
@@ -94,28 +89,28 @@ class _EventDashboardState extends State<EventDashboard> {
     }
   }
 
-  
-
-
-  
-
   @override
   Widget build(BuildContext context) {
     List<Widget> _widgetOptions = <Widget>[
-    EventPage(),
-    EventNewPostPage(moderator: Moderator(
-                            linkedIn: linkedIn,
-                            twitter: twitter,
-                            mail: mail,
-                            dpURL: dpURL, 
-                            moderatorId: moderatorId, 
-                            communityName: communityName, 
-                            moderatorName: moderatorName,
-                             about: about,
-    ),),
-    EventNotificationPage(),
-    PostedEvents(moderatorId: moderatorId,),
-  ];
+      EventPage(),
+      EventNewPostPage(
+        moderator: Moderator(
+          linkedIn: linkedIn,
+          twitter: twitter,
+          mail: mail,
+          dpURL: dpURL,
+          moderatorId: moderatorId,
+          communityName: communityName,
+          moderatorName: moderatorName,
+          about: about,
+        ),
+      ),
+      EventNotificationPage(),
+      PostedEvents(
+        moderatorId: moderatorId,
+        communityName: communityName,
+      ),
+    ];
     return FutureBuilder(
       future: _fetchDetails(),
       builder: (context, snapshot) {
@@ -147,15 +142,14 @@ class _EventDashboardState extends State<EventDashboard> {
                         MaterialPageRoute(
                           builder: (context) => ModeratorProfileScreen(
                               moderator: Moderator(
-                            
                             linkedIn: linkedIn,
                             twitter: twitter,
                             mail: mail,
-                            dpURL: dpURL, 
-                            moderatorId: moderatorId, 
-                            communityName: communityName, 
+                            dpURL: dpURL,
+                            moderatorId: moderatorId,
+                            communityName: communityName,
                             moderatorName: moderatorName,
-                             about: about,
+                            about: about,
                           )),
                         ));
                   },
@@ -185,22 +179,21 @@ class _EventDashboardState extends State<EventDashboard> {
               unselectedItemColor: Colors.grey,
               items: [
                 BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_today),
-            label: 'Events',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.add),
-            label: 'Post',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.notifications),
-            label: 'Notification',
-          ),
-          
-          BottomNavigationBarItem(
-            icon: Icon(Icons.alarm),
-            label: 'Event Posted',
-          ),
+                  icon: Icon(Icons.calendar_today),
+                  label: 'Events',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.add),
+                  label: 'Post',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.notifications),
+                  label: 'Notification',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.alarm),
+                  label: 'Event Posted',
+                ),
               ],
             ),
           );
@@ -209,4 +202,3 @@ class _EventDashboardState extends State<EventDashboard> {
     );
   }
 }
-

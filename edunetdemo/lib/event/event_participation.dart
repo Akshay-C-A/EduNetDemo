@@ -3,20 +3,18 @@ import 'package:edunetdemo/services/firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-// Student class
-class Student {
-  final String name;
-  final int age;
-  final String email;
-
-  Student({required this.name, required this.age, required this.email});
-}
-
 class EventParticipation extends StatefulWidget {
   final String moderatorId;
   final String postId;
+  final String eventTitle;
+  final String communityName;
+
   const EventParticipation(
-      {super.key, required this.postId, required this.moderatorId});
+      {super.key,
+      required this.postId,
+      required this.moderatorId,
+      required this.eventTitle,
+      required this.communityName});
 
   @override
   State<EventParticipation> createState() => _EventParticipationState();
@@ -25,12 +23,6 @@ class EventParticipation extends StatefulWidget {
 class _EventParticipationState extends State<EventParticipation> {
   FirestoreService firestoreService = FirestoreService();
   bool _verifyLoading = false;
-  // List to store enrolled students
-  List<Student> enrolledStudents = [
-    Student(name: 'John Doe', age: 20, email: 'john@example.com'),
-    Student(name: 'Jane Smith', age: 22, email: 'jane@example.com'),
-    Student(name: 'Bob Johnson', age: 21, email: 'bob@example.com'),
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -64,8 +56,8 @@ class _EventParticipationState extends State<EventParticipation> {
                         Text(
                             'Total no. of participants: ${eventParticipantList.length}'),
                         SizedBox(height: 10),
-                        Text(
-                            'No. of Enrolled students: ${enrolledStudents.length}'),
+                        // Text(
+                        //     'No. of Enrolled students: ${enrolledStudents.length}'),
                       ]);
                 }),
           ),
@@ -111,13 +103,14 @@ class _EventParticipationState extends State<EventParticipation> {
                     String batch = data['batch'];
                     bool isVerified = data['isVerified'] ?? false;
                     String studentId = data['studentId'];
+                    String studentEmail = data['studentMail'];
                     // Display as a list title
 
                     return Card(
                       child: ListTile(
                         leading: Text('${index + 1}'),
                         title: Text(studentName),
-                        subtitle: Text('$department $batch'),
+                        subtitle: Text('$department batch'),
                         trailing: isVerified
                             ? Text(
                                 'Verified',
@@ -131,7 +124,13 @@ class _EventParticipationState extends State<EventParticipation> {
                                   });
                                   firestoreService.verifyStudent(
                                       studentId: studentId,
-                                      postId: widget.postId);
+                                      postId: widget.postId,
+                                      studentName: studentName,
+                                      studentEmail: studentEmail,
+                                      eventTitle: widget.eventTitle,
+                                      communityMail: 'communityMail',
+                                      communityName: widget.communityName,
+                                      moderatorId: widget.moderatorId);
                                   setState(() {
                                     _verifyLoading = false;
                                   });
