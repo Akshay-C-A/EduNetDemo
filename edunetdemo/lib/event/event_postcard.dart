@@ -170,6 +170,36 @@ class _EventPostCardState extends State<EventPostCard> {
                           ),
                         ],
                       ),
+                      widget.isAdmin
+                          ? PopupMenuButton(
+                              itemBuilder: (_) => [
+                                PopupMenuItem(
+                                  child: Text('Delete'),
+                                  value: 'delete',
+                                ),
+                                PopupMenuItem(
+                                  child: Text('Option 2'),
+                                  value: 'option2',
+                                ),
+                                PopupMenuItem(
+                                  child: Text('Option 3'),
+                                  value: 'option3',
+                                ),
+                              ],
+                              onSelected: (value) {
+                                if (value == 'delete') {
+                                  // Perform delete operation here
+                                  firestoreService.deleteEventPost(
+                                      moderatorId: widget.moderatorId,
+                                      postId: widget.postId);
+                                  print('Delete function called');
+                                } else {
+                                  // Handle other options
+                                  print('Selected: $value');
+                                }
+                              },
+                            )
+                          : Container()
                     ],
                   ),
                 ),

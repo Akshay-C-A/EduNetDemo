@@ -368,8 +368,8 @@ class _ProfileSquarePostState extends State<ProfileSquarePost> {
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
-                firestoreService.deletePost(
-                    alumniId: widget.alumniId, postId: widget.postId);
+                firestoreService.deleteEventPost(
+                    moderatorId: widget.alumniId, postId: widget.postId);
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text('Post Deleted'),

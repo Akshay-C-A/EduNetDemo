@@ -254,7 +254,7 @@ Future<void> addAdminAnnouncement({
   }
 
   //To delete data inside the profile posts and alumni_posts
-  Future<void> deletePost({
+  Future<void> deleteAlumniPost({
     required String alumniId,
     required String postId,
   }) async {

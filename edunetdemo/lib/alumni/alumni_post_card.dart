@@ -20,7 +20,7 @@ class AlumniPostCard extends StatefulWidget {
 
   //data for post
   final bool isAdmin;
-  final String alumnId;
+  final String alumniId;
   final String type;
   final String alumniName;
   final String alumniDesignation;
@@ -32,7 +32,7 @@ class AlumniPostCard extends StatefulWidget {
   AlumniPostCard({
     required this.isAdmin,
     required this.type,
-    required this.alumnId,
+    required this.alumniId,
     required this.alumniName,
     required this.alumniDesignation,
     required this.caption,
@@ -103,7 +103,7 @@ class _AlumniPostCardState extends State<AlumniPostCard> {
     });
 
     List ref = firestoreService.alumniPostInstances(
-        postId: widget.postId, alumniId: widget.alumnId);
+        postId: widget.postId, alumniId: widget.alumniId);
     DocumentReference alumniPost = ref[0];
     DocumentReference alumniProfile = ref[1];
 
@@ -159,7 +159,7 @@ class _AlumniPostCardState extends State<AlumniPostCard> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => ViewAlumniProfile(
-                                          alumniId: widget.alumnId)));
+                                          alumniId: widget.alumniId)));
                             },
                             child: CircleAvatar(
                               radius: 20,
@@ -185,6 +185,36 @@ class _AlumniPostCardState extends State<AlumniPostCard> {
                         ],
                       ),
                       // Container for displaying post type
+                      widget.isAdmin
+                          ? PopupMenuButton(
+                              itemBuilder: (_) => [
+                                PopupMenuItem(
+                                  child: Text('Delete'),
+                                  value: 'delete',
+                                ),
+                                PopupMenuItem(
+                                  child: Text('Option 2'),
+                                  value: 'option2',
+                                ),
+                                PopupMenuItem(
+                                  child: Text('Option 3'),
+                                  value: 'option3',
+                                ),
+                              ],
+                              onSelected: (value) {
+                                if (value == 'delete') {
+                                  // Perform delete operation here
+                                  firestoreService.deleteAlumniPost(
+                                      alumniId: widget.alumniId,
+                                      postId: widget.postId);
+                                  print('Delete function called');
+                                } else {
+                                  // Handle other options
+                                  print('Selected: $value');
+                                }
+                              },
+                            )
+                          : Container(),
                       Container(
                         padding:
                             EdgeInsets.symmetric(vertical: 5, horizontal: 10),
