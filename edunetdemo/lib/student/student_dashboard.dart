@@ -54,7 +54,7 @@ class _Student_DashboardState extends State<Student_Dashboard> {
   late String student_name = 'john doe';
   late String student_designation = 'CS Engineer';
   late List<dynamic> skills = ['null'];
-  late String studentId='56';
+  late String studentId = '56';
   late String about = 'eg';
   late String studentDept = 'computer science';
   late String studentYear = '3';

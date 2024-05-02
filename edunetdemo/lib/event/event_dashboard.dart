@@ -3,6 +3,7 @@ import 'package:edunetdemo/common_pages/event_page.dart';
 import 'package:edunetdemo/event/event_newpost.dart';
 import 'package:edunetdemo/event/event_notification.dart';
 import 'package:edunetdemo/event/event_posted.dart';
+import 'package:edunetdemo/services/email_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -43,6 +44,16 @@ class _EventDashboardState extends State<EventDashboard> {
       appBar: AppBar(
         title: Text('MODERATOR'),
         actions: [
+          IconButton(
+              onPressed: () {
+                EmailService().sendEmail(
+                    studentName: 'Akshay',
+                    studentEmail: 'studentEmail',
+                    eventTitle: 'Aswamedham',
+                    communityMail: 'communityMail',
+                    communityName: 'u Learn');
+              },
+              icon: Icon(Icons.send)),
           // IconButton(
           //     onPressed: () {
           //       Navigator.push(

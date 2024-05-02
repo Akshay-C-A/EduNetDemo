@@ -21,7 +21,7 @@ class StudentPostCard extends StatefulWidget {
 
   //data for post
   final String studentId;
-  final bool isAdmin;
+  bool isAdmin = false;
   final String studentName;
   final String studentDesignation;
   final String caption;
@@ -171,36 +171,37 @@ class _StudentPostCardState extends State<StudentPostCard> {
                         ],
                       ),
                       // Container for displaying post type
-                      widget.isAdmin
-                          ? PopupMenuButton(
-                              itemBuilder: (_) => [
-                                PopupMenuItem(
-                                  child: Text('Delete'),
-                                  value: 'delete',
-                                ),
-                                PopupMenuItem(
-                                  child: Text('Option 2'),
-                                  value: 'option2',
-                                ),
-                                PopupMenuItem(
-                                  child: Text('Option 3'),
-                                  value: 'option3',
-                                ),
-                              ],
-                              onSelected: (value) {
-                                if (value == 'delete') {
-                                  // Perform delete operation here
-                                  firestoreService.deleteStudentPost(
-                                      studentId: widget.studentId,
-                                      postId: widget.postId);
-                                  print('Delete function called');
-                                } else {
-                                  // Handle other options
-                                  print('Selected: $value');
-                                }
-                              },
-                            )
-                          : Container()
+                      if (widget.isAdmin == true)
+                        PopupMenuButton(
+                          itemBuilder: (_) => [
+                            PopupMenuItem(
+                              child: Text('Delete'),
+                              value: 'delete',
+                            ),
+                            PopupMenuItem(
+                              child: Text('Option 2'),
+                              value: 'option2',
+                            ),
+                            PopupMenuItem(
+                              child: Text('Option 3'),
+                              value: 'option3',
+                            ),
+                          ],
+                          onSelected: (value) {
+                            if (value == 'delete') {
+                              // Perform delete operation here
+                              firestoreService.deleteStudentPost(
+                                  studentId: widget.studentId,
+                                  postId: widget.postId);
+                              print('Delete function called');
+                            } else {
+                              // Handle other options
+                              print('Selected: $value');
+                            }
+                          },
+                        )
+                      else
+                        Container()
                     ],
                   ),
                 ),

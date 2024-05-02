@@ -14,7 +14,7 @@ import 'package:http/http.dart' as http;
 
 class EventPostCard extends StatefulWidget {
   //data for likes
-  final bool isAdmin;
+  bool isAdmin = false;
   final String postId;
   final List<String> likes;
   final String communityName;
@@ -171,7 +171,8 @@ class _EventPostCardState extends State<EventPostCard> {
                         ],
                       ),
                       widget.isAdmin
-                          ? PopupMenuButton(
+                          ? Container()
+                          : PopupMenuButton(
                               itemBuilder: (_) => [
                                 PopupMenuItem(
                                   child: Text('Delete'),
@@ -199,7 +200,6 @@ class _EventPostCardState extends State<EventPostCard> {
                                 }
                               },
                             )
-                          : Container()
                     ],
                   ),
                 ),

@@ -19,7 +19,7 @@ class AlumniPostCard extends StatefulWidget {
   final List<String> likes;
 
   //data for post
-  final bool isAdmin;
+  bool isAdmin = false;
   final String alumniId;
   final String type;
   final String alumniName;
@@ -185,7 +185,7 @@ class _AlumniPostCardState extends State<AlumniPostCard> {
                         ],
                       ),
                       // Container for displaying post type
-                      widget.isAdmin
+                      !widget.isAdmin
                           ? PopupMenuButton(
                               itemBuilder: (_) => [
                                 PopupMenuItem(
