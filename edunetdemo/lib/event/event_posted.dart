@@ -4,7 +4,8 @@ import 'package:edunetdemo/services/firestore.dart';
 import 'package:flutter/material.dart';
 
 class PostedEvents extends StatefulWidget {
-  const PostedEvents({super.key});
+  final String? moderatorId;
+  const PostedEvents({super.key, required this.moderatorId});
 
   @override
   State<PostedEvents> createState() => _PostedEventsState();
@@ -12,23 +13,6 @@ class PostedEvents extends StatefulWidget {
 
 class _PostedEventsState extends State<PostedEvents> {
   FirestoreService firestoreService = FirestoreService();
-
-  final List<Map<String, dynamic>> postedEvents = [
-    {
-      'title': 'Flutter Meetup',
-      'date': 'April 28, 2024',
-      'venue': 'Google Campus, Mountain View',
-      'imageUrl': 'https://example.com/flutter_meetup.jpg',
-      // 'details': 'Join us for an exciting Flutter Meetup event! We\'ll have talks, workshops, and networking opportunities for Flutter developers of all levels.',
-    },
-    {
-      'title': 'Blockchain Conference',
-      'date': 'May 15, 2024',
-      'venue': 'San Francisco Convention Center',
-      'imageUrl': 'https://example.com/blockchain_conference.jpg',
-      // 'details': 'Explore the future of blockchain technology and its applications in various industries. Featuring keynote speakers, panel discussions, and workshops.',
-    },
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -74,6 +58,7 @@ class _PostedEventsState extends State<PostedEvents> {
                 venue: venue,
                 imageUrl: imageURL,
                 postId: document.id,
+                moderatorId: widget.moderatorId!,
                 // details: postedEvents[index]['details'],
               );
             },
@@ -90,10 +75,12 @@ class EventNotificationCard extends StatelessWidget {
   final String venue;
   final String imageUrl;
   final String postId;
+  final String moderatorId;
 
   const EventNotificationCard({
     super.key,
     required this.postId,
+    required this.moderatorId,
     required this.title,
     required this.date,
     required this.venue,
@@ -109,6 +96,7 @@ class EventNotificationCard extends StatelessWidget {
           context,
           MaterialPageRoute(
               builder: (context) => EventParticipation(
+                moderatorId:moderatorId,
                     postId: postId,
                   )),
         );

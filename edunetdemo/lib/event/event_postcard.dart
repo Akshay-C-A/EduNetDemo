@@ -77,6 +77,7 @@ class _EventPostCardState extends State<EventPostCard> {
 
   bool isExpanded = false;
   bool showLikeIcon = false;
+  bool _enrollLoading = false;
 
   @override
   void initState() {
@@ -259,34 +260,52 @@ class _EventPostCardState extends State<EventPostCard> {
                   mainAxisAlignment:
                       MainAxisAlignment.start, // Align to the left
                   children: [
-                    SizedBox(
-                      height: 40, // Set the desired height
-                      child: Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Colors.green,
-                            width: 2.0,
-                          ),
-                          borderRadius: BorderRadius.circular(
-                              10.0), // Reduce the curve size
-                        ),
-                        // Add horizontal padding
-                        child: TextButton(
-                          onPressed: () {
-                            firestoreService.enrollStudent(
-                                studentId: 'studentId',
-                                studentName: 'studentName',
-                                department: 'department',
-                                batch: 'batch',
-                                studentMail: 'studentMail',
-                                postId: widget.postId);
-                          },
-                          child: Text(
-                            "Enroll",
-                            style: TextStyle(
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: SizedBox(
+                        height: 40, // Set the desired height
+                        child: Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(
                               color: Colors.green,
-                              fontWeight: FontWeight.w600,
+                              width: 2.0,
                             ),
+                            borderRadius: BorderRadius.circular(
+                                10.0), // Reduce the curve size
+                          ),
+                          // Add horizontal padding
+                          child: TextButton(
+                            onPressed: () async {
+                              setState(() {
+                                _enrollLoading = true;
+                              });
+
+                              await firestoreService.enrollStudent(
+                                  studentId: currentUser!.email.toString(),
+                                  moderatorId: widget.moderatorId,
+                                  postId: widget.postId);
+                              setState(() {
+                                _enrollLoading = false;
+                              });
+                            },
+                            child: _enrollLoading
+                                ? SizedBox(
+                                    width:
+                                        24.0, // Adjust the width and height as per your requirements
+                                    height: 24.0,
+                                    child: CircularProgressIndicator(
+                                      color: Colors.green,
+                                      // strokeWidth:
+                                      //     3.0, // Increase or decrease this value to adjust the circle's thickness
+                                    ),
+                                  )
+                                : Text(
+                                    "Enroll",
+                                    style: TextStyle(
+                                      color: Colors.green,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
                           ),
                         ),
                       ),
