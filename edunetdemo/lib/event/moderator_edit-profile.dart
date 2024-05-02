@@ -204,7 +204,6 @@ class _ModeratorEditPostFormState extends State<ModeratorEditPostForm> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(height: 16.0),
                     _buildTextField('Event Title', _eventTitleController),
                     SizedBox(height: 16.0),
                     _buildTextFieldWithCalendarIcon('Event Date'),
@@ -230,7 +229,7 @@ class _ModeratorEditPostFormState extends State<ModeratorEditPostForm> {
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.greenAccent,
                           ),
-                          child: const Text('Submit'),
+                          child: const Text('Update'),
                         ),
                       ],
                     ),
