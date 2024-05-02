@@ -1,28 +1,23 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
 
 class ModeratorManagementPage extends StatefulWidget {
   const ModeratorManagementPage({Key? key}) : super(key: key);
 
   @override
-  _ModeratorManagementPageState createState() =>
-      _ModeratorManagementPageState();
+  _ModeratorManagementPageState createState() => _ModeratorManagementPageState();
 }
 
 class _ModeratorManagementPageState extends State<ModeratorManagementPage> {
-  final moderatorsCollection =
-      FirebaseFirestore.instance.collection('moderators');
+  final moderatorsCollection = FirebaseFirestore.instance.collection('moderators');
 
-  Future<void> _addModerator(String name) async {
-    final email = '${name.toLowerCase()}@moderator.edunet.com';
+  Future<void> _addModerator(String name, String communityName) async {
+    final email = '${name.toLowerCase()}-${communityName.toLowerCase()}@moderator.edunet.com';
     final password = generatePassword(); // Implement password generation logic
 
     try {
-      final userCredential =
-          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      final userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -31,6 +26,7 @@ class _ModeratorManagementPageState extends State<ModeratorManagementPage> {
         'moderatorName': name,
         'moderatorMail': email,
         'moderatorId': email,
+        'communityName': communityName,
       });
 
       ScaffoldMessenger.of(context).showSnackBar(
@@ -47,40 +43,12 @@ class _ModeratorManagementPageState extends State<ModeratorManagementPage> {
     }
   }
 
-  // Future<void> _deleteModerator(String docId) async {
-  //   try {
-  //     final moderatorDoc = await moderatorsCollection.doc(docId).get();
-  //     final email = moderatorDoc.data()?['email'] as String;
-
-  //     final userRecord = await FirebaseAuth.instance.getUserByEmail(email);
-  //     if (userRecord != null) {
-  //       await FirebaseAuth.instance.deleteUser(userRecord.user!.uid);
-  //     }
-
-  //     await moderatorsCollection.doc(docId).delete();
-
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(
-  //         content: Text('Moderator deleted successfully'),
-  //       ),
-  //     );
-  //   } catch (e) {
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(
-  //         content: Text('Error deleting moderator: $e'),
-  //       ),
-  //     );
-  //   }
-  // }
-
   Future<void> _deleteModerator(String docId) async {
     try {
       final moderatorDoc = await moderatorsCollection.doc(docId).get();
-      final email = moderatorDoc.data()?['email'] as String;
+      final email = moderatorDoc.data()?['moderatorMail'] as String;
 
-      // final signInMethods = await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
-      final signInMethods =
-          await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
+      final signInMethods = await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
       if (signInMethods.isNotEmpty) {
         final user = await FirebaseAuth.instance.currentUser;
         if (user != null) {
@@ -112,8 +80,7 @@ class _ModeratorManagementPageState extends State<ModeratorManagementPage> {
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
               stream: moderatorsCollection.snapshots(),
-              builder: (BuildContext context,
-                  AsyncSnapshot<QuerySnapshot> snapshot) {
+              builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.hasError) {
                   return Text('Error: ${snapshot.error}');
                 }
@@ -128,10 +95,11 @@ class _ModeratorManagementPageState extends State<ModeratorManagementPage> {
                     final moderatorDoc = snapshot.data!.docs[index];
                     final name = moderatorDoc['moderatorName'];
                     final email = moderatorDoc['moderatorMail'];
+                    final communityName = moderatorDoc['communityName'];
 
                     return ListTile(
                       title: Text(name),
-                      subtitle: Text(email),
+                      subtitle: Text('$email ($communityName)'),
                       trailing: IconButton(
                         icon: Icon(Icons.delete),
                         onPressed: () => _deleteModerator(moderatorDoc.id),
@@ -144,21 +112,38 @@ class _ModeratorManagementPageState extends State<ModeratorManagementPage> {
           ),
           Padding(
             padding: const EdgeInsets.all(16.0),
-            child: TextField(
-              controller: _moderatorNameController,
-              decoration: InputDecoration(
-                hintText: 'Enter moderator name',
-                suffixIcon: IconButton(
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _moderatorNameController,
+                    decoration: InputDecoration(
+                      hintText: 'Moderator name',
+                    ),
+                  ),
+                ),
+                SizedBox(width: 8.0),
+                Expanded(
+                  child: TextField(
+                    controller: _communityNameController,
+                    decoration: InputDecoration(
+                      hintText: 'Community name',
+                    ),
+                  ),
+                ),
+                IconButton(
                   icon: Icon(Icons.add),
                   onPressed: () {
                     final name = _moderatorNameController.text;
-                    if (name.isNotEmpty) {
-                      _addModerator(name);
+                    final communityName = _communityNameController.text;
+                    if (name.isNotEmpty && communityName.isNotEmpty) {
+                      _addModerator(name, communityName);
                       _moderatorNameController.clear();
+                      _communityNameController.clear();
                     }
                   },
                 ),
-              ),
+              ],
             ),
           ),
         ],
@@ -167,15 +152,15 @@ class _ModeratorManagementPageState extends State<ModeratorManagementPage> {
   }
 
   final _moderatorNameController = TextEditingController();
+  final _communityNameController = TextEditingController();
 
   @override
   void dispose() {
     _moderatorNameController.dispose();
+    _communityNameController.dispose();
     super.dispose();
   }
 }
-
-
 
 String generatePassword() {
   return 'password123';
