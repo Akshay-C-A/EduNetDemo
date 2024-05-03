@@ -73,7 +73,7 @@ class _EventDashboardState extends State<EventDashboard> {
       communityName = postData['communityName'] as String;
       moderatorName = postData['moderatorName'] as String;
       postData['about'] == ''
-          ? about = about = 'Edit Profile to Add About'
+          ? about = 'Edit Profile to Add About'
           : about = postData['about'] as String;
       postData['linkedIn'] == ''
           ? linkedIn = 'None'
