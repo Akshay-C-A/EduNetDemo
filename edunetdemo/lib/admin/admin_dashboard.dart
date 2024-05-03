@@ -33,7 +33,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
       ModeratorManagementPage(),
       AdminAnnouncementPage(
         adminId: currentUser?.email ?? '',
-        adminName: currentUser?.displayName ?? '',
+        adminName: currentUser?.displayName ?? 'Principal',
       ),
     ];
 

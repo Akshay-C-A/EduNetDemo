@@ -120,7 +120,6 @@ class _EventDashboardState extends State<EventDashboard> {
           about: about,
         ),
       ),
-      EventNotificationPage(),
       PostedEvents(
         moderatorId: moderatorId,
         communityName: communityName,
@@ -200,10 +199,6 @@ class _EventDashboardState extends State<EventDashboard> {
                 BottomNavigationBarItem(
                   icon: Icon(Icons.add),
                   label: 'Post',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.notifications),
-                  label: 'Notification',
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(Icons.alarm),

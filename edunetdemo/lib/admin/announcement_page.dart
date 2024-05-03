@@ -1,24 +1,26 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:edunetdemo/admin/admin_postcard.dart';
 import 'package:edunetdemo/alumni/alumni_post_card.dart';
 import 'package:edunetdemo/services/firestore.dart';
 import 'package:edunetdemo/services/notification_services.dart';
 import 'package:flutter/material.dart';
 
-class AlumniPage extends StatefulWidget {
-  AlumniPage({super.key});
-  bool isAdmin = false;
-  AlumniPage.forAdmin({super.key, required isAdmin});
+class AdminPage extends StatefulWidget {
+  AdminPage({super.key});
   @override
-  State<AlumniPage> createState() => _AlumniPageState();
+  State<AdminPage> createState() => _AdminPageState();
 }
 
-class _AlumniPageState extends State<AlumniPage> {
+class _AdminPageState extends State<AdminPage> {
   final FirestoreService firestoreService = FirestoreService();
 
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+      title: Text("Announcement"),
+      ),
       body: StreamBuilder<QuerySnapshot>(
-        stream: firestoreService.getAlumniPostsStream(),
+        stream: firestoreService.getAnnouncementPostsStream(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}');
@@ -32,55 +34,51 @@ class _AlumniPageState extends State<AlumniPage> {
             return Center(child: Text('No data available'));
           }
 
-          List alumniPostList = snapshot.data!.docs;
+          List adminpostList = snapshot.data!.docs;
           return ListView.builder(
-            itemCount: alumniPostList.length,
+            itemCount: adminpostList.length,
             itemBuilder: (context, index) {
               // Get each individual doc
-              DocumentSnapshot document = alumniPostList[index];
+              DocumentSnapshot document = adminpostList[index];
               // String docID = document.id;
 
               // Get note from each doc
               Map<String, dynamic> data =
                   document.data() as Map<String, dynamic>;
               String type = data['type'];
-              String alumniId = data['alumniId'];
-              String alumniName = data['alumniName'];
-              String alumniDesignation = data['alumniDesignation'];
+              String adminId = data['adminId'];
+              String adminName = data['adminName'];
               String caption = data['caption'];
               String description = data['description'];
               String? imgURL = data['imageURL'];
-              String? dpURL = data['dpURL'];
               bool notified = data['notified'] ?? true;
               Timestamp timestamp = data['timestamp'];
 
+
               if (notified == false) {
                 NotificationService().showNotification(
-                  title: alumniName,
+                  title: adminName,
                   body: description,
                 );
-                List ref = firestoreService.alumniPostInstances(
-                    postId: document.id, alumniId: alumniId);
-                DocumentReference alumniPost = ref[0];
-                DocumentReference alumniProfile = ref[1];
+                List ref = firestoreService.adminPostInstances(
+                    postId: document.id, adminId: adminId);
+                DocumentReference adminPost = ref[0];
+                DocumentReference adminProfile = ref[1];
 
-                alumniPost.update({'notified': true});
-                alumniProfile.update({'notified': true});
+                adminPost.update({'notified': true});
+                adminProfile.update({'notified': true});
               }
 
               // Display as a list title
-              return AlumniPostCard(
-                isAdmin: widget.isAdmin,
+              return AdminPostCard(
                 type: type,
-                alumniId: alumniId,
-                alumniName: alumniName,
-                alumniDesignation: alumniDesignation,
+                adminId: adminId,
+                adminName: adminName,
                 caption: caption,
                 description: description,
                 imageURL: imgURL ?? '',
-                dpURL: dpURL ?? '',
                 postId: document.id,
-                likes: List<String>.from(data['likes'] ?? []), timestamp: timestamp,
+                timestamp: timestamp,
               );
             },
           );
