@@ -122,6 +122,26 @@ class FirestoreService {
     });
   }
 
+    Stream<QuerySnapshot> getAnnouncementPostsStream() {
+    final announcementStream =
+        announcement.orderBy('timestamp', descending: true).snapshots();
+    return announcementStream;
+  }
+
+    List adminPostInstances({
+    required String postId,
+    required String adminId,
+  }) {
+    // Update the post in the alumni_posts collection
+    DocumentReference adminRef = announcement.doc(postId);
+
+    // Update the post in the alumni user data
+    DocumentReference adminPostRef =
+        user.doc(adminId).collection('announcements').doc(postId);
+
+    return [adminRef, adminPostRef];
+  }
+
 //----------------------------------------------------------------------------------------------------------------
 // ALUMNI SECTION
 
@@ -159,6 +179,9 @@ class FirestoreService {
       'mail': mail,
     });
   }
+
+// / To get the data for alumni posts
+
 
 // To get alumni details
   Future<DocumentSnapshot> getAlumni({
