@@ -38,10 +38,10 @@ class _EventDashboardState extends State<EventDashboard> {
   late String moderatorId = '56';
   late String moderatorName = 'john doe';
   late String communityName = 'Mulearn';
-  late String about = 'eg';
-  late String? linkedIn = 'eg';
-  late String? twitter = 'eg';
-  late String? mail = 'eg';
+  String about = 'eghhhdd';
+  String? linkedIn = 'eg';
+  String? twitter = 'eg';
+  String? mail = 'eg';
   String dpURL = '';
 
   Map<String, dynamic>? _postData;
@@ -72,6 +72,19 @@ class _EventDashboardState extends State<EventDashboard> {
       moderatorId = currentUser!.email!;
       communityName = postData['communityName'] as String;
       moderatorName = postData['moderatorName'] as String;
+      postData['about'] == ''
+          ? about = about = 'eggg'
+          : about = postData['about'] as String;
+      postData['linkedIn'] == ''
+          ? linkedIn = 'eg'
+          : linkedIn = postData['linkedIn'] as String;
+      postData['twitter'] == ''
+          ? twitter = 'eg'
+          : twitter = postData['twitter'] as String;
+      postData['mail'] == '' ? mail = 'eg' : mail = postData['mail'] as String;
+      postData['dpURL'] == ''
+          ? dpURL = 'eg'
+          : dpURL = postData['dpURL'] as String;
     } else {
       communityName = 'Mulearn';
       about = 'eg';
