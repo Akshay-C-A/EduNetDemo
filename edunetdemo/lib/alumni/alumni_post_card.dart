@@ -12,6 +12,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
+
 
 class AlumniPostCard extends StatefulWidget {
   //data for likes
@@ -28,8 +30,10 @@ class AlumniPostCard extends StatefulWidget {
   final String description;
   final String imageURL;
   final String dpURL;
+  final Timestamp timestamp;
 
   AlumniPostCard({
+    
     required this.isAdmin,
     required this.type,
     required this.alumniId,
@@ -41,6 +45,7 @@ class AlumniPostCard extends StatefulWidget {
     required this.dpURL,
     required this.postId,
     required this.likes,
+    required this.timestamp,
   });
 
   @override
@@ -180,41 +185,16 @@ class _AlumniPostCardState extends State<AlumniPostCard> {
                                 style:
                                     TextStyle(fontSize: 12, color: Colors.grey),
                               ),
-                            ],
+                              SizedBox(height: 4,),
+                              Text(
+                  DateFormat('yyyy-MM-dd  HH:mm').format(widget.timestamp.toDate()),
+                  style: TextStyle(color: Colors.grey),
+                          ),
+                          ],
                           ),
                         ],
                       ),
                       // Container for displaying post type
-                      !widget.isAdmin
-                          ? PopupMenuButton(
-                              itemBuilder: (_) => [
-                                PopupMenuItem(
-                                  child: Text('Delete'),
-                                  value: 'delete',
-                                ),
-                                PopupMenuItem(
-                                  child: Text('Option 2'),
-                                  value: 'option2',
-                                ),
-                                PopupMenuItem(
-                                  child: Text('Option 3'),
-                                  value: 'option3',
-                                ),
-                              ],
-                              onSelected: (value) {
-                                if (value == 'delete') {
-                                  // Perform delete operation here
-                                  firestoreService.deleteAlumniPost(
-                                      alumniId: widget.alumniId,
-                                      postId: widget.postId);
-                                  print('Delete function called');
-                                } else {
-                                  // Handle other options
-                                  print('Selected: $value');
-                                }
-                              },
-                            )
-                          : Container(),
                       Container(
                         padding:
                             EdgeInsets.symmetric(vertical: 5, horizontal: 10),
@@ -395,3 +375,40 @@ class LikeButton extends StatelessWidget {
     );
   }
 }
+
+
+
+// ...
+
+// @override
+// Widget build(BuildContext context) {
+//   // ...
+//   return GestureDetector(
+//     onDoubleTap: () {
+//       // ...
+//     },
+//     child: Card(
+//       margin: EdgeInsets.all(10.0),
+//       elevation: 5.0,
+//       child: Stack(
+//         children: [
+//           Column(
+//             crossAxisAlignment: CrossAxisAlignment.stretch,
+//             children: [
+//               // ...
+//               Padding(
+//                 padding: EdgeInsets.all(10.0),
+//                 child: Text(
+//                   DateFormat('yyyy-MM-dd HH:mm').format(widget.timestamp.toDate()),
+//                   style: TextStyle(color: Colors.grey),
+//                 ),
+//               ),
+//               // ...
+//             ],
+//           ),
+//           // ...
+//         ],
+//       ),
+//     ),
+//   );
+// }

@@ -52,6 +52,7 @@ class _AlumniPageState extends State<AlumniPage> {
               String? imgURL = data['imageURL'];
               String? dpURL = data['dpURL'];
               bool notified = data['notified'] ?? true;
+              Timestamp timestamp = data['timestamp'];
 
               if (notified == false) {
                 NotificationService().showNotification(
@@ -79,7 +80,7 @@ class _AlumniPageState extends State<AlumniPage> {
                 imageURL: imgURL ?? '',
                 dpURL: dpURL ?? '',
                 postId: document.id,
-                likes: List<String>.from(data['likes'] ?? []),
+                likes: List<String>.from(data['likes'] ?? []), timestamp: timestamp,
               );
             },
           );
