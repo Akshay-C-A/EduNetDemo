@@ -38,10 +38,10 @@ class _EventDashboardState extends State<EventDashboard> {
   late String moderatorId = '56';
   late String moderatorName = 'john doe';
   late String communityName = 'Mulearn';
-  String about = 'eghhhdd';
-  String? linkedIn = 'eg';
-  String? twitter = 'eg';
-  String? mail = 'eg';
+  String about = 'Edit profile to change ABout';
+  String? linkedIn = 'None';
+  String? twitter = 'None';
+  String? mail = 'None';
   String dpURL = '';
 
   Map<String, dynamic>? _postData;
@@ -73,25 +73,27 @@ class _EventDashboardState extends State<EventDashboard> {
       communityName = postData['communityName'] as String;
       moderatorName = postData['moderatorName'] as String;
       postData['about'] == ''
-          ? about = about = 'eggg'
+          ? about = about = 'Edit Profile to Add About'
           : about = postData['about'] as String;
       postData['linkedIn'] == ''
-          ? linkedIn = 'eg'
+          ? linkedIn = 'None'
           : linkedIn = postData['linkedIn'] as String;
       postData['twitter'] == ''
-          ? twitter = 'eg'
+          ? twitter = 'None'
           : twitter = postData['twitter'] as String;
-      postData['mail'] == '' ? mail = 'eg' : mail = postData['mail'] as String;
+      postData['mail'] == ''
+          ? mail = 'None'
+          : mail = postData['mail'] as String;
       postData['dpURL'] == ''
-          ? dpURL = 'eg'
+          ? dpURL = 'None'
           : dpURL = postData['dpURL'] as String;
     } else {
       communityName = 'Mulearn';
-      about = 'eg';
-      linkedIn = 'eg';
-      twitter = 'eg';
-      mail = 'eg';
-      dpURL = 'eg';
+      about = 'Edit Profile to Update About';
+      linkedIn = 'None';
+      twitter = 'None';
+      mail = 'None';
+      dpURL = '';
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
