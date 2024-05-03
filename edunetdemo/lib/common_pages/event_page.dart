@@ -63,6 +63,8 @@ class _EventPageState extends State<EventPage> {
               String dpURL = data['dpURL'];
               String communityName = data['communityName'];
               bool notified = data['notified'] ?? true;
+              Timestamp timestamp = data['timestamp'];
+
 
               if (notified == false) {
                 NotificationService().showNotification(
@@ -91,7 +93,7 @@ class _EventPageState extends State<EventPage> {
                 postId: document.id,
                 imageURL: imageURL,
                 eventTitle: eventTitle,
-                likes: List<String>.from(data['likes'] ?? []),
+                likes: List<String>.from(data['likes'] ?? []), timestamp: timestamp,
               );
             },
           );
