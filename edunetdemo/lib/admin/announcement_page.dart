@@ -52,6 +52,8 @@ class _AdminPageState extends State<AdminPage> {
               String description = data['description'];
               String? imgURL = data['imageURL'];
               bool notified = data['notified'] ?? true;
+              Timestamp timestamp = data['timestamp'];
+
 
               if (notified == false) {
                 NotificationService().showNotification(
@@ -76,6 +78,7 @@ class _AdminPageState extends State<AdminPage> {
                 description: description,
                 imageURL: imgURL ?? '',
                 postId: document.id,
+                timestamp: timestamp,
               );
             },
           );

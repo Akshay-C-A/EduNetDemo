@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
 // import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:edunetdemo/services/firestore.dart';
@@ -22,6 +24,7 @@ class AdminPostCard extends StatefulWidget {
   final String caption;
   final String description;
   final String imageURL;
+  final Timestamp timestamp;
 
   AdminPostCard({
    required this.postId,
@@ -30,7 +33,8 @@ class AdminPostCard extends StatefulWidget {
     required this.adminName,
      required this.caption,
       required this.description,
-       required this.imageURL
+       required this.imageURL,
+       required this.timestamp,
        
   });
 
@@ -108,8 +112,17 @@ class _AdminPostCardState extends State<AdminPostCard> {
                             children: [
                               Text(
                                 widget.adminName,
-                                style: TextStyle(fontWeight: FontWeight.bold),
+                                style: TextStyle(fontWeight: FontWeight.bold,
+                                fontSize: 18.0,
+                                color: Color.fromARGB(255, 2, 134, 6),
+                                ),
+                                
                               ),
+                              SizedBox(height: 4,),
+                              Text(
+                                DateFormat('yyyy-MM-dd  HH:mm').format(widget.timestamp.toDate()),
+                                style: TextStyle(color:Colors.grey),
+                                        ),
                               // SizedBox(height: 4),
                             ],
                           ),
