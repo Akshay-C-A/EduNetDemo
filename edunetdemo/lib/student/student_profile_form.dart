@@ -21,6 +21,7 @@ class StudentProfileForm extends StatefulWidget {
 }
 
 class _StudentProfileFormState extends State<StudentProfileForm> {
+  final _formKey = GlobalKey<FormState>();
   final FirestoreService _Student = FirestoreService();
   final currentUser = FirebaseAuth.instance.currentUser;
 
@@ -96,6 +97,8 @@ class _StudentProfileFormState extends State<StudentProfileForm> {
   }
 
   Future<void> _submitPost() async {
+    if (_formKey.currentState!.validate()) {
+
     setState(() {
       _isLoading = true;
     });
@@ -138,6 +141,7 @@ class _StudentProfileFormState extends State<StudentProfileForm> {
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => Student_Dashboard()));
   }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -153,220 +157,263 @@ class _StudentProfileFormState extends State<StudentProfileForm> {
           : SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // const Text(
-                    //   'Post Type',
-                    //   style: TextStyle(
-                    //     fontSize: 18.0,
-                    //     fontWeight: FontWeight.bold,
-                    //   ),
-                    // ),
-                    // const SizedBox(height: 8.0),
-                    // Container(
-                    //   padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                    //   decoration: BoxDecoration(
-                    //     borderRadius: BorderRadius.circular(8.0),
-                    //     border: Border.all(color: Colors.grey),
-                    //   ),
-                    //   child: DropdownButton<String>(
-                    //     value: _postType,
-                    //     isExpanded: true,
-                    //     underline: const SizedBox.shrink(),
-                    //     items: _postTypes.map((String value) {
-                    //       return DropdownMenuItem<String>(
-                    //         value: value,
-                    //         child: Text(value),
-                    //       );
-                    //     }).toList(),
-                    //     onChanged: (String? newValue) {
-                    //       setState(() {
-                    //         _postType = newValue!;
-                    //       });
-                    //     },
-                    //   ),
-                    // ),
-                    const SizedBox(height: 16.0),
-                    const Text(
-                      'Name',
-                      style: TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    TextField(
-                      controller: _nameController,
-                      decoration: const InputDecoration(
-                        hintText: 'Enter your name',
-                        border: OutlineInputBorder(),
-                      ),
-                      maxLines: null,
-                    ),
-                    const SizedBox(height: 16.0),
-                    const Text(
-                      'Department',
-                      style: TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    TextField(
-                      controller: _deptController,
-                      decoration: const InputDecoration(
-                        hintText: 'Enter your department',
-                        border: OutlineInputBorder(),
-                      ),
-                      maxLines: null,
-                    ),
-                    const SizedBox(height: 16.0),
-                    const Text(
-                      'Year',
-                      style: TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    TextField(
-                      controller: _yearController,
-                      decoration: const InputDecoration(
-                        hintText: 'Year of study',
-                        border: OutlineInputBorder(),
-                      ),
-                      maxLines: null,
-                    ),
-                    const SizedBox(height: 16.0),
-                    const Text(
-                      'Designation',
-                      style: TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    TextField(
-                      controller: _designationController,
-                      decoration: const InputDecoration(
-                        hintText: 'Enter Current Designation',
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                    const Text(
-                      'Skills',
-                      style: TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    TextField(
-                      controller: _skillsController,
-                      decoration: const InputDecoration(
-                        hintText: 'Enter Skills',
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                    const Text(
-                      'About',
-                      style: TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    TextField(
-                      controller: _aboutController,
-                      decoration: const InputDecoration(
-                        hintText: 'Enter About',
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                    const Text(
-                      'LinkedIn',
-                      style: TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    TextField(
-                      controller: _link1Controller,
-                      decoration: const InputDecoration(
-                        hintText: 'Enter LinkedIn link or username',
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                    const Text(
-                      'Twitter',
-                      style: TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    TextField(
-                      controller: _link2Controller,
-                      decoration: const InputDecoration(
-                        hintText: 'Enter Twitter link or username',
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                    const Text(
-                      'Mail Id',
-                      style: TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    TextField(
-                      controller: _link3Controller,
-                      decoration: const InputDecoration(
-                        hintText: 'Enter Mail Id',
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                    const SizedBox(height: 16.0),
-                    const Text(
-                      'Photo',
-                      style: TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 8.0),
-                    Row(
-                      children: [
-                        IconButton(
-                          onPressed: _pickImage,
-                          icon: Icon(Icons.upload_file),
+                child: Form(
+                  key:_formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // const Text(
+                      //   'Post Type',
+                      //   style: TextStyle(
+                      //     fontSize: 18.0,
+                      //     fontWeight: FontWeight.bold,
+                      //   ),
+                      // ),
+                      // const SizedBox(height: 8.0),
+                      // Container(
+                      //   padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                      //   decoration: BoxDecoration(
+                      //     borderRadius: BorderRadius.circular(8.0),
+                      //     border: Border.all(color: Colors.grey),
+                      //   ),
+                      //   child: DropdownButton<String>(
+                      //     value: _postType,
+                      //     isExpanded: true,
+                      //     underline: const SizedBox.shrink(),
+                      //     items: _postTypes.map((String value) {
+                      //       return DropdownMenuItem<String>(
+                      //         value: value,
+                      //         child: Text(value),
+                      //       );
+                      //     }).toList(),
+                      //     onChanged: (String? newValue) {
+                      //       setState(() {
+                      //         _postType = newValue!;
+                      //       });
+                      //     },
+                      //   ),
+                      // ),
+                      const SizedBox(height: 16.0),
+                      const Text(
+                        'Name',
+                        style: TextStyle(
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.bold,
                         ),
-                        if (_selectedImage != null)
-                          Expanded(
-                            child: Row(
-                              children: [
-                                const SizedBox(width: 16.0),
-                                Expanded(
-                                  child: Image.file(
-                                    File(_selectedImage!.path),
-                                    height: 200,
-                                    fit: BoxFit.contain,
-                                  ),
-                                ),
-                                IconButton(
-                                  onPressed: _cancelImageSelection,
-                                  icon: const Icon(Icons.cancel),
-                                ),
-                              ],
-                            ),
+                      ),
+                      TextFormField(
+                        controller: _nameController,
+                        validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Name is required';
+                      }
+                      return null;
+                    },
+                        decoration: const InputDecoration(
+                          hintText: 'Enter your name',
+                          border: OutlineInputBorder(),
+                        ),
+                  
+                        maxLines: null,
+                      ),
+                      const SizedBox(height: 16.0),
+                      const Text(
+                        'Department',
+                        style: TextStyle(
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      TextFormField(
+                        controller: _deptController,
+                        validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Department is required';
+                      }
+                      return null;
+                    },
+                        decoration: const InputDecoration(
+                          hintText: 'Enter your department',
+                          border: OutlineInputBorder(),
+                        ),
+                        maxLines: null,
+                      ),
+                      const SizedBox(height: 16.0),
+                      const Text(
+                        'Year',
+                        style: TextStyle(
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      TextFormField(
+                        controller: _yearController,
+                        validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Year is required';
+                      }
+                      if (int.tryParse(value) == null) {
+                        return 'Year must be a number';
+                      }
+                      return null;
+                    },
+                        decoration: const InputDecoration(
+                          hintText: 'Year of study',
+                          border: OutlineInputBorder(),
+                        ),
+                        maxLines: null,
+                      ),
+                      const SizedBox(height: 16.0),
+                      const Text(
+                        'Designation',
+                        style: TextStyle(
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      TextFormField(
+                        controller: _designationController,
+                        validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Designation is required';
+                      }
+                      return null;
+                    },
+                        decoration: const InputDecoration(
+                          hintText: 'Enter Current Designation',
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                      const Text(
+                        'Skills',
+                        style: TextStyle(
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      TextFormField(
+                        controller: _skillsController,
+                         validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Skills are required';
+                      }
+                      return null;
+                    },
+                        decoration: const InputDecoration(
+                          hintText: 'Enter Skills',
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                      const Text(
+                        'About',
+                        style: TextStyle(
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      TextFormField(
+                        controller: _aboutController,
+                        validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'About is required';
+                      }
+                      return null;
+                    },
+                        decoration: const InputDecoration(
+                          hintText: 'Enter About',
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                      const Text(
+                        'LinkedIn',
+                        style: TextStyle(
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      TextField(
+                        controller: _link1Controller,
+                        decoration: const InputDecoration(
+                          hintText: 'Enter LinkedIn link or username',
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                      const Text(
+                        'Twitter',
+                        style: TextStyle(
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      TextField(
+                        controller: _link2Controller,
+                        decoration: const InputDecoration(
+                          hintText: 'Enter Twitter link or username',
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                      const Text(
+                        'Mail Id',
+                        style: TextStyle(
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      TextField(
+                        controller: _link3Controller,
+                        decoration: const InputDecoration(
+                          hintText: 'Enter Mail Id',
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                      const SizedBox(height: 16.0),
+                      const Text(
+                        'Photo',
+                        style: TextStyle(
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 8.0),
+                      Row(
+                        children: [
+                          IconButton(
+                            onPressed: _pickImage,
+                            icon: Icon(Icons.upload_file),
                           ),
-                      ],
-                    ),
-                    const SizedBox(height: 16.0),
-                    ElevatedButton(
-                      onPressed: _submitPost,
-                      child: const Text('Submit'),
-                    ),
-                    const SizedBox(height: 16.0),
-                    IconButton(
-                      onPressed: _resetForm,
-                      icon: Icon(Icons.delete),
-                    ),
-                  ],
+                          if (_selectedImage != null)
+                            Expanded(
+                              child: Row(
+                                children: [
+                                  const SizedBox(width: 16.0),
+                                  Expanded(
+                                    child: Image.file(
+                                      File(_selectedImage!.path),
+                                      height: 200,
+                                      fit: BoxFit.contain,
+                                    ),
+                                  ),
+                                  IconButton(
+                                    onPressed: _cancelImageSelection,
+                                    icon: const Icon(Icons.cancel),
+                                  ),
+                                ],
+                              ),
+                            ),
+                        ],
+                      ),
+                      const SizedBox(height: 16.0),
+                      ElevatedButton(
+                        onPressed: _submitPost,
+                        child: const Text('Submit'),
+                      ),
+                      const SizedBox(height: 16.0),
+                      IconButton(
+                        onPressed: _resetForm,
+                        icon: Icon(Icons.delete),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
