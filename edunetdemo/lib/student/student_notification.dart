@@ -47,12 +47,15 @@ class _StudentNotificationState extends State<StudentNotification> {
               String userName = data['studentName'];
               String caption = data['caption'];
               String dpURL = data['dpURL'];
+              Timestamp timestamp = data['timestamp'];
+
 
               // Display as a list title
               return NotificationCard(
                   userName: userName,
                   caption: caption,
-                  dpURL: dpURL);
+                  dpURL: dpURL,
+                   timestamp: timestamp);
               // return Card(
               //   elevation: 2,
               //   margin: EdgeInsets.all(8),

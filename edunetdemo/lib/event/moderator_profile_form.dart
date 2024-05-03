@@ -82,11 +82,18 @@ class _ModeratorProfileFormState extends State<ModeratorProfileForm> {
       _isLoading = true;
     });
 
+    String about;
+    if (_aboutController.text == '')
+      about = 'nullification';
+    else
+      about = _aboutController.text;
+    print('This is the about $about');
+
     final imageURL = await _uploadImage();
     await _ModeratorFirestoreService.updateModerator(
       moderatorMail: currentUser!.email,
       about: _aboutController.text,
-      dpURL: imageURL,
+      dpURL: imageURL ?? '',
       linkedIn: _link1Controller.text,
       twitter: _link2Controller.text,
       mail: _link3Controller.text,
@@ -97,12 +104,12 @@ class _ModeratorProfileFormState extends State<ModeratorProfileForm> {
     });
 
     // Show a success message
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Profile Updated'),
-        duration: Duration(seconds: 2),
-      ),
-    );
+    // ScaffoldMessenger.of(context).showSnackBar(
+    //   const SnackBar(
+    //     content: Text('Profile Updated'),
+    //     duration: Duration(seconds: 2),
+    //   ),
+    // );
 
     _resetForm();
     // final prefs = await SharedPreferences.getInstance();

@@ -1,4 +1,5 @@
 // ignore_for_file: prefer_final_fields, non_constant_identifier_names
+import 'package:edunetdemo/admin/announcement_page.dart';
 import 'package:edunetdemo/common_pages/alumni_page.dart';
 import 'package:edunetdemo/common_pages/event_page.dart';
 import 'package:edunetdemo/common_pages/user_search.dart';
@@ -162,9 +163,12 @@ class _Student_DashboardState extends State<Student_Dashboard> {
                 
                 IconButton(
                     onPressed: () {
-                      
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => AdminPage()));
                     },
-                    icon: Icon(Icons.announcement_rounded)),
+                    icon: Icon(Icons.announcement)),
                 
                 IconButton(
                     onPressed: () {

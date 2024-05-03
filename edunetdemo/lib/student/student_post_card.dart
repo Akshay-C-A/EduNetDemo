@@ -13,6 +13,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
+
 
 class StudentPostCard extends StatefulWidget {
   //data for likes
@@ -28,6 +30,7 @@ class StudentPostCard extends StatefulWidget {
   final String description;
   final String imageURL;
   final String dpURL;
+  final Timestamp timestamp;
 
   StudentPostCard({
     required this.isAdmin,
@@ -40,6 +43,7 @@ class StudentPostCard extends StatefulWidget {
     required this.dpURL,
     required this.postId,
     required this.likes,
+    required this.timestamp,
   });
 
   @override
@@ -166,42 +170,16 @@ class _StudentPostCardState extends State<StudentPostCard> {
                                 style:
                                     TextStyle(fontSize: 12, color: Colors.grey),
                               ),
+                               SizedBox(height: 4,),
+                              Text(
+                                DateFormat('yyyy-MM-dd  HH:mm').format(widget.timestamp.toDate()),
+                                style: TextStyle(color: Colors.grey),
+                                        ),
                             ],
                           ),
                         ],
                       ),
                       // Container for displaying post type
-                      if (widget.isAdmin == true)
-                        PopupMenuButton(
-                          itemBuilder: (_) => [
-                            PopupMenuItem(
-                              child: Text('Delete'),
-                              value: 'delete',
-                            ),
-                            PopupMenuItem(
-                              child: Text('Option 2'),
-                              value: 'option2',
-                            ),
-                            PopupMenuItem(
-                              child: Text('Option 3'),
-                              value: 'option3',
-                            ),
-                          ],
-                          onSelected: (value) {
-                            if (value == 'delete') {
-                              // Perform delete operation here
-                              firestoreService.deleteStudentPost(
-                                  studentId: widget.studentId,
-                                  postId: widget.postId);
-                              print('Delete function called');
-                            } else {
-                              // Handle other options
-                              print('Selected: $value');
-                            }
-                          },
-                        )
-                      else
-                        Container()
                     ],
                   ),
                 ),

@@ -38,10 +38,10 @@ class _EventDashboardState extends State<EventDashboard> {
   late String moderatorId = '56';
   late String moderatorName = 'john doe';
   late String communityName = 'Mulearn';
-  late String about = 'eg';
-  late String? linkedIn = 'eg';
-  late String? twitter = 'eg';
-  late String? mail = 'eg';
+  String about = 'Edit profile to change ABout';
+  String? linkedIn = 'None';
+  String? twitter = 'None';
+  String? mail = 'None';
   String dpURL = '';
 
   Map<String, dynamic>? _postData;
@@ -72,13 +72,28 @@ class _EventDashboardState extends State<EventDashboard> {
       moderatorId = currentUser!.email!;
       communityName = postData['communityName'] as String;
       moderatorName = postData['moderatorName'] as String;
+      postData['about'] == ''
+          ? about = 'Edit Profile to Add About'
+          : about = postData['about'] as String;
+      postData['linkedIn'] == ''
+          ? linkedIn = 'None'
+          : linkedIn = postData['linkedIn'] as String;
+      postData['twitter'] == ''
+          ? twitter = 'None'
+          : twitter = postData['twitter'] as String;
+      postData['mail'] == ''
+          ? mail = 'None'
+          : mail = postData['mail'] as String;
+      postData['dpURL'] == ''
+          ? dpURL = 'None'
+          : dpURL = postData['dpURL'] as String;
     } else {
       communityName = 'Mulearn';
-      about = 'eg';
-      linkedIn = 'eg';
-      twitter = 'eg';
-      mail = 'eg';
-      dpURL = 'eg';
+      about = 'Edit Profile to Update About';
+      linkedIn = 'None';
+      twitter = 'None';
+      mail = 'None';
+      dpURL = '';
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -105,7 +120,6 @@ class _EventDashboardState extends State<EventDashboard> {
           about: about,
         ),
       ),
-      EventNotificationPage(),
       PostedEvents(
         moderatorId: moderatorId,
         communityName: communityName,
@@ -185,10 +199,6 @@ class _EventDashboardState extends State<EventDashboard> {
                 BottomNavigationBarItem(
                   icon: Icon(Icons.add),
                   label: 'Post',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.notifications),
-                  label: 'Notification',
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(Icons.alarm),

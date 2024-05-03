@@ -122,6 +122,26 @@ class FirestoreService {
     });
   }
 
+    Stream<QuerySnapshot> getAnnouncementPostsStream() {
+    final announcementStream =
+        announcement.orderBy('timestamp', descending: true).snapshots();
+    return announcementStream;
+  }
+
+    List adminPostInstances({
+    required String postId,
+    required String adminId,
+  }) {
+    // Update the post in the alumni_posts collection
+    DocumentReference adminRef = announcement.doc(postId);
+
+    // Update the post in the alumni user data
+    DocumentReference adminPostRef =
+        user.doc(adminId).collection('announcements').doc(postId);
+
+    return [adminRef, adminPostRef];
+  }
+
 //----------------------------------------------------------------------------------------------------------------
 // ALUMNI SECTION
 
@@ -159,6 +179,9 @@ class FirestoreService {
       'mail': mail,
     });
   }
+
+// / To get the data for alumni posts
+
 
 // To get alumni details
   Future<DocumentSnapshot> getAlumni({
@@ -493,7 +516,7 @@ class FirestoreService {
   //To add student details
   Future<void> addModerator({
     required String? moderatorMail,
-    required String about,
+    required String? about,
     String? dpURL,
     String? linkedIn,
     String? twitter,
@@ -512,20 +535,40 @@ class FirestoreService {
 
   Future<void> updateModerator({
     required String? moderatorMail,
-    required String about,
-    String? dpURL,
-    String? linkedIn,
-    String? twitter,
-    String? mail,
-  }) {
+    required String? about,
+    required String? dpURL,
+    required String linkedIn,
+    required String twitter,
+    required String mail,
+  }) async {
     print('Updating');
-    return moderator.doc('$moderatorMail').update({
-      'about': about,
-      'dpURL': dpURL,
-      'linkedIn': linkedIn,
-      'twitter': twitter,
-      'mail': mail,
-    });
+    if (about != '')
+      moderator.doc('$moderatorMail').update({
+        'about': about,
+      });
+    if (dpURL != '')
+      moderator.doc('$moderatorMail').update({
+        'dpURL': dpURL,
+      });
+    if (linkedIn != '')
+      moderator.doc('$moderatorMail').update({
+        'linkedIn': linkedIn,
+      });
+    if (twitter != '')
+      moderator.doc('$moderatorMail').update({
+        'twitter': twitter,
+      });
+    if (mail != '')
+      moderator.doc('$moderatorMail').update({
+        'mail': mail,
+      });
+    // return moderator.doc('$moderatorMail').update({
+    //   'about': about,
+    //   'dpURL': dpURL,
+    //   'linkedIn': linkedIn,
+    //   'twitter': twitter,
+    //   'mail': mail,
+    // });
   }
 
   Future<DocumentSnapshot> getModerator({
