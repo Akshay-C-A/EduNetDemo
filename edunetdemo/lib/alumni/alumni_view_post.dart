@@ -11,26 +11,28 @@ import 'package:share_plus/share_plus.dart';
 
 
 
-class StudentViewPost extends StatefulWidget {
+class AlumniViewPost extends StatefulWidget {
   //data for likes
   final String postId;
   final List<String> likes;
 
-  final String studentId;
+  final String alumniId;
   bool isAdmin = false;
-  final String studentName;
-  final String studentDesignation;
+  final String alumniName;
+  final String alumniDesignation;
+  final String type;
   final String caption;
   final String description;
   final String imageURL;
   final String dpURL;
   final DateTime timestamp;
 
-  StudentViewPost({
+  AlumniViewPost({
      required this.isAdmin,
-    required this.studentId,
-    required this.studentName,
-    required this.studentDesignation,
+    required this.alumniId,
+    required this.alumniName,
+    required this.alumniDesignation,
+    required this.type,
     required this.caption,
     required this.description,
     required this.imageURL,
@@ -41,7 +43,7 @@ class StudentViewPost extends StatefulWidget {
   });
 
   @override
-  _StudentViewPostState createState() => _StudentViewPostState();
+  _AlumniViewPostState createState() => _AlumniViewPostState();
 }
 
 Future<void> _downloadImageToGallery(String imageURL) async {
@@ -65,7 +67,7 @@ Future<void> _downloadImageToGallery(String imageURL) async {
     print('Error downloading image: $e');
   }
 }
-class _StudentViewPostState extends State<StudentViewPost> {
+class _AlumniViewPostState extends State<AlumniViewPost> {
   //data for likes
   final FirestoreService firestoreService = FirestoreService();
   final currentUser = FirebaseAuth.instance.currentUser;
@@ -73,6 +75,19 @@ class _StudentViewPostState extends State<StudentViewPost> {
 
   bool isExpanded = false;
   bool showLikeIcon = false;
+
+  Color getButtonColor(String type) {
+    switch (type) {
+      case 'Placement offer':
+        return Color.fromARGB(255, 7, 156, 183);
+      case 'Internship offer':
+        return Color.fromARGB(255, 158, 79, 189);
+      case 'Technical event':
+        return Color.fromARGB(255, 155, 50, 85);
+      default:
+        return Colors.blue;
+    }
+  }
 
   @override
   void initState() {
@@ -85,23 +100,23 @@ class _StudentViewPostState extends State<StudentViewPost> {
       isLiked = !isLiked;
     });
 
-    List ref = firestoreService.studentPostInstances(
-        postId: widget.postId, studentId: widget.studentId);
-    DocumentReference studentPost = ref[0];
-    DocumentReference studentProfile = ref[1];
+    List ref = firestoreService.alumniPostInstances(
+        postId: widget.postId, alumniId: widget.alumniId);
+    DocumentReference alumniPost = ref[0];
+    DocumentReference alumniProfile = ref[1];
 
     if (isLiked) {
-      studentPost.update({
+      alumniPost.update({
         'likes': FieldValue.arrayUnion([currentUser!.email])
       });
-      studentProfile.update({
+      alumniProfile.update({
         'likes': FieldValue.arrayUnion([currentUser!.email])
       });
     } else {
-      studentPost.update({
+      alumniPost.update({
         'likes': FieldValue.arrayRemove([currentUser!.email])
       });
-      studentProfile.update({
+      alumniProfile.update({
         'likes': FieldValue.arrayRemove([currentUser!.email])
       });
     }
@@ -131,12 +146,12 @@ class _StudentViewPostState extends State<StudentViewPost> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        widget.studentName,
+                        widget.alumniName,
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                       SizedBox(height: 4),
                       Text(
-                        widget.studentDesignation,
+                        widget.alumniDesignation,
                         style: TextStyle(fontSize: 12, color: Colors.grey),
                       ),
                       SizedBox(height: 4),
@@ -146,9 +161,26 @@ class _StudentViewPostState extends State<StudentViewPost> {
                       ),
                     ],
                   ),
+                  Container(
+                        padding:
+                            EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                        decoration: BoxDecoration(
+                          color: getButtonColor(widget.type),
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        child: Text(
+                          widget.type,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
                 ],
               ),
             ),
+               
+            
             Padding(
               padding: EdgeInsets.all(10.0),
               child: Text(
@@ -186,6 +218,7 @@ class _StudentViewPostState extends State<StudentViewPost> {
                 ),
             ButtonBar(
               alignment: MainAxisAlignment.spaceEvenly,
+              
               children: [
                 Column(
                   children: [
@@ -224,7 +257,7 @@ class _StudentViewPostState extends State<StudentViewPost> {
                             await Share.shareXFiles(
                               [XFile(tempFile.path)],
                               text:
-                                  '${widget.studentName} shared a post:\n\n${widget.caption}\n\n${widget.description}',
+                                  '${widget.alumniName} shared a post:\n\n${widget.caption}\n\n${widget.description}',
                             );
                       },
                     ),
