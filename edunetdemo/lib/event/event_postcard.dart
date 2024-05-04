@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:edunetdemo/event/view_event_post.dart';
 import 'package:edunetdemo/event/view_moderator_profile.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/widgets.dart';
@@ -13,7 +14,6 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
-
 
 class EventPostCard extends StatefulWidget {
   //data for likes
@@ -119,6 +119,25 @@ class _EventPostCardState extends State<EventPostCard> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: ((context) => ViewEventPost(
+                    isAdmin: widget.isAdmin,
+                    venue: widget.venue,
+                    moderatorId: widget.moderatorId,
+                    moderatorName: widget.moderatorName,
+                    otherDetails: widget.otherDetails,
+                    eventTitle: widget.eventTitle,
+                    date: widget.date,
+                    communityName: widget.communityName,
+                    imageURL: widget.imageURL,
+                    dpURL: widget.dpURL,
+                    postId: widget.postId,
+                    likes: widget.likes,
+                    timestamp: widget.timestamp))));
+      },
       onDoubleTap: () {
         setState(() {
           toggleLike();
@@ -150,8 +169,10 @@ class _EventPostCardState extends State<EventPostCard> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => ViewModeratorProfile(
-                                          moderatorId: widget.moderatorId)));
+                                      builder: (context) =>
+                                          ViewModeratorProfile(
+                                              moderatorId:
+                                                  widget.moderatorId)));
                             },
                             child: CircleAvatar(
                               radius: 20,
@@ -167,18 +188,19 @@ class _EventPostCardState extends State<EventPostCard> {
                                 style: TextStyle(fontWeight: FontWeight.bold),
                               ),
                               SizedBox(height: 4),
-                              
                               Text(
                                 '${widget.moderatorName}', // Changed
                                 style:
                                     TextStyle(fontSize: 12, color: Colors.grey),
                               ),
-
-                               SizedBox(height: 4,),
+                              SizedBox(
+                                height: 4,
+                              ),
                               Text(
-                  DateFormat('yyyy-MM-dd  HH:mm').format(widget.timestamp.toDate()),
-                  style: TextStyle(color: Colors.grey),
-                          ),
+                                DateFormat('yyyy-MM-dd  HH:mm')
+                                    .format(widget.timestamp.toDate()),
+                                style: TextStyle(color: Colors.grey),
+                              ),
                             ],
                           ),
                         ],
