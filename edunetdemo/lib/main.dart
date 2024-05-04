@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'My App',
+      title: 'Edunet',
       home: FutureBuilder<bool>(
         future: _checkIfFirstLaunch(),
         builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
