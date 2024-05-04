@@ -1,5 +1,3 @@
-// import 'package:edunetdemo/alumni/alumni_dashboard.dart';
-
 import 'package:edunetdemo/auth/login_check2.dart';
 import 'package:edunetdemo/services/notification_services.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
@@ -21,7 +19,6 @@ void main() async {
 
   await FirebaseAppCheck.instance.activate();
   runApp(MaterialApp(
-    // home: Alumni_Dashboard(),
     home: const MainPage(),
   ));
 }
