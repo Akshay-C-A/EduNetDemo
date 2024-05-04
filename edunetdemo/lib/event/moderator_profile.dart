@@ -179,10 +179,9 @@ class _ModeratorProfileScreenState extends State<ModeratorProfileScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            widget.moderator.about,
+                            '\"${widget.moderator.about}\"',
                             style: TextStyle(
-                              fontSize: 16,
-                            ),
+                                fontSize: 16, fontStyle: FontStyle.italic),
                           ),
                           SizedBox(height: width * 0.08),
                           Column(

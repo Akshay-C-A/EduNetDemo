@@ -57,34 +57,42 @@ class _EventDashboardState extends State<EventDashboard> {
   Future<void> _fetchDetails() async {
     moderatorId = currentUser!.email!;
     final postSnapshot = await _firestoreService.getModerator(
-      moderatorId: moderatorId.toString(),
+      moderatorId: moderatorId,
     );
 
     Map<String, dynamic>? postData;
+    print('Post Data $postData');
     if (postSnapshot.exists) {
       postData = postSnapshot.data() as Map<String, dynamic>;
+      print('Post Data $postData');
     } else {
       // Handle the case when the post is not found
       postData = null;
+      print('Post Data $postData');
     }
 
     if (postData != null) {
       moderatorId = currentUser!.email!;
+      print('ModeratorId $moderatorId');
+
       communityName = postData['communityName'] as String;
+      print('communityName $communityName');
       moderatorName = postData['moderatorName'] as String;
-      postData['about'] == ''
+      print('communityName $moderatorName');
+
+      postData['about'] == '' || postData['about'] == null
           ? about = 'Edit Profile to Add About'
           : about = postData['about'] as String;
-      postData['linkedIn'] == ''
+      postData['linkedIn'] == '' || postData['linkedIn'] == null
           ? linkedIn = 'None'
           : linkedIn = postData['linkedIn'] as String;
-      postData['twitter'] == ''
+      postData['twitter'] == '' || postData['twitter'] == null
           ? twitter = 'None'
           : twitter = postData['twitter'] as String;
-      postData['mail'] == ''
+      postData['mail'] == '' || postData['mail'] == null
           ? mail = 'None'
           : mail = postData['mail'] as String;
-      postData['dpURL'] == ''
+      postData['dpURL'] == '' || postData['dpURL'] == null
           ? dpURL = 'None'
           : dpURL = postData['dpURL'] as String;
     } else {
