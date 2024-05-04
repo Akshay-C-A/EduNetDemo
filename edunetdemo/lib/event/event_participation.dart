@@ -28,7 +28,7 @@ class _EventParticipationState extends State<EventParticipation> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Details'),
+        title: const Text('Details'),
       ),
       body: Column(
         children: [
@@ -42,11 +42,11 @@ class _EventParticipationState extends State<EventParticipation> {
                   }
 
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
+                    return const Center(child: CircularProgressIndicator());
                   }
 
                   if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                    return Center(child: Text('No data available'));
+                    return const Center(child: Text('No data available'));
                   }
 
                   List eventParticipantList = snapshot.data!.docs;
@@ -55,14 +55,14 @@ class _EventParticipationState extends State<EventParticipation> {
                       children: [
                         Text(
                             'Total no. of participants: ${eventParticipantList.length}'),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         // Text(
                         //     'No. of Enrolled students: ${enrolledStudents.length}'),
                       ]);
                 }),
           ),
-          SizedBox(height: 20),
-          Text(
+          const SizedBox(height: 20),
+          const Text(
             'Participants',
             style: TextStyle(
               fontWeight: FontWeight.bold,
@@ -79,11 +79,11 @@ class _EventParticipationState extends State<EventParticipation> {
                 }
 
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator());
                 }
 
                 if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                  return Center(child: Text('No data available'));
+                  return const Center(child: Text('No data available'));
                 }
 
                 List eventPostList = snapshot.data!.docs;
@@ -112,7 +112,7 @@ class _EventParticipationState extends State<EventParticipation> {
                         title: Text(studentName),
                         subtitle: Text('$department batch'),
                         trailing: isVerified
-                            ? Text(
+                            ? const Text(
                                 'Verified',
                                 style: TextStyle(
                                     color: Colors.green, fontSize: 15),
@@ -136,7 +136,7 @@ class _EventParticipationState extends State<EventParticipation> {
                                   });
                                 },
                                 child: _verifyLoading
-                                    ? SizedBox(
+                                    ? const SizedBox(
                                         width:
                                             24.0, // Adjust the width and height as per your requirements
                                         height: 24.0,
@@ -146,7 +146,7 @@ class _EventParticipationState extends State<EventParticipation> {
                                           //     3.0, // Increase or decrease this value to adjust the circle's thickness
                                         ),
                                       )
-                                    : Text('Verify')),
+                                    : const Text('Verify')),
                       ),
                     );
                   },
