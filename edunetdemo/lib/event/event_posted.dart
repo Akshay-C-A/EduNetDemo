@@ -23,7 +23,8 @@ class _PostedEventsState extends State<PostedEvents> {
         title: Text('Posted Events'),
       ),
       body: StreamBuilder<QuerySnapshot>(
-        stream: firestoreService.getEventPostsStream(),
+        stream: firestoreService.getModeratorProfilePosts(
+            moderatorId: widget.moderatorId),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}');

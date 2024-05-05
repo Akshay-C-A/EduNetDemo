@@ -124,6 +124,7 @@ class _EventPostCardState extends State<EventPostCard> {
             context,
             MaterialPageRoute(
                 builder: ((context) => ViewEventPost(
+                    payment: '100',
                     isAdmin: widget.isAdmin,
                     venue: widget.venue,
                     moderatorId: widget.moderatorId,
