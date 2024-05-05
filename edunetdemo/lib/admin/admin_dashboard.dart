@@ -1,5 +1,5 @@
 import 'package:edunetdemo/admin/admin_add_announcement.dart';
-import 'package:edunetdemo/admin/mod_mangment.dart';
+import 'package:edunetdemo/admin/user_mangment.dart';
 import 'package:edunetdemo/auth/login_check2.dart';
 import 'package:edunetdemo/common_pages/alumni_page.dart';
 import 'package:edunetdemo/common_pages/event_page.dart';
@@ -30,7 +30,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
       AlumniPage.forAdmin(
         isAdmin: true,
       ),
-      ModeratorManagementPage(),
+      AdminManagementPage(),
       AdminAnnouncementPage(
         adminId: currentUser?.email ?? '',
         adminName: currentUser?.displayName ?? 'Principal',
