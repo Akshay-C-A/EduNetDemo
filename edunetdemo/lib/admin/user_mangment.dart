@@ -17,7 +17,7 @@ class _AdminManagementPageState extends State<AdminManagementPage> {
   final studentsCollection = FirebaseFirestore.instance.collection('students');
   final alumniCollection = FirebaseFirestore.instance.collection('alumni');
 
-  /////////////////////////////////////////MODERATOR////////////////////////////////////////////////////
+  /////////////////////////////////////////MODERATOR//////////////////////////////////////////////////
 
   Future<void> _addModerator(String name, String communityName) async {
     final email = '${name.toLowerCase()}-${communityName.toLowerCase()}@moderator.edunet.com';
