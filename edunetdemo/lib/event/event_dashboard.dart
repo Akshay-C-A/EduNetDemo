@@ -1,6 +1,7 @@
 import 'package:edunetdemo/auth/login_check2.dart';
 import 'package:edunetdemo/common_pages/event_page.dart';
 import 'package:edunetdemo/common_pages/event_search.dart';
+import 'package:edunetdemo/common_pages/suspended_page.dart';
 import 'package:edunetdemo/event/event_newpost.dart';
 import 'package:edunetdemo/event/event_notification.dart';
 import 'package:edunetdemo/event/event_posted.dart';
@@ -43,6 +44,7 @@ class _EventDashboardState extends State<EventDashboard> {
   String? twitter = 'None';
   String? mail = 'None';
   String dpURL = '';
+  bool isSuspended = false;
 
   Map<String, dynamic>? _postData;
 
@@ -74,7 +76,7 @@ class _EventDashboardState extends State<EventDashboard> {
     if (postData != null) {
       moderatorId = currentUser!.email!;
       print('ModeratorId $moderatorId');
-
+      isSuspended=postData['isSuspended'] as bool; 
       communityName = postData['communityName'] as String;
       print('communityName $communityName');
       moderatorName = postData['moderatorName'] as String;
@@ -102,6 +104,7 @@ class _EventDashboardState extends State<EventDashboard> {
       twitter = 'None';
       mail = 'None';
       dpURL = '';
+      
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -145,7 +148,9 @@ class _EventDashboardState extends State<EventDashboard> {
             child: Text('Error: ${snapshot.error}'),
           );
         } else {
-          return Scaffold(
+          return isSuspended
+          ? SuspendedPage()
+          :Scaffold(
             appBar: AppBar(
               title: Text('Moderator'),
               actions: [

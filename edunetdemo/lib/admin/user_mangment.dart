@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -31,6 +33,7 @@ class _AdminManagementPageState extends State<AdminManagementPage> {
         'moderatorMail': email,
         'moderatorId': email,
         'communityName': communityName,
+        'isSuspended': false,
       });
 
       ScaffoldMessenger.of(context).showSnackBar(
@@ -50,32 +53,51 @@ class _AdminManagementPageState extends State<AdminManagementPage> {
     Future<void> _deleteModerator(String docId) async {
     try {
       final moderatorDoc = await moderatorsCollection.doc(docId).get();
-      final email = moderatorDoc.data()?['moderatorMail'] as String;
+      moderatorsCollection.doc(docId).update({'isSuspended' :  true});
 
-      final signInMethods = await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
-      if (signInMethods.isNotEmpty) {
-        final user = await FirebaseAuth.instance.currentUser;
-        if (user != null) {
-          await user.delete();
-        }
-      }
-
-      await moderatorsCollection.doc(docId).delete();
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Moderator deleted successfully'),
+          content: Text('Moderator suspended successfully'),
         ),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Error deleting moderator: $e'),
+          content: Text('Error suspending moderator: $e'),
         ),
       );
     }
   }
 
+      Future<void> _unsuspendModerator(String docId) async {
+    try {
+      final moderatorDoc = await moderatorsCollection.doc(docId).get();
+      moderatorsCollection.doc(docId).update({'isSuspended' :  false});
+
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Moderator Unsuspended'),
+        ),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error Unsuspending Moderator: $e'),
+        ),
+      );
+    }
+  }
+
+  // bool changeIcon=false;
+  final _moderatorIconStates = <String, bool>{};
+
+  void _toggleModeratorIcon(String docId) {
+  setState(() {
+    _moderatorIconStates[docId] = !_moderatorIconStates[docId]!;
+  });
+}
 
     Widget _buildModeratorList() {
     return Column(
@@ -96,17 +118,28 @@ class _AdminManagementPageState extends State<AdminManagementPage> {
                 itemCount: snapshot.data!.docs.length,
                 itemBuilder: (BuildContext context, int index) {
                   final moderatorDoc = snapshot.data!.docs[index];
+                  final docId = moderatorDoc.id;
                   final name = moderatorDoc['moderatorName'];
                   final email = moderatorDoc['moderatorMail'];
                   final communityName = moderatorDoc['communityName'];
+                  // bool isSuspended = moderatorDoc['isSuspended'];
+
+                  _moderatorIconStates.putIfAbsent(docId, () => false);
 
                   return ListTile(
                     title: Text(name),
                     subtitle: Text('$email ($communityName)'),
-                    trailing: IconButton(
-                      icon: Icon(Icons.delete),
-                      onPressed: () => _deleteModerator(moderatorDoc.id),
-                    ),
+                    trailing: _moderatorIconStates[docId]!? IconButton(
+                      icon: Icon(Icons.person_remove),
+                      onPressed: ()  {
+                          _toggleModeratorIcon(docId);
+                          _deleteModerator(moderatorDoc.id);
+                        }
+                    ):IconButton(
+                      icon: Icon(Icons.person_add),
+                      onPressed:()  { _toggleModeratorIcon(docId);_unsuspendModerator(docId);}
+                      // onPressed:()  {_unsuspendModerator(docId);}
+                    )
                   );
                 },
               );
