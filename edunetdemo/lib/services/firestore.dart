@@ -122,13 +122,13 @@ class FirestoreService {
     });
   }
 
-    Stream<QuerySnapshot> getAnnouncementPostsStream() {
+  Stream<QuerySnapshot> getAnnouncementPostsStream() {
     final announcementStream =
         announcement.orderBy('timestamp', descending: true).snapshots();
     return announcementStream;
   }
 
-    List adminPostInstances({
+  List adminPostInstances({
     required String postId,
     required String adminId,
   }) {
@@ -181,7 +181,6 @@ class FirestoreService {
   }
 
 // / To get the data for alumni posts
-
 
 // To get alumni details
   Future<DocumentSnapshot> getAlumni({
@@ -588,6 +587,7 @@ class FirestoreService {
     required String Date,
     required String Venue,
     required String otherDetails,
+    required String payment,
     String? imageURL,
     String? dpURL,
   }) {
@@ -605,6 +605,8 @@ class FirestoreService {
       'likes': [],
       'timestamp': Timestamp.now(),
       'notified': false,
+      'payment': payment,
+      'enrolled': [],
     });
 
     //Adding post to alumni user data
@@ -737,6 +739,17 @@ class FirestoreService {
           'isVerified': false,
         });
         print('data inserted');
+
+        List ref = eventPostInstances(postId: postId, moderatorId: moderatorId);
+
+        DocumentReference eventPost = ref[0];
+        eventPost.update({
+          'enrolled': FieldValue.arrayUnion([studentId]),
+        });
+        DocumentReference moderatorProfile = ref[1];
+        moderatorProfile.update({
+          'enrolled': FieldValue.arrayUnion([studentId]),
+        });
       } else {
         print('Student document does not exist');
       }

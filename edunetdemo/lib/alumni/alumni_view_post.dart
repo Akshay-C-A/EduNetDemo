@@ -9,12 +9,10 @@ import 'package:http/http.dart' as http;
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:share_plus/share_plus.dart';
 
-
-
 class AlumniViewPost extends StatefulWidget {
   //data for likes
   final String postId;
-  final List<String> likes;
+  List<String> likes;
 
   final String alumniId;
   bool isAdmin = false;
@@ -28,7 +26,7 @@ class AlumniViewPost extends StatefulWidget {
   final DateTime timestamp;
 
   AlumniViewPost({
-     required this.isAdmin,
+    required this.isAdmin,
     required this.alumniId,
     required this.alumniName,
     required this.alumniDesignation,
@@ -67,6 +65,7 @@ Future<void> _downloadImageToGallery(String imageURL) async {
     print('Error downloading image: $e');
   }
 }
+
 class _AlumniViewPostState extends State<AlumniViewPost> {
   //data for likes
   final FirestoreService firestoreService = FirestoreService();
@@ -112,6 +111,7 @@ class _AlumniViewPostState extends State<AlumniViewPost> {
       alumniProfile.update({
         'likes': FieldValue.arrayUnion([currentUser!.email])
       });
+      widget.likes = widget.likes + [currentUser!.email.toString()];
     } else {
       alumniPost.update({
         'likes': FieldValue.arrayRemove([currentUser!.email])
@@ -119,9 +119,9 @@ class _AlumniViewPostState extends State<AlumniViewPost> {
       alumniProfile.update({
         'likes': FieldValue.arrayRemove([currentUser!.email])
       });
+      widget.likes.remove(currentUser!.email.toString());
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -156,31 +156,29 @@ class _AlumniViewPostState extends State<AlumniViewPost> {
                       ),
                       SizedBox(height: 4),
                       Text(
-                        widget.timestamp.toString(), // Adjust date formatting as needed
+                        widget.timestamp
+                            .toString(), // Adjust date formatting as needed
                         style: TextStyle(color: Colors.grey),
                       ),
                     ],
                   ),
                   Container(
-                        padding:
-                            EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                        decoration: BoxDecoration(
-                          color: getButtonColor(widget.type),
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        child: Text(
-                          widget.type,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
+                    padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                    decoration: BoxDecoration(
+                      color: getButtonColor(widget.type),
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    child: Text(
+                      widget.type,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
                       ),
+                    ),
+                  ),
                 ],
               ),
             ),
-               
-            
             Padding(
               padding: EdgeInsets.all(10.0),
               child: Text(
@@ -188,40 +186,38 @@ class _AlumniViewPostState extends State<AlumniViewPost> {
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
             ),
-           Padding(
-  padding: EdgeInsets.all(10.0),
-  child: GestureDetector(
-    onDoubleTap: toggleLike, // Add onDoubleTap callback here
-    child: widget.imageURL!.isNotEmpty
-        ? Image.network(
-            widget.imageURL,
-            fit: BoxFit.cover,
-          )
-        : Container(),
-  ),
-),
-                Padding(
-                  padding: EdgeInsets.all(10.0),
-                  child: GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        isExpanded = !isExpanded;
-                      });
-                    },
-                    child: Text(
-                      isExpanded || widget.description.length <= 100
-                          ? widget.description
-                          : '${widget.description!.substring(0, 100)}...',
-                      maxLines: isExpanded ? null : 2,
-                      overflow: isExpanded
-                          ? TextOverflow.clip
-                          : TextOverflow.ellipsis,
-                    ),
-                  ),
+            Padding(
+              padding: EdgeInsets.all(10.0),
+              child: GestureDetector(
+                onDoubleTap: toggleLike, // Add onDoubleTap callback here
+                child: widget.imageURL!.isNotEmpty
+                    ? Image.network(
+                        widget.imageURL,
+                        fit: BoxFit.cover,
+                      )
+                    : Container(),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.all(10.0),
+              child: GestureDetector(
+                onTap: () {
+                  setState(() {
+                    isExpanded = !isExpanded;
+                  });
+                },
+                child: Text(
+                  isExpanded || widget.description.length <= 100
+                      ? widget.description
+                      : '${widget.description!.substring(0, 100)}...',
+                  maxLines: isExpanded ? null : 2,
+                  overflow:
+                      isExpanded ? TextOverflow.clip : TextOverflow.ellipsis,
                 ),
+              ),
+            ),
             ButtonBar(
               alignment: MainAxisAlignment.spaceEvenly,
-              
               children: [
                 Column(
                   children: [
@@ -247,21 +243,21 @@ class _AlumniViewPostState extends State<AlumniViewPost> {
                       child: Icon(Icons.send),
                       onTap: () async {
                         // Implement share functionality
-                          final tempDir = await getTemporaryDirectory();
-                            final tempFile =
-                                File('${tempDir.path}/shared_image.jpg');
+                        final tempDir = await getTemporaryDirectory();
+                        final tempFile =
+                            File('${tempDir.path}/shared_image.jpg');
 
-                            // Download the image to the temporary file
-                            var response =
-                                await http.get(Uri.parse(widget.imageURL));
-                            await tempFile.writeAsBytes(response.bodyBytes);
+                        // Download the image to the temporary file
+                        var response =
+                            await http.get(Uri.parse(widget.imageURL));
+                        await tempFile.writeAsBytes(response.bodyBytes);
 
-                            // Share the image and other details
-                            await Share.shareXFiles(
-                              [XFile(tempFile.path)],
-                              text:
-                                  '${widget.alumniName} shared a post:\n\n${widget.caption}\n\n${widget.description}',
-                            );
+                        // Share the image and other details
+                        await Share.shareXFiles(
+                          [XFile(tempFile.path)],
+                          text:
+                              '${widget.alumniName} shared a post:\n\n${widget.caption}\n\n${widget.description}',
+                        );
                       },
                     ),
                     SizedBox(
@@ -280,25 +276,25 @@ class _AlumniViewPostState extends State<AlumniViewPost> {
                       onTap: () async {
                         // Implement save functionality
                         PermissionStatus status =
-                                await Permission.storage.request();
-                            if (status.isGranted) {
-                              // Download the image to the gallery
-                              await _downloadImageToGallery(widget.imageURL);
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text('Image downloaded to gallery'),
-                                  duration: Duration(seconds: 2),
-                                ),
-                              );
-                            } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(
-                                      'Permission denied to access storage'),
-                                  duration: Duration(seconds: 2),
-                                ),
-                              );
-                            }
+                            await Permission.storage.request();
+                        if (status.isGranted) {
+                          // Download the image to the gallery
+                          await _downloadImageToGallery(widget.imageURL);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Image downloaded to gallery'),
+                              duration: Duration(seconds: 2),
+                            ),
+                          );
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content:
+                                  Text('Permission denied to access storage'),
+                              duration: Duration(seconds: 2),
+                            ),
+                          );
+                        }
                       },
                     ),
                     SizedBox(
@@ -318,6 +314,7 @@ class _AlumniViewPostState extends State<AlumniViewPost> {
     );
   }
 }
+
 class LikeButton extends StatelessWidget {
   final bool isLiked;
   final void Function()? onTap;

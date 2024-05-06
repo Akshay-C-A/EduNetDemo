@@ -1,7 +1,9 @@
 import 'dart:io';
 import 'package:edunetdemo/event/moderator_profile.dart';
 import 'package:edunetdemo/services/firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:path/path.dart' as path;
@@ -24,11 +26,13 @@ class _EventNewPostPageState extends State<EventNewPostPage> {
   String _eventVenue = '';
   String? _otherDetails;
   bool _submitted = false;
+  bool _isPayment = false;
 
   TextEditingController _dateController = TextEditingController();
   TextEditingController _eventTitleController = TextEditingController();
   TextEditingController _eventVenueController = TextEditingController();
   TextEditingController _otherDetailsController = TextEditingController();
+  TextEditingController _paymentsController = TextEditingController();
 
   XFile? _selectedImage;
   final _picker = ImagePicker();
@@ -72,10 +76,11 @@ class _EventNewPostPageState extends State<EventNewPostPage> {
     _eventTitleController.clear();
     _eventVenueController.clear();
     _otherDetailsController.clear();
+    _paymentsController.clear();
 
     setState(() {
       _selectedImage = null;
-      // _postType = 'Internship offer';
+      _isPayment = false;
     });
   }
 
@@ -85,6 +90,7 @@ class _EventNewPostPageState extends State<EventNewPostPage> {
     });
 
     final imageURL = await _uploadImage();
+
     await _EventFirestoreService.addEventPosts(
       communityName: widget.moderator.communityName,
       EventTitle: _eventTitleController.text,
@@ -95,6 +101,7 @@ class _EventNewPostPageState extends State<EventNewPostPage> {
       otherDetails: _otherDetailsController.text,
       imageURL: imageURL,
       dpURL: widget.moderator.dpURL,
+      payment: _paymentsController.text,
     );
 
     setState(() {
@@ -129,13 +136,13 @@ class _EventNewPostPageState extends State<EventNewPostPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 16.0),
-                    _buildTextField('Event Title',
+                    _buildTextFormField('Event Title',
                         (value) => _eventTitle = value!, _eventTitleController),
                     SizedBox(height: 16.0),
                     _buildTextFieldWithCalendarIcon(
                         'Event Date', (value) => _eventDate = value!),
                     SizedBox(height: 16.0),
-                    _buildTextField('Event Venue',
+                    _buildTextFormField('Event Venue',
                         (value) => _eventVenue = value!, _eventVenueController),
                     SizedBox(height: 16.0),
                     _buildTextField(
@@ -143,6 +150,84 @@ class _EventNewPostPageState extends State<EventNewPostPage> {
                         (value) => _otherDetails = value,
                         _otherDetailsController),
                     SizedBox(height: 16.0),
+                    Text(
+                      'Registration Fee?',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    Row(
+                      children: [
+                        Row(
+                          children: [
+                            Radio(
+                              // title: Text('No'),
+                              value: false,
+                              groupValue: _isPayment,
+                              onChanged: (value) {
+                                setState(() {
+                                  _isPayment = false;
+                                });
+                              },
+                            ),
+                            Text('No'),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Radio(
+                              // title: Text('No'),
+                              value: true,
+                              groupValue: _isPayment,
+                              onChanged: (value) {
+                                setState(() {
+                                  _isPayment = true;
+                                });
+                              },
+                            ),
+                            Text('Yes'),
+                          ],
+                        ),
+                      ],
+                    ),
+
+                    // RadioListTile(
+                    //   title: Text('Yes'),
+                    //   value: true,
+                    //   groupValue: _isPayment,
+                    //   onChanged: (value) {
+                    //     setState(() {
+                    //       _isPayment = true;
+                    //     });
+                    //   },
+                    // ),
+                    SizedBox(height: 16.0),
+                    _isPayment
+                        ? Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Amount',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              TextFormField(
+                                controller: _paymentsController,
+                                decoration: InputDecoration(
+                                  hintText: 'Enter Amount',
+                                  border: OutlineInputBorder(),
+                                ),
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Amount should be entered';
+                                  }
+                                  if (int.tryParse(value) == null) {
+                                    return 'You must enter a numeric value';
+                                  }
+                                  return null;
+                                },
+                              ),
+                              SizedBox(height: 16.0),
+                            ],
+                          )
+                        : Container(),
                     const Text(
                       'Photo',
                       style: TextStyle(
@@ -207,6 +292,50 @@ class _EventNewPostPageState extends State<EventNewPostPage> {
   }
 
   Widget _buildTextField(String label, Function(String?) onSaved,
+      TextEditingController t_controller) {
+    bool showError = _submitted &&
+        (label == 'Event Title'
+            ? _eventTitle.isEmpty
+            : (label == 'Event Date'
+                ? _eventDate.isEmpty
+                : label == 'Event Venue'
+                    ? _eventVenue.isEmpty
+                    : false));
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        TextField(
+          maxLines: null,
+          controller: t_controller,
+          decoration: InputDecoration(
+            hintText: 'Enter $label',
+            border: OutlineInputBorder(),
+            errorBorder: showError
+                ? OutlineInputBorder(borderSide: BorderSide(color: Colors.red))
+                : OutlineInputBorder(),
+            errorText: showError ? 'This field is required' : null,
+          ),
+          // onSaved: onSaved,
+          // validator: (value) {
+          //   if (_submitted &&
+          //       (value == null || value.isEmpty) &&
+          //       (label == 'Event Title' ||
+          //           label == 'Event Date' ||
+          //           label == 'Event Venue')) {
+          //     return 'This field is required';
+          //   }
+          //   return null;
+          // },
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTextFormField(String label, Function(String?) onSaved,
       TextEditingController t_controller) {
     bool showError = _submitted &&
         (label == 'Event Title'

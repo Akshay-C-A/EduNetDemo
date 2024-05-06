@@ -15,7 +15,6 @@ import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
-
 class StudentPostCard extends StatefulWidget {
   //data for likes
   final String postId;
@@ -170,11 +169,14 @@ class _StudentPostCardState extends State<StudentPostCard> {
                                 style:
                                     TextStyle(fontSize: 12, color: Colors.grey),
                               ),
-                               SizedBox(height: 4,),
+                              SizedBox(
+                                height: 4,
+                              ),
                               Text(
-                                DateFormat('yyyy-MM-dd  HH:mm').format(widget.timestamp.toDate()),
+                                DateFormat('yyyy-MM-dd  HH:mm')
+                                    .format(widget.timestamp.toDate()),
                                 style: TextStyle(color: Colors.grey),
-                                        ),
+                              ),
                             ],
                           ),
                         ],
@@ -217,6 +219,16 @@ class _StudentPostCardState extends State<StudentPostCard> {
                           : TextOverflow.ellipsis,
                     ),
                   ),
+                ),
+                Center(
+                  child: Container(
+                    color: Colors.grey[350],
+                    height: 2,
+                    width: MediaQuery.of(context).size.width * 0.85,
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
                 ),
                 ButtonBar(
                   alignment: MainAxisAlignment.spaceEvenly,

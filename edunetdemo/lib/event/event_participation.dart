@@ -31,6 +31,7 @@ class _EventParticipationState extends State<EventParticipation> {
         title: const Text('Details'),
       ),
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(
             child: StreamBuilder<QuerySnapshot>(
@@ -46,7 +47,15 @@ class _EventParticipationState extends State<EventParticipation> {
                   }
 
                   if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                    return const Center(child: Text('No data available'));
+                    return const Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text('Total no. of participants: 0'),
+                          const SizedBox(height: 10),
+                          // Text(
+                          //     'No. of Enrolled students: ${enrolledStudents.length}'),
+                        ]);
+                    ;
                   }
 
                   List eventParticipantList = snapshot.data!.docs;
@@ -83,7 +92,16 @@ class _EventParticipationState extends State<EventParticipation> {
                 }
 
                 if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                  return const Center(child: Text('No data available'));
+                  return Center(
+                    child: const Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text('No Participants Yet'),
+                          const SizedBox(height: 10),
+                          // Text(
+                          //     'No. of Enrolled students: ${enrolledStudents.length}'),
+                        ]),
+                  );
                 }
 
                 List eventPostList = snapshot.data!.docs;

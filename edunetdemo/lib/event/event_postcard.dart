@@ -20,6 +20,7 @@ class EventPostCard extends StatefulWidget {
   bool isAdmin = false;
   final String postId;
   final List<String> likes;
+  final List<String> enrolled;
   final String communityName;
   final String venue;
   final String moderatorId;
@@ -30,6 +31,7 @@ class EventPostCard extends StatefulWidget {
   final String imageURL;
   final String dpURL;
   final Timestamp timestamp;
+  final String payment;
 
   EventPostCard({
     required this.isAdmin,
@@ -45,6 +47,8 @@ class EventPostCard extends StatefulWidget {
     required this.postId,
     required this.likes,
     required this.timestamp,
+    required this.payment,
+    required this.enrolled,
   });
 
   @override
@@ -73,20 +77,38 @@ Future<void> _downloadImageToGallery(String imageURL) async {
   }
 }
 
-class _EventPostCardState extends State<EventPostCard> {
+class _EventPostCardState extends State<EventPostCard>
+    with WidgetsBindingObserver {
   //data for likes
   final FirestoreService firestoreService = FirestoreService();
   final currentUser = FirebaseAuth.instance.currentUser;
   bool isLiked = false;
-
   bool isExpanded = false;
   bool showLikeIcon = false;
   bool _enrollLoading = false;
+  bool isEnrolled = false;
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     isLiked = widget.likes.contains(currentUser!.email);
+    print(widget.likes);
+    isEnrolled = widget.enrolled.contains(currentUser!.email);
+    print(widget.enrolled);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  Future<bool> didPopRoute() async {
+    // TODO: implement didPopRoute
+    isEnrolled = widget.enrolled.contains(currentUser!.email);
+    return true;
   }
 
   void toggleLike() {
@@ -124,34 +146,36 @@ class _EventPostCardState extends State<EventPostCard> {
             context,
             MaterialPageRoute(
                 builder: ((context) => ViewEventPost(
-                    payment: '100',
-                    isAdmin: widget.isAdmin,
-                    venue: widget.venue,
-                    moderatorId: widget.moderatorId,
-                    moderatorName: widget.moderatorName,
-                    otherDetails: widget.otherDetails,
-                    eventTitle: widget.eventTitle,
-                    date: widget.date,
-                    communityName: widget.communityName,
-                    imageURL: widget.imageURL,
-                    dpURL: widget.dpURL,
-                    postId: widget.postId,
-                    likes: widget.likes,
-                    timestamp: widget.timestamp))));
+                      payment: widget.payment,
+                      isAdmin: widget.isAdmin,
+                      venue: widget.venue,
+                      moderatorId: widget.moderatorId,
+                      moderatorName: widget.moderatorName,
+                      otherDetails: widget.otherDetails,
+                      eventTitle: widget.eventTitle,
+                      date: widget.date,
+                      communityName: widget.communityName,
+                      imageURL: widget.imageURL,
+                      dpURL: widget.dpURL,
+                      postId: widget.postId,
+                      likes: widget.likes,
+                      timestamp: widget.timestamp,
+                      enrolled: widget.enrolled,
+                    ))));
       },
       onDoubleTap: () {
         setState(() {
           toggleLike();
           showLikeIcon = true;
         });
-        Timer(Duration(milliseconds: 500), () {
+        Timer(const Duration(milliseconds: 500), () {
           setState(() {
             showLikeIcon = !showLikeIcon;
           });
         });
       },
       child: Card(
-        margin: EdgeInsets.all(10.0),
+        margin: const EdgeInsets.all(10.0),
         elevation: 5.0,
         child: Stack(
           children: [
@@ -159,7 +183,7 @@ class _EventPostCardState extends State<EventPostCard> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Padding(
-                  padding: EdgeInsets.all(10.0),
+                  padding: const EdgeInsets.all(10.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -176,31 +200,32 @@ class _EventPostCardState extends State<EventPostCard> {
                                                   widget.moderatorId)));
                             },
                             child: CircleAvatar(
-                              radius: 20,
+                              radius: 25,
                               backgroundImage: NetworkImage(widget.dpURL),
                             ),
                           ),
-                          SizedBox(width: 10),
+                          const SizedBox(width: 10),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
                                 widget.communityName, // Changed
-                                style: TextStyle(fontWeight: FontWeight.bold),
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold),
                               ),
-                              SizedBox(height: 4),
+                              const SizedBox(height: 4),
                               Text(
                                 '${widget.moderatorName}', // Changed
-                                style:
-                                    TextStyle(fontSize: 12, color: Colors.grey),
+                                style: const TextStyle(
+                                    fontSize: 12, color: Colors.grey),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 4,
                               ),
                               Text(
                                 DateFormat('yyyy-MM-dd  HH:mm')
                                     .format(widget.timestamp.toDate()),
-                                style: TextStyle(color: Colors.grey),
+                                style: const TextStyle(color: Colors.grey),
                               ),
                             ],
                           ),
@@ -210,30 +235,37 @@ class _EventPostCardState extends State<EventPostCard> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.all(10.0),
+                  padding: const EdgeInsets.all(10.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         'Event     :    ${widget.eventTitle}',
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                        style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
-                      SizedBox(height: 4),
+                      const SizedBox(height: 4),
                       Text(
                         'Date      :    ${widget.date}',
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                        style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
-                      SizedBox(height: 4),
+                      const SizedBox(height: 4),
                       Text(
                         'Venue   :     ${widget.venue}',
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                        style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
-                      SizedBox(height: 4),
+                      const SizedBox(height: 4),
+                      widget.payment != ''
+                          ? Text(
+                              'Fee        :    Rs ${widget.payment}',
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold),
+                            )
+                          : Container()
                     ],
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.all(10.0),
+                  padding: const EdgeInsets.all(10.0),
                   child: widget.imageURL!.isNotEmpty
                       ? Image.network(
                           widget.imageURL,
@@ -242,7 +274,7 @@ class _EventPostCardState extends State<EventPostCard> {
                       : Container(),
                 ),
                 Padding(
-                  padding: EdgeInsets.all(10.0),
+                  padding: const EdgeInsets.all(10.0),
                   child: GestureDetector(
                     onTap: () {
                       setState(() {
@@ -252,7 +284,7 @@ class _EventPostCardState extends State<EventPostCard> {
                     child: Text(
                       isExpanded || widget.otherDetails.length <= 100
                           ? widget.otherDetails
-                          : '${widget.otherDetails!.substring(0, 100)}...',
+                          : '${widget.otherDetails.substring(0, 80)}...read more',
                       maxLines: isExpanded ? null : 2,
                       overflow: isExpanded
                           ? TextOverflow.clip
@@ -268,53 +300,75 @@ class _EventPostCardState extends State<EventPostCard> {
                       padding: const EdgeInsets.all(16.0),
                       child: SizedBox(
                         height: 40, // Set the desired height
-                        child: Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: Colors.green,
-                              width: 2.0,
-                            ),
-                            borderRadius: BorderRadius.circular(
-                                10.0), // Reduce the curve size
-                          ),
-                          // Add horizontal padding
-                          child: TextButton(
-                            onPressed: () async {
-                              setState(() {
-                                _enrollLoading = true;
-                              });
-
-                              await firestoreService.enrollStudent(
-                                  studentId: currentUser!.email.toString(),
-                                  moderatorId: widget.moderatorId,
-                                  postId: widget.postId);
-                              setState(() {
-                                _enrollLoading = false;
-                              });
-                            },
-                            child: _enrollLoading
-                                ? SizedBox(
-                                    width:
-                                        24.0, // Adjust the width and height as per your requirements
-                                    height: 24.0,
-                                    child: CircularProgressIndicator(
-                                      color: Colors.green,
-                                      // strokeWidth:
-                                      //     3.0, // Increase or decrease this value to adjust the circle's thickness
-                                    ),
-                                  )
-                                : Text(
+                        child: isEnrolled
+                            ? const Text(
+                                "You are already enrolled in this event",
+                                style: TextStyle(
+                                  color: Colors.green,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              )
+                            : Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: Colors.green,
+                                    width: 2.0,
+                                  ),
+                                  borderRadius: BorderRadius.circular(
+                                      10.0), // Reduce the curve size
+                                ),
+                                // Add horizontal padding
+                                child: TextButton(
+                                  onPressed: () async {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: ((context) =>
+                                                ViewEventPost(
+                                                    enrolled: widget.enrolled,
+                                                    payment: widget.payment,
+                                                    isAdmin: widget.isAdmin,
+                                                    venue: widget.venue,
+                                                    moderatorId:
+                                                        widget.moderatorId,
+                                                    moderatorName:
+                                                        widget.moderatorName,
+                                                    otherDetails:
+                                                        widget.otherDetails,
+                                                    eventTitle:
+                                                        widget.eventTitle,
+                                                    date: widget.date,
+                                                    communityName:
+                                                        widget.communityName,
+                                                    imageURL: widget.imageURL,
+                                                    dpURL: widget.dpURL,
+                                                    postId: widget.postId,
+                                                    likes: widget.likes,
+                                                    timestamp:
+                                                        widget.timestamp))));
+                                  },
+                                  child: const Text(
                                     "Enroll",
                                     style: TextStyle(
                                       color: Colors.green,
                                       fontWeight: FontWeight.w600,
                                     ),
                                   ),
-                          ),
-                        ),
+                                ),
+                              ),
                       ),
                     ),
                   ],
+                ),
+                Center(
+                  child: Container(
+                    color: Colors.grey[350],
+                    height: 2,
+                    width: MediaQuery.of(context).size.width * 0.85,
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
                 ),
                 ButtonBar(
                   alignment: MainAxisAlignment.spaceEvenly,
@@ -324,21 +378,21 @@ class _EventPostCardState extends State<EventPostCard> {
                         //like button
                         LikeButton(isLiked: isLiked, onTap: toggleLike),
 
-                        SizedBox(
+                        const SizedBox(
                           height: 5,
                         ),
 
                         //like count
                         Text(
                           widget.likes.length.toString(),
-                          style: TextStyle(color: Colors.grey),
+                          style: const TextStyle(color: Colors.grey),
                         ),
                       ],
                     ),
                     Column(
                       children: [
                         GestureDetector(
-                          child: Icon(Icons.send),
+                          child: const Icon(Icons.send),
                           onTap: () async {
                             // Create a temporary file to store the image
                             final tempDir = await getTemporaryDirectory();
@@ -358,10 +412,10 @@ class _EventPostCardState extends State<EventPostCard> {
                             );
                           },
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 5,
                         ),
-                        Text(
+                        const Text(
                           'Share',
                           style: TextStyle(color: Colors.grey),
                         ),
@@ -370,7 +424,7 @@ class _EventPostCardState extends State<EventPostCard> {
                     Column(
                       children: [
                         GestureDetector(
-                          child: Icon(Icons.bookmark_border),
+                          child: const Icon(Icons.bookmark_border),
                           onTap: () async {
                             // Check and request storage permission
                             PermissionStatus status =
@@ -379,14 +433,14 @@ class _EventPostCardState extends State<EventPostCard> {
                               // Download the image to the gallery
                               await _downloadImageToGallery(widget.imageURL);
                               ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
+                                const SnackBar(
                                   content: Text('Image downloaded to gallery'),
                                   duration: Duration(seconds: 2),
                                 ),
                               );
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
+                                const SnackBar(
                                   content: Text(
                                       'Permission denied to access storage'),
                                   duration: Duration(seconds: 2),
@@ -395,10 +449,10 @@ class _EventPostCardState extends State<EventPostCard> {
                             }
                           },
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 5,
                         ),
-                        Text(
+                        const Text(
                           'Save',
                           style: TextStyle(color: Colors.grey),
                         ),
@@ -411,10 +465,10 @@ class _EventPostCardState extends State<EventPostCard> {
             if (showLikeIcon)
               Positioned.fill(
                 child: Container(
-                  child: Center(
+                  child: const Center(
                     child: Icon(
                       Icons.favorite,
-                      color: const Color.fromARGB(255, 255, 255, 255),
+                      color: Color.fromARGB(255, 255, 255, 255),
                       size: 100,
                     ),
                   ),

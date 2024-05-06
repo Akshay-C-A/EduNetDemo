@@ -1,19 +1,45 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class RazorPayService {
   late Razorpay _razorpay;
 
+  Future<bool> setStatus() async {
+    SharedPreferences paymentStatus = await SharedPreferences.getInstance();
+    // if (isFirstLaunch) {
+    paymentStatus.setBool('Payment', false);
+    // }
+    return false;
+  }
+
+  Future<bool> setStatusSuccess() async {
+    SharedPreferences paymentStatus = await SharedPreferences.getInstance();
+    // if (isFirstLaunch) {
+    paymentStatus.setBool('Payment', true);
+    // }
+    return true;
+  }
+
   RazorPayService() {
+    setStatus();
     _razorpay = Razorpay();
     _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, handlePaymentSuccess);
     _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, handlePaymentError);
     _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, handleExternalWallet);
   }
 
-  Future<void> openCheckout(amount, String communityName, String eventTitle,
-      String moderatorMail) async {
+  late void Function(bool) _paymentStatusCallback;
+
+  Future<void> openCheckout(
+    amount,
+    String communityName,
+    String eventTitle,
+    String moderatorMail,
+    void Function(bool) paymentStatusCallback,
+  ) async {
+    _paymentStatusCallback = paymentStatusCallback;
     amount = amount * 100;
     var options = {
       'key': 'rzp_test_w57hbfiqJrI6jl',
@@ -33,19 +59,21 @@ class RazorPayService {
 
     _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, handlePaymentSuccess);
     _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, handlePaymentError);
-    _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, handleExternalWallet);
+    // _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, handleExternalWallet);
   }
 
   void handlePaymentSuccess(PaymentSuccessResponse response) {
     Fluttertoast.showToast(
         msg: 'Payment Success${response.paymentId!}',
         toastLength: Toast.LENGTH_SHORT);
+    _paymentStatusCallback(true);
   }
 
   void handlePaymentError(PaymentFailureResponse response) {
     Fluttertoast.showToast(
         msg: 'Payment Failed${response.message!}',
         toastLength: Toast.LENGTH_SHORT);
+    _paymentStatusCallback(false);
   }
 
   void handleExternalWallet(ExternalWalletResponse response) {

@@ -18,6 +18,14 @@ class EventPage extends StatefulWidget {
 class _EventPageState extends State<EventPage> {
   final FirestoreService firestoreService = FirestoreService();
 
+  List<String> val1 = [];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,7 +72,9 @@ class _EventPageState extends State<EventPage> {
               String communityName = data['communityName'];
               bool notified = data['notified'] ?? true;
               Timestamp timestamp = data['timestamp'];
-
+              String payment = data['payment'];
+              List<String> enrolled = List<String>.from(data['enrolled'] ?? []);
+              print("ENROLE evpage ${data['enrolled']}");
 
               if (notified == false) {
                 NotificationService().showNotification(
@@ -93,7 +103,10 @@ class _EventPageState extends State<EventPage> {
                 postId: document.id,
                 imageURL: imageURL,
                 eventTitle: eventTitle,
-                likes: List<String>.from(data['likes'] ?? []), timestamp: timestamp,
+                likes: List<String>.from(data['likes'] ?? []),
+                timestamp: timestamp,
+                payment: payment,
+                enrolled: enrolled,
               );
             },
           );

@@ -14,7 +14,6 @@ import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
-
 class AlumniPostCard extends StatefulWidget {
   //data for likes
   final String postId;
@@ -33,7 +32,6 @@ class AlumniPostCard extends StatefulWidget {
   final Timestamp timestamp;
 
   AlumniPostCard({
-    
     required this.isAdmin,
     required this.type,
     required this.alumniId,
@@ -185,12 +183,15 @@ class _AlumniPostCardState extends State<AlumniPostCard> {
                                 style:
                                     TextStyle(fontSize: 12, color: Colors.grey),
                               ),
-                              SizedBox(height: 4,),
+                              SizedBox(
+                                height: 4,
+                              ),
                               Text(
-                  DateFormat('yyyy-MM-dd  HH:mm').format(widget.timestamp.toDate()),
-                  style: TextStyle(color: Colors.grey),
-                          ),
-                          ],
+                                DateFormat('yyyy-MM-dd  HH:mm')
+                                    .format(widget.timestamp.toDate()),
+                                style: TextStyle(color: Colors.grey),
+                              ),
+                            ],
                           ),
                         ],
                       ),
@@ -247,6 +248,16 @@ class _AlumniPostCardState extends State<AlumniPostCard> {
                           : TextOverflow.ellipsis,
                     ),
                   ),
+                ),
+                Center(
+                  child: Container(
+                    color: Colors.grey[350],
+                    height: 2,
+                    width: MediaQuery.of(context).size.width * 0.85,
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
                 ),
                 ButtonBar(
                   alignment: MainAxisAlignment.spaceEvenly,

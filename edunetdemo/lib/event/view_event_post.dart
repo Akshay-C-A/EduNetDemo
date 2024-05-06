@@ -15,6 +15,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ViewEventPost extends StatefulWidget {
   //data for likes
@@ -22,6 +23,7 @@ class ViewEventPost extends StatefulWidget {
   final String payment;
   final String postId;
   final List<String> likes;
+  List<String> enrolled;
   final String communityName;
   final String venue;
   final String moderatorId;
@@ -48,6 +50,7 @@ class ViewEventPost extends StatefulWidget {
     required this.postId,
     required this.likes,
     required this.timestamp,
+    required this.enrolled,
   });
 
   @override
@@ -91,8 +94,10 @@ class _ViewEventPostState extends State<ViewEventPost> {
   @override
   void initState() {
     super.initState();
+
     isLiked = widget.likes.contains(currentUser!.email);
-    // isEnrolled = widget.enrolled.contains(currentUser!.email);
+    print('View Post - ${widget.enrolled}');
+    isEnrolled = widget.enrolled.contains(currentUser!.email);
   }
 
   void toggleLike() {
@@ -123,23 +128,30 @@ class _ViewEventPostState extends State<ViewEventPost> {
   }
 
   void registerStudent() async {
+    if (widget.payment != '')
+      _paymentDialogue();
+    else {
+      setState(() {
+        _enrollLoading = true;
+      });
+
+      await firestoreService.enrollStudent(
+          studentId: currentUser!.email.toString(),
+          moderatorId: widget.moderatorId,
+          postId: widget.postId);
+      setState(() {
+        _enrollLoading = false;
+        widget.enrolled = widget.enrolled + [currentUser!.email.toString()];
+        isEnrolled = widget.enrolled.contains(currentUser!.email);
+      });
+    }
+  }
+
+  _paymentDialogue() {
     setState(() {
       _enrollLoading = true;
     });
 
-    if (widget.payment != '') _paymentDialogue();
-
-    await firestoreService.enrollStudent(
-        studentId: currentUser!.email.toString(),
-        moderatorId: widget.moderatorId,
-        postId: widget.postId);
-
-    setState(() {
-      _enrollLoading = false;
-    });
-  }
-
-  _paymentDialogue() {
     showDialog(
       context: context,
       builder: (context) {
@@ -151,17 +163,43 @@ class _ViewEventPostState extends State<ViewEventPost> {
             TextButton(
               onPressed: () async {
                 Navigator.of(context).pop();
-                setState(() {
-                  _razorPayService.openCheckout(int.parse(widget.payment),
-                      widget.communityName, widget.eventTitle, '');
-                  
+                setState(() async {
+                  await _razorPayService.openCheckout(
+                    int.parse(widget.payment),
+                    widget.communityName,
+                    widget.eventTitle,
+                    '',
+                    (paymentSuccessful) {
+                      if (paymentSuccessful) {
+                        // Payment successful, enroll the student
+                        firestoreService.enrollStudent(
+                          studentId: currentUser!.email.toString(),
+                          moderatorId: widget.moderatorId,
+                          postId: widget.postId,
+                        );
+                        setState(() {
+                          _enrollLoading = false;
+                          widget.enrolled =
+                              widget.enrolled + [currentUser!.email.toString()];
+                          isEnrolled =
+                              widget.enrolled.contains(currentUser!.email);
+                        });
+                      }
+                      {
+                        // Payment failed, show a snackbar
+                        setState(() {
+                          _enrollLoading = false;
+                        });
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content:
+                                Text('Payment canceled, enrollment canceled'),
+                          ),
+                        );
+                      }
+                    },
+                  );
                 });
-
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('Payment Successfull'),
-                  ),
-                );
               },
               child: Text('Yes'),
             ),
@@ -206,7 +244,11 @@ class _ViewEventPostState extends State<ViewEventPost> {
                       ),
                       // Add horizontal padding
                       child: TextButton(
-                        onPressed: registerStudent,
+                        onPressed: () {
+                          setState(() {
+                            registerStudent();
+                          });
+                        },
                         child: _enrollLoading
                             ? SizedBox(
                                 width:
@@ -232,165 +274,156 @@ class _ViewEventPostState extends State<ViewEventPost> {
         ],
       ),
       body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Padding(
-              padding: EdgeInsets.all(10.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ViewModeratorProfile(
-                                      moderatorId: widget.moderatorId)));
-                        },
-                        child: CircleAvatar(
-                          radius: 20,
-                          backgroundImage: NetworkImage(widget.dpURL),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Padding(
+                padding: EdgeInsets.all(10.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ViewModeratorProfile(
+                                        moderatorId: widget.moderatorId)));
+                          },
+                          child: CircleAvatar(
+                            radius: 20,
+                            backgroundImage: NetworkImage(widget.dpURL),
+                          ),
                         ),
-                      ),
-                      SizedBox(width: 10),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            widget.communityName, // Changed
+                        SizedBox(width: 10),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              widget.communityName, // Changed
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            SizedBox(height: 4),
+                            Text(
+                              '${widget.moderatorName}', // Changed
+                              style:
+                                  TextStyle(fontSize: 12, color: Colors.grey),
+                            ),
+                            SizedBox(
+                              height: 4,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    Text(
+                      DateFormat('yyyy-MM-dd  HH:mm')
+                          .format(widget.timestamp.toDate()),
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.all(10.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Event    :    ${widget.eventTitle}',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(height: 4),
+                    Text(
+                      'Date      :    ${widget.date}',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(height: 4),
+                    Text(
+                      'Venue   :     ${widget.venue}',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(height: 4),
+                    widget.payment != ''
+                        ? Text(
+                            'Fee        :    Rs ${widget.payment}',
                             style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          SizedBox(height: 4),
-                          Text(
-                            '${widget.moderatorName}', // Changed
-                            style: TextStyle(fontSize: 12, color: Colors.grey),
-                          ),
-                          SizedBox(
-                            height: 4,
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  Text(
-                    DateFormat('yyyy-MM-dd  HH:mm')
-                        .format(widget.timestamp.toDate()),
-                    style: TextStyle(color: Colors.grey),
-                  ),
-                ],
+                          )
+                        : Container()
+                  ],
+                ),
               ),
-            ),
-            Padding(
-              padding: EdgeInsets.all(10.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              Padding(
+                padding: EdgeInsets.all(10.0),
+                child: widget.imageURL.isNotEmpty
+                    ? Image.network(
+                        widget.imageURL,
+                        fit: BoxFit.cover,
+                      )
+                    : Container(),
+              ),
+              Padding(
+                padding: EdgeInsets.all(10.0),
+                child: Text(widget.otherDetails),
+              ),
+              Row(
+                mainAxisAlignment:
+                    MainAxisAlignment.center, // Align to the left
                 children: [
-                  Text(
-                    'Event    :    ${widget.eventTitle}',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: isEnrolled
+                        ? Text(
+                            "Already Registered",
+                            style: TextStyle(
+                              color: Colors.green,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          )
+                        : SizedBox(
+                            height: 40, // Set the desired height
+                            child: Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: Colors.green,
+                                  width: 2.0,
+                                ),
+                                borderRadius: BorderRadius.circular(
+                                    10.0), // Reduce the curve size
+                              ),
+                              // Add horizontal padding
+                              child: TextButton(
+                                onPressed: registerStudent,
+                                child: _enrollLoading
+                                    ? SizedBox(
+                                        width:
+                                            24.0, // Adjust the width and height as per your requirements
+                                        height: 24.0,
+                                        child: CircularProgressIndicator(
+                                          color: Colors.green,
+                                          // strokeWidth:
+                                          //     3.0, // Increase or decrease this value to adjust the circle's thickness
+                                        ),
+                                      )
+                                    : Text(
+                                        "Register",
+                                        style: TextStyle(
+                                          color: Colors.green,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                              ),
+                            ),
+                          ),
                   ),
-                  SizedBox(height: 4),
-                  Text(
-                    'Date      :    ${widget.date}',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(height: 4),
-                  Text(
-                    'Venue   :     ${widget.venue}',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(height: 4),
-                  widget.payment != ''
-                      ? Text(
-                          'Fee        :    Rs ${widget.payment}',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        )
-                      : Container()
                 ],
               ),
-            ),
-            Padding(
-              padding: EdgeInsets.all(10.0),
-              child: widget.imageURL.isNotEmpty
-                  ? Image.network(
-                      widget.imageURL,
-                      fit: BoxFit.cover,
-                    )
-                  : Container(),
-            ),
-            Padding(
-              padding: EdgeInsets.all(10.0),
-              child: GestureDetector(
-                onTap: () {
-                  setState(() {
-                    isExpanded = !isExpanded;
-                  });
-                },
-                child: Text(
-                  isExpanded || widget.otherDetails.length <= 100
-                      ? widget.otherDetails
-                      : '${widget.otherDetails!.substring(0, 100)}...',
-                  maxLines: isExpanded ? null : 2,
-                  overflow:
-                      isExpanded ? TextOverflow.clip : TextOverflow.ellipsis,
-                ),
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center, // Align to the left
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: isEnrolled
-                      ? Text(
-                          "Already Registered",
-                          style: TextStyle(
-                            color: Colors.green,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        )
-                      : SizedBox(
-                          height: 40, // Set the desired height
-                          child: Container(
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: Colors.green,
-                                width: 2.0,
-                              ),
-                              borderRadius: BorderRadius.circular(
-                                  10.0), // Reduce the curve size
-                            ),
-                            // Add horizontal padding
-                            child: TextButton(
-                              onPressed: registerStudent,
-                              child: _enrollLoading
-                                  ? SizedBox(
-                                      width:
-                                          24.0, // Adjust the width and height as per your requirements
-                                      height: 24.0,
-                                      child: CircularProgressIndicator(
-                                        color: Colors.green,
-                                        // strokeWidth:
-                                        //     3.0, // Increase or decrease this value to adjust the circle's thickness
-                                      ),
-                                    )
-                                  : Text(
-                                      "Register",
-                                      style: TextStyle(
-                                        color: Colors.green,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                            ),
-                          ),
-                        ),
-                ),
-              ],
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
