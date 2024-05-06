@@ -18,6 +18,7 @@ class AlumniNewPostPage extends StatefulWidget {
 
 class _AlumniNewPostPageState extends State<AlumniNewPostPage> {
   final FirestoreService _AlumniFirestoreService = FirestoreService();
+  final _formKey = GlobalKey<FormState>();
   final _detailsController = TextEditingController();
   final _captionController = TextEditingController();
   String _postType = 'Internship offer';
@@ -73,6 +74,7 @@ class _AlumniNewPostPageState extends State<AlumniNewPostPage> {
   }
 
   Future<void> _submitPost() async {
+     if (_formKey.currentState!.validate()) {
     setState(() {
       _isLoading = true;
     });
@@ -103,6 +105,7 @@ class _AlumniNewPostPageState extends State<AlumniNewPostPage> {
 
     _resetForm();
   }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -117,6 +120,8 @@ class _AlumniNewPostPageState extends State<AlumniNewPostPage> {
           : SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
+                child: Form(
+                key: _formKey,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -159,8 +164,14 @@ class _AlumniNewPostPageState extends State<AlumniNewPostPage> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    TextField(
+                    TextFormField(
                       controller: _detailsController,
+                      validator: (value) {
+    if (value == null || value.isEmpty) {
+      return 'This field is required';
+    }
+    return null;
+  },
                       decoration: const InputDecoration(
                         hintText: 'Enter details',
                         border: OutlineInputBorder(),
@@ -175,8 +186,14 @@ class _AlumniNewPostPageState extends State<AlumniNewPostPage> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    TextField(
+                    TextFormField(
                       controller: _captionController,
+                      validator: (value) {
+    if (value == null || value.isEmpty) {
+      return 'This field is required';
+    }
+    return null;
+  },
                       decoration: const InputDecoration(
                         hintText: 'Enter organisation name',
                         border: OutlineInputBorder(),
@@ -240,6 +257,7 @@ class _AlumniNewPostPageState extends State<AlumniNewPostPage> {
                       ],
                     ),
                   ],
+                ),
                 ),
               ),
             ),

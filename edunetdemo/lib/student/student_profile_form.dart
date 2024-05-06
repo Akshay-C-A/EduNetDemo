@@ -43,6 +43,21 @@ class _StudentProfileFormState extends State<StudentProfileForm> {
   //   'Technical events',
   //   // 'My achievements'
   // ];
+
+// Validator function to check if the input contains only alphabets and is not empty
+  String? _validateAlphabets(String? value) {
+    if (value != null && value.isNotEmpty) {
+      // Regular expression to match only alphabets
+      final alphaRegex = RegExp(r'^[a-zA-Z]+$');
+      if (!alphaRegex.hasMatch(value)) {
+        return 'Only alphabets are allowed';
+      }
+    } else {
+      return 'This field is required';
+    }
+    return null;
+  }
+
   XFile? _selectedImage;
   final _picker = ImagePicker();
   bool _isLoading = false;
@@ -203,12 +218,7 @@ class _StudentProfileFormState extends State<StudentProfileForm> {
                       ),
                       TextFormField(
                         controller: _nameController,
-                        validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Name is required';
-                      }
-                      return null;
-                    },
+                        validator: _validateAlphabets,
                         decoration: const InputDecoration(
                           hintText: 'Enter your name',
                           border: OutlineInputBorder(),
@@ -226,12 +236,7 @@ class _StudentProfileFormState extends State<StudentProfileForm> {
                       ),
                       TextFormField(
                         controller: _deptController,
-                        validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Department is required';
-                      }
-                      return null;
-                    },
+                        validator: _validateAlphabets,
                         decoration: const InputDecoration(
                           hintText: 'Enter your department',
                           border: OutlineInputBorder(),
@@ -273,12 +278,7 @@ class _StudentProfileFormState extends State<StudentProfileForm> {
                       ),
                       TextFormField(
                         controller: _designationController,
-                        validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Designation is required';
-                      }
-                      return null;
-                    },
+                        validator: _validateAlphabets,
                         decoration: const InputDecoration(
                           hintText: 'Enter Current Designation',
                           border: OutlineInputBorder(),

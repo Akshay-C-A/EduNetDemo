@@ -20,6 +20,7 @@ class StudentNewPostPage extends StatefulWidget {
 
 class _StudentNewPostPageState extends State<StudentNewPostPage> {
   final FirestoreService _firestoreService = FirestoreService();
+  final _formKey = GlobalKey<FormState>();
   final _detailsController = TextEditingController();
   final _captionController = TextEditingController();
   
@@ -69,6 +70,7 @@ class _StudentNewPostPageState extends State<StudentNewPostPage> {
   }
 
   Future<void> _submitPost() async {
+     if (_formKey.currentState!.validate()) {
     final imageURL = await _uploadImage();
     await _firestoreService.addStudentPosts(
      
@@ -84,13 +86,15 @@ class _StudentNewPostPageState extends State<StudentNewPostPage> {
     _resetForm();
     // Show a success message or navigate to the home page
   }
-
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
+          child: Form(
+            key: _formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -101,8 +105,14 @@ class _StudentNewPostPageState extends State<StudentNewPostPage> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              TextField(
+              TextFormField(
                 controller: _captionController,
+                validator: (value) {
+    if (value == null || value.isEmpty) {
+      return 'This field is required';
+    }
+    return null;
+  },
                 decoration: const InputDecoration(
                   hintText: 'Add your caption',
                   border: OutlineInputBorder(),
@@ -117,8 +127,14 @@ class _StudentNewPostPageState extends State<StudentNewPostPage> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              TextField(
+              TextFormField(
                 controller: _detailsController,
+                validator: (value) {
+    if (value == null || value.isEmpty) {
+      return 'This field is required';
+    }
+    return null;
+  },
                 decoration: const InputDecoration(
                   hintText: 'Enter details',
                   border: OutlineInputBorder(),
@@ -167,6 +183,7 @@ class _StudentNewPostPageState extends State<StudentNewPostPage> {
               IconButton(onPressed: _resetForm, icon: Icon(Icons.delete)),
             ],
           ),
+          )
         ),
       ),
     );

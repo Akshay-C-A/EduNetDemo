@@ -22,7 +22,7 @@ class ModeratorProfileForm extends StatefulWidget {
 class _ModeratorProfileFormState extends State<ModeratorProfileForm> {
   final _ModeratorFirestoreService = FirestoreService();
   final currentUser = FirebaseAuth.instance.currentUser;
-
+final _formKey = GlobalKey<FormState>();
   final _aboutController = TextEditingController();
   final _link1Controller = TextEditingController();
   final _link2Controller = TextEditingController();
@@ -78,6 +78,7 @@ class _ModeratorProfileFormState extends State<ModeratorProfileForm> {
   }
 
   Future<void> _submitPost() async {
+     if (_formKey.currentState!.validate()) {
     setState(() {
       _isLoading = true;
     });
@@ -118,7 +119,7 @@ class _ModeratorProfileFormState extends State<ModeratorProfileForm> {
     Navigator.pushReplacement(
         context, MaterialPageRoute(builder: (context) => EventDashboard()));
   }
-
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -133,6 +134,8 @@ class _ModeratorProfileFormState extends State<ModeratorProfileForm> {
           : SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
+                child: Form(
+                  key: _formKey,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -144,8 +147,14 @@ class _ModeratorProfileFormState extends State<ModeratorProfileForm> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    TextField(
+                    TextFormField(
                       controller: _aboutController,
+                      validator: (value) {
+    if (value == null || value.isEmpty) {
+      return 'This field is required';
+    }
+    return null;
+  },
                       decoration: const InputDecoration(
                         hintText: 'Enter About',
                         border: OutlineInputBorder(),
@@ -241,6 +250,7 @@ class _ModeratorProfileFormState extends State<ModeratorProfileForm> {
                     ),
                   ],
                 ),
+                )
               ),
             ),
     );
