@@ -94,7 +94,7 @@ class _AlumniProfileFormState extends State<AlumniProfileForm> {
   }
 
   Future<void> _submitPost() async {
-    
+     if (_formKey.currentState!.validate()) {
     setState(() {
       _isLoading = true;
     });
@@ -116,7 +116,7 @@ class _AlumniProfileFormState extends State<AlumniProfileForm> {
     );
 
     await FirebaseAuth.instance.currentUser!.updateDisplayName(_nameController.text);
-  if (_formKey.currentState!.validate()) {
+ 
     setState(() {
       _isLoading = false;
     });
@@ -197,19 +197,19 @@ class _AlumniProfileFormState extends State<AlumniProfileForm> {
                         ),
                       ),
                       TextFormField(
-                        controller: _nameController,
-                        validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Name is required';
-                        }
-                        return null;
-                      },
-                        decoration: const InputDecoration(
-                          hintText: 'Enter your name',
-                          border: OutlineInputBorder(),
-                        ),
-                        maxLines: null,
-                      ),
+  controller: _nameController,
+  validator: (value) {
+    if (value == null || value.isEmpty) {
+      return 'Name is required';
+    }
+    return null;
+  },
+  decoration: const InputDecoration(
+    hintText: 'Enter your name',
+    border: OutlineInputBorder(),
+  ),
+  maxLines: null,
+),
                       const SizedBox(height: 16.0),
                       const Text(
                         'Designation',
@@ -219,18 +219,18 @@ class _AlumniProfileFormState extends State<AlumniProfileForm> {
                         ),
                       ),
                       TextFormField(
-                        controller: _designationController,
-                        validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Designation is required';
-                        }
-                        return null;
-                      },
-                        decoration: const InputDecoration(
-                          hintText: 'Enter Current Designation',
-                          border: OutlineInputBorder(),
-                        ),
-                      ),
+  controller: _designationController,
+  validator: (value) {
+    if (value == null || value.isEmpty) {
+      return 'Designation is required';
+    }
+    return null;
+  },
+  decoration: const InputDecoration(
+    hintText: 'Enter Current Designation',
+    border: OutlineInputBorder(),
+  ),
+),
                       const Text(
                         'Skills',
                         style: TextStyle(
@@ -239,18 +239,18 @@ class _AlumniProfileFormState extends State<AlumniProfileForm> {
                         ),
                       ),
                       TextFormField(
-                        controller: _skillsController,
-                        validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Skills are required';
-                        }
-                        return null;
-                      },
-                        decoration: const InputDecoration(
-                          hintText: 'Enter Skills',
-                          border: OutlineInputBorder(),
-                        ),
-                      ),
+                              controller: _skillsController,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Skills are required';
+                                }
+                                return null;
+                              },
+                              decoration: const InputDecoration(
+                                hintText: 'Enter Skills',
+                                border: OutlineInputBorder(),
+                              ),
+                            ),
                       const Text(
                         'Company',
                         style: TextStyle(
@@ -259,18 +259,18 @@ class _AlumniProfileFormState extends State<AlumniProfileForm> {
                         ),
                       ),
                       TextFormField(
-                        controller: _companyController,
-                        validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Company is required';
-                        }
-                        return null;
-                      },
-                        decoration: const InputDecoration(
-                          hintText: 'Enter Company Name',
-                          border: OutlineInputBorder(),
+                          controller: _companyController,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Company is required';
+                            }
+                            return null;
+                          },
+                          decoration: const InputDecoration(
+                            hintText: 'Enter Company Name',
+                            border: OutlineInputBorder(),
+                          ),
                         ),
-                      ),
                       const Text(
                         'About',
                         style: TextStyle(
