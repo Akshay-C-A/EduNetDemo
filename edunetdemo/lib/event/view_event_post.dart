@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'package:edunetdemo/event/view_moderator_profile.dart';
+import 'package:edunetdemo/razorpay/razorpay_payment.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/widgets.dart';
+import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:edunetdemo/services/firestore.dart';
@@ -14,10 +16,10 @@ import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
-
 class ViewEventPost extends StatefulWidget {
   //data for likes
   bool isAdmin = false;
+  final String payment;
   final String postId;
   final List<String> likes;
   final String communityName;
@@ -32,6 +34,7 @@ class ViewEventPost extends StatefulWidget {
   final Timestamp timestamp;
 
   ViewEventPost({
+    required this.payment,
     required this.isAdmin,
     required this.venue,
     required this.moderatorId,
@@ -75,6 +78,7 @@ Future<void> _downloadImageToGallery(String imageURL) async {
 
 class _ViewEventPostState extends State<ViewEventPost> {
   //data for likes
+  final RazorPayService _razorPayService = RazorPayService();
   final FirestoreService firestoreService = FirestoreService();
   final currentUser = FirebaseAuth.instance.currentUser;
   bool isLiked = false;
@@ -82,11 +86,13 @@ class _ViewEventPostState extends State<ViewEventPost> {
   bool isExpanded = false;
   bool showLikeIcon = false;
   bool _enrollLoading = false;
+  bool isEnrolled = false;
 
   @override
   void initState() {
     super.initState();
     isLiked = widget.likes.contains(currentUser!.email);
+    // isEnrolled = widget.enrolled.contains(currentUser!.email);
   }
 
   void toggleLike() {
@@ -116,23 +122,117 @@ class _ViewEventPostState extends State<ViewEventPost> {
     }
   }
 
-// onDoubleTap: () {
-//         setState(() {
-//           toggleLike();
-//           showLikeIcon = true;
-//         });
-//         Timer(Duration(milliseconds: 500), () {
-//           setState(() {
-//             showLikeIcon = !showLikeIcon;
-//           });
-//         });
-//       },
+  void registerStudent() async {
+    setState(() {
+      _enrollLoading = true;
+    });
+
+    if (widget.payment != '') _paymentDialogue();
+
+    await firestoreService.enrollStudent(
+        studentId: currentUser!.email.toString(),
+        moderatorId: widget.moderatorId,
+        postId: widget.postId);
+
+    setState(() {
+      _enrollLoading = false;
+    });
+  }
+
+  _paymentDialogue() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          content: ListTile(
+            title: Text('Proceed to pay Rs ${widget.payment}/-'),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () async {
+                Navigator.of(context).pop();
+                setState(() {
+                  _razorPayService.openCheckout(int.parse(widget.payment),
+                      widget.communityName, widget.eventTitle, '');
+                  
+                });
+
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Payment Successfull'),
+                  ),
+                );
+              },
+              child: Text('Yes'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Cancel'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Column(
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.eventTitle),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 20.0),
+            child: isEnrolled
+                ? Text(
+                    "Registered",
+                    style: TextStyle(
+                      color: Colors.green,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  )
+                : SizedBox(
+                    height: 38, // Set the desired height
+                    child: Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.green,
+                          width: 2.0,
+                        ),
+                        borderRadius: BorderRadius.circular(
+                            10.0), // Reduce the curve size
+                      ),
+                      // Add horizontal padding
+                      child: TextButton(
+                        onPressed: registerStudent,
+                        child: _enrollLoading
+                            ? SizedBox(
+                                width:
+                                    24.0, // Adjust the width and height as per your requirements
+                                height: 24.0,
+                                child: CircularProgressIndicator(
+                                  color: Colors.green,
+                                  // strokeWidth:
+                                  //     3.0, // Increase or decrease this value to adjust the circle's thickness
+                                ),
+                              )
+                            : Text(
+                                "Register",
+                                style: TextStyle(
+                                  color: Colors.green,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                      ),
+                    ),
+                  ),
+          ),
+        ],
+      ),
+      body: SingleChildScrollView(
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Padding(
@@ -164,21 +264,21 @@ class _ViewEventPostState extends State<ViewEventPost> {
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
                           SizedBox(height: 4),
-                          
                           Text(
                             '${widget.moderatorName}', // Changed
-                            style:
-                                TextStyle(fontSize: 12, color: Colors.grey),
+                            style: TextStyle(fontSize: 12, color: Colors.grey),
                           ),
-        
-                           SizedBox(height: 4,),
-                          Text(
-              DateFormat('yyyy-MM-dd  HH:mm').format(widget.timestamp.toDate()),
-              style: TextStyle(color: Colors.grey),
-                      ),
+                          SizedBox(
+                            height: 4,
+                          ),
                         ],
                       ),
                     ],
+                  ),
+                  Text(
+                    DateFormat('yyyy-MM-dd  HH:mm')
+                        .format(widget.timestamp.toDate()),
+                    style: TextStyle(color: Colors.grey),
                   ),
                 ],
               ),
@@ -189,7 +289,7 @@ class _ViewEventPostState extends State<ViewEventPost> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Event     :    ${widget.eventTitle}',
+                    'Event    :    ${widget.eventTitle}',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 4),
@@ -203,12 +303,18 @@ class _ViewEventPostState extends State<ViewEventPost> {
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 4),
+                  widget.payment != ''
+                      ? Text(
+                          'Fee        :    Rs ${widget.payment}',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        )
+                      : Container()
                 ],
               ),
             ),
             Padding(
               padding: EdgeInsets.all(10.0),
-              child: widget.imageURL!.isNotEmpty
+              child: widget.imageURL.isNotEmpty
                   ? Image.network(
                       widget.imageURL,
                       fit: BoxFit.cover,
@@ -228,173 +334,65 @@ class _ViewEventPostState extends State<ViewEventPost> {
                       ? widget.otherDetails
                       : '${widget.otherDetails!.substring(0, 100)}...',
                   maxLines: isExpanded ? null : 2,
-                  overflow: isExpanded
-                      ? TextOverflow.clip
-                      : TextOverflow.ellipsis,
+                  overflow:
+                      isExpanded ? TextOverflow.clip : TextOverflow.ellipsis,
                 ),
               ),
             ),
             Row(
-              mainAxisAlignment:
-                  MainAxisAlignment.start, // Align to the left
+              mainAxisAlignment: MainAxisAlignment.center, // Align to the left
               children: [
                 Padding(
                   padding: const EdgeInsets.all(16.0),
-                  child: SizedBox(
-                    height: 40, // Set the desired height
-                    child: Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.green,
-                          width: 2.0,
-                        ),
-                        borderRadius: BorderRadius.circular(
-                            10.0), // Reduce the curve size
-                      ),
-                      // Add horizontal padding
-                      child: TextButton(
-                        onPressed: () async {
-                          setState(() {
-                            _enrollLoading = true;
-                          });
-        
-                          await firestoreService.enrollStudent(
-                              studentId: currentUser!.email.toString(),
-                              moderatorId: widget.moderatorId,
-                              postId: widget.postId);
-                          setState(() {
-                            _enrollLoading = false;
-                          });
-                        },
-                        child: _enrollLoading
-                            ? SizedBox(
-                                width:
-                                    24.0, // Adjust the width and height as per your requirements
-                                height: 24.0,
-                                child: CircularProgressIndicator(
-                                  color: Colors.green,
-                                  // strokeWidth:
-                                  //     3.0, // Increase or decrease this value to adjust the circle's thickness
-                                ),
-                              )
-                            : Text(
-                                "Enroll",
-                                style: TextStyle(
-                                  color: Colors.green,
-                                  fontWeight: FontWeight.w600,
-                                ),
+                  child: isEnrolled
+                      ? Text(
+                          "Already Registered",
+                          style: TextStyle(
+                            color: Colors.green,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        )
+                      : SizedBox(
+                          height: 40, // Set the desired height
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Colors.green,
+                                width: 2.0,
                               ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            ButtonBar(
-              alignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Column(
-                  children: [
-                    //like button
-                    LikeButton(isLiked: isLiked, onTap: toggleLike),
-        
-                    SizedBox(
-                      height: 5,
-                    ),
-        
-                    //like count
-                    Text(
-                      widget.likes.length.toString(),
-                      style: TextStyle(color: Colors.grey),
-                    ),
-                  ],
-                ),
-                Column(
-                  children: [
-                    GestureDetector(
-                      child: Icon(Icons.send),
-                      onTap: () async {
-                        // Create a temporary file to store the image
-                        final tempDir = await getTemporaryDirectory();
-                        final tempFile =
-                            File('${tempDir.path}/shared_image.jpg');
-        
-                        // Download the image to the temporary file
-                        var response =
-                            await http.get(Uri.parse(widget.imageURL));
-                        await tempFile.writeAsBytes(response.bodyBytes);
-        
-                        // Share the image and other details
-                        await Share.shareXFiles(
-                          [XFile(tempFile.path)],
-                          text:
-                              '${widget.communityName} shared a post:\n\n${widget.eventTitle}\n\n${widget.eventTitle}\n\n${widget.venue}\n\n${widget.otherDetails}',
-                        );
-                      },
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    Text(
-                      'Share',
-                      style: TextStyle(color: Colors.grey),
-                    ),
-                  ],
-                ),
-                Column(
-                  children: [
-                    GestureDetector(
-                      child: Icon(Icons.bookmark_border),
-                      onTap: () async {
-                        // Check and request storage permission
-                        PermissionStatus status =
-                            await Permission.storage.request();
-                        if (status.isGranted) {
-                          // Download the image to the gallery
-                          await _downloadImageToGallery(widget.imageURL);
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('Image downloaded to gallery'),
-                              duration: Duration(seconds: 2),
+                              borderRadius: BorderRadius.circular(
+                                  10.0), // Reduce the curve size
                             ),
-                          );
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                  'Permission denied to access storage'),
-                              duration: Duration(seconds: 2),
+                            // Add horizontal padding
+                            child: TextButton(
+                              onPressed: registerStudent,
+                              child: _enrollLoading
+                                  ? SizedBox(
+                                      width:
+                                          24.0, // Adjust the width and height as per your requirements
+                                      height: 24.0,
+                                      child: CircularProgressIndicator(
+                                        color: Colors.green,
+                                        // strokeWidth:
+                                        //     3.0, // Increase or decrease this value to adjust the circle's thickness
+                                      ),
+                                    )
+                                  : Text(
+                                      "Register",
+                                      style: TextStyle(
+                                        color: Colors.green,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
                             ),
-                          );
-                        }
-                      },
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    Text(
-                      'Save',
-                      style: TextStyle(color: Colors.grey),
-                    ),
-                  ],
+                          ),
+                        ),
                 ),
               ],
             ),
           ],
         ),
-        if (showLikeIcon)
-          Positioned.fill(
-            child: Container(
-              child: Center(
-                child: Icon(
-                  Icons.favorite,
-                  color: const Color.fromARGB(255, 255, 255, 255),
-                  size: 100,
-                ),
-              ),
-            ),
-          ),
-      ],
+      ),
     );
   }
 }
