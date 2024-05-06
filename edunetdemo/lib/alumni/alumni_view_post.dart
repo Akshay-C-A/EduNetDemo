@@ -188,15 +188,18 @@ class _AlumniViewPostState extends State<AlumniViewPost> {
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
             ),
-            Padding(
-                  padding: EdgeInsets.all(10.0),
-                  child: widget.imageURL!.isNotEmpty
-                      ? Image.network(
-                          widget.imageURL,
-                          fit: BoxFit.cover,
-                        )
-                      : Container(),
-                ),
+           Padding(
+  padding: EdgeInsets.all(10.0),
+  child: GestureDetector(
+    onDoubleTap: toggleLike, // Add onDoubleTap callback here
+    child: widget.imageURL!.isNotEmpty
+        ? Image.network(
+            widget.imageURL,
+            fit: BoxFit.cover,
+          )
+        : Container(),
+  ),
+),
                 Padding(
                   padding: EdgeInsets.all(10.0),
                   child: GestureDetector(

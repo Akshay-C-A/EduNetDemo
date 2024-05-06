@@ -157,14 +157,17 @@ class _StudentViewPostState extends State<StudentViewPost> {
               ),
             ),
             Padding(
-                  padding: EdgeInsets.all(10.0),
-                  child: widget.imageURL!.isNotEmpty
-                      ? Image.network(
-                          widget.imageURL,
-                          fit: BoxFit.cover,
-                        )
-                      : Container(),
-                ),
+  padding: EdgeInsets.all(10.0),
+  child: GestureDetector(
+    onDoubleTap: toggleLike, // Add onDoubleTap callback here
+    child: widget.imageURL!.isNotEmpty
+        ? Image.network(
+            widget.imageURL,
+            fit: BoxFit.cover,
+          )
+        : Container(),
+  ),
+),
                 Padding(
                   padding: EdgeInsets.all(10.0),
                   child: GestureDetector(

@@ -258,12 +258,12 @@ class _StudentProfileFormState extends State<StudentProfileForm> {
                         return 'Year is required';
                       }
                       if (int.tryParse(value) == null) {
-                        return 'Year must be a number';
+                        return 'Year must be a number range from 1-4';
                       }
                       return null;
                     },
                         decoration: const InputDecoration(
-                          hintText: 'Year of study',
+                          hintText: 'Year of study(1-4)',
                           border: OutlineInputBorder(),
                         ),
                         maxLines: null,
