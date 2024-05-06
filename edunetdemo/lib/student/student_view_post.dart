@@ -110,6 +110,7 @@ class _StudentViewPostState extends State<StudentViewPost> {
 
   @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
       appBar: AppBar(
         title: Text('Post Details'),
