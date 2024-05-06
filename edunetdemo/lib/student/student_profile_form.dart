@@ -258,7 +258,7 @@ class _StudentProfileFormState extends State<StudentProfileForm> {
                         return 'Year is required';
                       }
                       if (int.tryParse(value) == null) {
-                        return 'Year must be a number range from 1-4';
+                        return 'Year must be a number ranging from 1-4';
                       }
                       return null;
                     },
