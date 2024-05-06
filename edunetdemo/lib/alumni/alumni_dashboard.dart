@@ -3,6 +3,7 @@
 import 'package:edunetdemo/alumni/alumni_newpost.dart';
 import 'package:edunetdemo/alumni/alumni_notification.dart';
 import 'package:edunetdemo/alumni/alumni_profile.dart';
+import 'package:edunetdemo/alumni/alumni_profile_form.dart';
 import 'package:edunetdemo/common_pages/alumni_page.dart';
 import 'package:edunetdemo/common_pages/user_search.dart';
 import 'package:edunetdemo/common_pages/student_page.dart';
@@ -106,12 +107,12 @@ class _Alumni_DashboardState extends State<Alumni_Dashboard> {
       mail = 'eg';
       dpURL = 'eg';
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Account details not found'),
-          duration: Duration(seconds: 3),
-        ),
-      );
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   SnackBar(
+      //     content: Text('Account details not found'),
+      //     duration: Duration(seconds: 3),
+      //   ),
+      // );
     }
   }
 
@@ -148,87 +149,86 @@ class _Alumni_DashboardState extends State<Alumni_Dashboard> {
             child: Text('Error: ${snapshot.error}'),
           );
         } else {
-          return Scaffold(
-            appBar: AppBar(
-              title: Text('Alumni'),
-              actions: [
-                IconButton(
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => UserSearchPage()));
-                    },
-                    icon: Icon(Icons.search)),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ProfileScreen(
-                              alumni: Alumni(
-                            alumni_name: alumni_name,
-                            alumniId: alumniId,
-                            alumni_designation: alumni_designation,
-                            skills: skills,
-                            about: about,
-                            company: company,
-                            linkedIn: linkedIn,
-                            twitter: twitter,
-                            mail: mail,
-                            dpURL: dpURL,
-                          )),
-                        ));
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 16.0),
-                    child: CircleAvatar(
-                      backgroundImage: NetworkImage(dpURL),
-                      radius: 20.0,
-                    ),
+          return alumni_name == 'john doe'
+              ? AlumniProfileForm()
+              : Scaffold(
+                  appBar: AppBar(
+                    title: Text('Alumni'),
+                    actions: [
+                      IconButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => UserSearchPage()));
+                          },
+                          icon: Icon(Icons.search)),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ProfileScreen(
+                                    alumni: Alumni(
+                                  alumni_name: alumni_name,
+                                  alumniId: alumniId,
+                                  alumni_designation: alumni_designation,
+                                  skills: skills,
+                                  about: about,
+                                  company: company,
+                                  linkedIn: linkedIn,
+                                  twitter: twitter,
+                                  mail: mail,
+                                  dpURL: dpURL,
+                                )),
+                              ));
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 16.0),
+                          child: CircleAvatar(
+                            backgroundImage: NetworkImage(dpURL),
+                            radius: 20.0,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-              ],
-            ),
-            body: IndexedStack(
-              index: _selectedIndex,
-              children: widgetOptions,
-            ),
-            bottomNavigationBar: BottomNavigationBar(
-              type: BottomNavigationBarType.fixed,
-              currentIndex: _selectedIndex,
-              onTap: (index) {
-                setState(() {
-                  _selectedIndex = index;
-                });
-              },
-              selectedItemColor: Colors.black,
-              unselectedItemColor: Colors.grey,
-              items: [
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.home),
-                  label: 'Home',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.people),
-                  label: 'Students',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.add),
-                  label: 'Post',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.notifications),
-                  label: 'Notification',
-                ),
-              ],
-            ),
-          );
+                  body: IndexedStack(
+                    index: _selectedIndex,
+                    children: widgetOptions,
+                  ),
+                  bottomNavigationBar: BottomNavigationBar(
+                    type: BottomNavigationBarType.fixed,
+                    currentIndex: _selectedIndex,
+                    onTap: (index) {
+                      setState(() {
+                        _selectedIndex = index;
+                      });
+                    },
+                    selectedItemColor: Colors.black,
+                    unselectedItemColor: Colors.grey,
+                    items: [
+                      BottomNavigationBarItem(
+                        icon: Icon(Icons.home),
+                        label: 'Home',
+                      ),
+                      BottomNavigationBarItem(
+                        icon: Icon(Icons.people),
+                        label: 'Students',
+                      ),
+                      BottomNavigationBarItem(
+                        icon: Icon(Icons.add),
+                        label: 'Post',
+                      ),
+                      BottomNavigationBarItem(
+                        icon: Icon(Icons.notifications),
+                        label: 'Notification',
+                      ),
+                    ],
+                  ),
+                );
         }
       },
     );
   }
 }
-
-
-

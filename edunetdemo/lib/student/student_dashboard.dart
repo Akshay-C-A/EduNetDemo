@@ -8,6 +8,7 @@ import 'package:edunetdemo/services/firestore.dart';
 import 'package:edunetdemo/student/student_newpost.dart';
 import 'package:edunetdemo/student/student_notification.dart';
 import 'package:edunetdemo/student/student_profile.dart';
+import 'package:edunetdemo/student/student_profile_form.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -112,12 +113,12 @@ class _Student_DashboardState extends State<Student_Dashboard> {
       mail = 'eg';
       dpURL = 'eg';
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Account details not found'),
-          duration: Duration(seconds: 3),
-        ),
-      );
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   SnackBar(
+      //     content: Text('Account details not found'),
+      //     duration: Duration(seconds: 3),
+      //   ),
+      // );
     }
   }
 
@@ -156,97 +157,97 @@ class _Student_DashboardState extends State<Student_Dashboard> {
             child: Text('Error: ${snapshot.error}'),
           );
         } else {
-          return Scaffold(
-            appBar: AppBar(
-              title: Text('Student'),
-              actions: [
-                
-                IconButton(
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => AdminPage()));
-                    },
-                    icon: Icon(Icons.announcement)),
-                
-                IconButton(
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => UserSearchPage()));
-                    },
-                    icon: Icon(Icons.search)),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ProfileScreen(
-                              student: Student(
-                            student_name: student_name,
-                            studentId: studentId,
-                            student_designation: student_designation,
-                            skills: skills,
-                            about: about,
-                            studentDept: studentDept,
-                            studentYear: studentYear,
-                            linkedIn: linkedIn,
-                            twitter: twitter,
-                            mail: mail,
-                            dpURL: dpURL,
-                          )),
-                        ));
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 16.0),
-                    child: CircleAvatar(
-                      backgroundImage: NetworkImage(dpURL),
-                      radius: 20.0,
-                    ),
+          return student_name == 'john doe'
+              ? StudentProfileForm()
+              : Scaffold(
+                  appBar: AppBar(
+                    title: Text('Student'),
+                    actions: [
+                      IconButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => AdminPage()));
+                          },
+                          icon: Icon(Icons.announcement)),
+                      IconButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => UserSearchPage()));
+                          },
+                          icon: Icon(Icons.search)),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ProfileScreen(
+                                    student: Student(
+                                  student_name: student_name,
+                                  studentId: studentId,
+                                  student_designation: student_designation,
+                                  skills: skills,
+                                  about: about,
+                                  studentDept: studentDept,
+                                  studentYear: studentYear,
+                                  linkedIn: linkedIn,
+                                  twitter: twitter,
+                                  mail: mail,
+                                  dpURL: dpURL,
+                                )),
+                              ));
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 16.0),
+                          child: CircleAvatar(
+                            backgroundImage: NetworkImage(dpURL),
+                            radius: 20.0,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-              ],
-            ),
-            body: IndexedStack(
-              index: _selectedIndex,
-              children: widgetOptions,
-            ),
-            bottomNavigationBar: BottomNavigationBar(
-              type: BottomNavigationBarType.fixed,
-              currentIndex: _selectedIndex,
-              onTap: (index) {
-                setState(() {
-                  _selectedIndex = index;
-                });
-              },
-              selectedItemColor: Colors.black,
-              unselectedItemColor: Colors.grey,
-              items: [
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.home),
-                  label: 'Home',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.people),
-                  label: 'Alumni',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.add),
-                  label: 'Post',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.calendar_today),
-                  label: 'Events',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.notifications),
-                  label: 'Notification',
-                ),
-              ],
-            ),
-          );
+                  body: IndexedStack(
+                    index: _selectedIndex,
+                    children: widgetOptions,
+                  ),
+                  bottomNavigationBar: BottomNavigationBar(
+                    type: BottomNavigationBarType.fixed,
+                    currentIndex: _selectedIndex,
+                    onTap: (index) {
+                      setState(() {
+                        _selectedIndex = index;
+                      });
+                    },
+                    selectedItemColor: Colors.black,
+                    unselectedItemColor: Colors.grey,
+                    items: [
+                      BottomNavigationBarItem(
+                        icon: Icon(Icons.home),
+                        label: 'Home',
+                      ),
+                      BottomNavigationBarItem(
+                        icon: Icon(Icons.people),
+                        label: 'Alumni',
+                      ),
+                      BottomNavigationBarItem(
+                        icon: Icon(Icons.add),
+                        label: 'Post',
+                      ),
+                      BottomNavigationBarItem(
+                        icon: Icon(Icons.calendar_today),
+                        label: 'Events',
+                      ),
+                      BottomNavigationBarItem(
+                        icon: Icon(Icons.notifications),
+                        label: 'Notification',
+                      ),
+                    ],
+                  ),
+                );
         }
       },
     );
