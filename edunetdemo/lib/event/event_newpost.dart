@@ -399,6 +399,7 @@ class _EventNewPostPageState extends State<EventNewPostPage> {
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         TextFormField(
+          readOnly: true,
           controller: _dateController,
           decoration: InputDecoration(
             hintText: 'Enter $label',
