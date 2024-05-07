@@ -276,7 +276,17 @@ class _EventNewPostPageState extends State<EventNewPostPage> {
                         ),
                         const SizedBox(width: 16.0),
                         ElevatedButton(
-                          onPressed: _submitPost,
+                          onPressed: (){
+                            if(_dateController.text.isEmpty || _eventTitleController.text.isEmpty||_eventVenueController.text.isEmpty|| _selectedImage==null){
+                            ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Enter all the fields to submit'),
+          duration: Duration(seconds: 3),
+        ),
+      );}
+                            else
+                                                        _submitPost();
+},
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.greenAccent,
                           ),
