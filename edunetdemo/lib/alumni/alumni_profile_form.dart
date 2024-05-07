@@ -35,17 +35,17 @@ class _AlumniProfileFormState extends State<AlumniProfileForm> {
   late List<String> skills = [];
 
 String? _validateAlphabets(String? value) {
-    if (value != null && value.isNotEmpty) {
-      // Regular expression to match only alphabets
-      final alphaRegex = RegExp(r'^[a-zA-Z]+$');
-      if (!alphaRegex.hasMatch(value)) {
-        return 'Only alphabets are allowed';
-      }
-    } else {
-      return 'This field is required';
+  if (value != null && value.isNotEmpty) {
+    // Regular expression to match alphabets and spaces
+    final alphaRegex = RegExp(r'^[a-zA-Z\s]+$');
+    if (!alphaRegex.hasMatch(value)) {
+      return 'Only alphabets and spaces are allowed';
     }
-    return null;
+  } else {
+    return 'This field is required';
   }
+  return null;
+}
 
 
   // String _postType = 'Internship offers';
