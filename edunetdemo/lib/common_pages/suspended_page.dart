@@ -2,9 +2,14 @@ import 'package:edunetdemo/auth/login_check2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class SuspendedPage extends StatelessWidget {
+class SuspendedPage extends StatefulWidget {
   const SuspendedPage({Key? key}) : super(key: key);
 
+  @override
+  State<SuspendedPage> createState() => _SuspendedPageState();
+}
+
+class _SuspendedPageState extends State<SuspendedPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -12,7 +17,15 @@ class SuspendedPage extends StatelessWidget {
         title: Text('Suspended'),
         actions: [
           IconButton(
-            onPressed: () async {
+              onPressed: () {
+                setState(() {
+                  Navigator.pushReplacement(context,
+                      MaterialPageRoute(builder: (context) => MainPage()));
+                });
+              },
+              icon: Icon(Icons.arrow_circle_down)),
+          IconButton(
+              onPressed: () async {
                 try {
                   await FirebaseAuth.instance.signOut();
                   // Navigate to the MainPage
@@ -25,10 +38,8 @@ class SuspendedPage extends StatelessWidget {
                   print('Error signing out: $e');
                 }
               },
-         icon: Icon(Icons.logout)
-          ),
+              icon: Icon(Icons.logout)),
         ],
-
       ),
       body: Center(
         child: Column(
