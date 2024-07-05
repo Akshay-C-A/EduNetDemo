@@ -1,5 +1,4 @@
 import 'dart:ffi';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -12,16 +11,33 @@ class AdminManagementPage extends StatefulWidget {
 }
 
 class _AdminManagementPageState extends State<AdminManagementPage> {
-
   final moderatorsCollection = FirebaseFirestore.instance.collection('moderators');
   final studentsCollection = FirebaseFirestore.instance.collection('students');
   final alumniCollection = FirebaseFirestore.instance.collection('alumni');
 
-  /////////////////////////////////////////MODERATOR//////////////////////////////////////////////////
+  final TextEditingController _moderatorNameController = TextEditingController();
+  final TextEditingController _communityNameController = TextEditingController();
+  final TextEditingController _studentNameController = TextEditingController();
+  final TextEditingController _passoutYearController = TextEditingController();
+  final TextEditingController _departmentController = TextEditingController();
+  final TextEditingController _alumniNameController = TextEditingController();
+
+  final _moderatorIconStates = <String, bool>{};
+
+  @override
+  void dispose() {
+    _moderatorNameController.dispose();
+    _communityNameController.dispose();
+    _studentNameController.dispose();
+    _passoutYearController.dispose();
+    _departmentController.dispose();
+    _alumniNameController.dispose();
+    super.dispose();
+  }
 
   Future<void> _addModerator(String name, String communityName) async {
     final email = '${name.toLowerCase()}-${communityName.toLowerCase()}@moderator.edunet.com';
-    final password = generatePassword(); // Implement password generation logic
+    final password = generatePassword();
     try {
       final userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email,
@@ -36,70 +52,41 @@ class _AdminManagementPageState extends State<AdminManagementPage> {
         'isSuspended': false,
       });
 
+      // Update icon state for the new moderator
+      setState(() {
+        _moderatorIconStates[email] = false;
+      });
+
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Moderator added successfully'),
-        ),
+        SnackBar(content: Text('Moderator added successfully')),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error adding moderator: $e'),
-        ),
+        SnackBar(content: Text('Error adding moderator: $e')),
       );
     }
   }
 
-    Future<void> _deleteModerator(String docId) async {
+  Future<void> _toggleModeratorSuspension(String docId, bool isSuspended) async {
     try {
-      final moderatorDoc = await moderatorsCollection.doc(docId).get();
-      moderatorsCollection.doc(docId).update({'isSuspended' :  true});
-
-
+      await moderatorsCollection.doc(docId).update({'isSuspended': isSuspended});
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Moderator suspended successfully'),
-        ),
+        SnackBar(content: Text('Moderator ${isSuspended ? 'suspended' : 'unsuspended'} successfully')),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error suspending moderator: $e'),
-        ),
+        SnackBar(content: Text('Error ${isSuspended ? 'suspending' : 'unsuspending'} moderator: $e')),
       );
     }
   }
-
-      Future<void> _unsuspendModerator(String docId) async {
-    try {
-      final moderatorDoc = await moderatorsCollection.doc(docId).get();
-      moderatorsCollection.doc(docId).update({'isSuspended' :  false});
-
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Moderator Unsuspended'),
-        ),
-      );
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error Unsuspending Moderator: $e'),
-        ),
-      );
-    }
-  }
-
-  // bool changeIcon=false;
-  final _moderatorIconStates = <String, bool>{};
 
   void _toggleModeratorIcon(String docId) {
-  setState(() {
-    _moderatorIconStates[docId] = !_moderatorIconStates[docId]!;
-  });
-}
+    setState(() {
+      _moderatorIconStates[docId] = !_moderatorIconStates[docId]!;
+    });
+  }
 
-    Widget _buildModeratorList() {
+  Widget _buildModeratorList() {
     return Column(
       children: [
         Expanded(
@@ -122,24 +109,26 @@ class _AdminManagementPageState extends State<AdminManagementPage> {
                   final name = moderatorDoc['moderatorName'];
                   final email = moderatorDoc['moderatorMail'];
                   final communityName = moderatorDoc['communityName'];
-                  // bool isSuspended = moderatorDoc['isSuspended'];
+                  final isSuspended = moderatorDoc['isSuspended'];
 
-                  _moderatorIconStates.putIfAbsent(docId, () => false);
+                  _moderatorIconStates.putIfAbsent(docId, () => isSuspended);
 
                   return ListTile(
                     title: Text(name),
                     subtitle: Text('$email ($communityName)'),
-                    trailing: _moderatorIconStates[docId]!? IconButton(
-                      icon: Icon(Icons.person_remove),
-                      onPressed: ()  {
-                          _toggleModeratorIcon(docId);
-                          _deleteModerator(moderatorDoc.id);
-                        }
-                    ):IconButton(
+                    trailing: _moderatorIconStates[docId]! ? IconButton(
                       icon: Icon(Icons.person_add),
-                      onPressed:()  { _toggleModeratorIcon(docId);_unsuspendModerator(docId);}
-                      // onPressed:()  {_unsuspendModerator(docId);}
-                    )
+                      onPressed: () {
+                        _toggleModeratorIcon(docId);
+                        _toggleModeratorSuspension(docId, false);
+                      },
+                    ) : IconButton(
+                      icon: Icon(Icons.person_remove),
+                      onPressed: () {
+                        _toggleModeratorIcon(docId);
+                        _toggleModeratorSuspension(docId, true);
+                      },
+                    ),
                   );
                 },
               );
@@ -153,18 +142,14 @@ class _AdminManagementPageState extends State<AdminManagementPage> {
               Expanded(
                 child: TextField(
                   controller: _moderatorNameController,
-                  decoration: InputDecoration(
-                    hintText: 'Moderator name',
-                  ),
+                  decoration: InputDecoration(hintText: 'Moderator name'),
                 ),
               ),
               SizedBox(width: 8.0),
               Expanded(
                 child: TextField(
                   controller: _communityNameController,
-                  decoration: InputDecoration(
-                    hintText: 'Community name',
-                  ),
+                  decoration: InputDecoration(hintText: 'Community name'),
                 ),
               ),
               IconButton(
@@ -186,12 +171,9 @@ class _AdminManagementPageState extends State<AdminManagementPage> {
     );
   }
 
-  //////////////////////////////////////////////////STUDENT/////////////////////////////////////////////////////////////////
-
   Future<void> _addStudent(String name, String passoutYear, String dept) async {
     final email = '${name.toLowerCase()}${passoutYear}@${dept.toLowerCase()}.sjcetpalai.ac.in';
-    final password = generatePassword(); // Implement password generation logic
-
+    final password = generatePassword();
     try {
       final userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email,
@@ -207,50 +189,46 @@ class _AdminManagementPageState extends State<AdminManagementPage> {
       });
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Student added successfully'),
-        ),
+        SnackBar(content: Text('Student added successfully')),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error adding student: $e'),
-        ),
+        SnackBar(content: Text('Error adding student: $e')),
       );
     }
   }
 
-    Widget _buildStudentList() {
+  Widget _buildStudentList() {
     return Column(
       children: [
         Expanded(
           child: StreamBuilder<QuerySnapshot>(
             stream: studentsCollection.snapshots(),
             builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-  if (snapshot.hasError) {
-    return Text('Error: ${snapshot.error}');
-  }
+              if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              }
 
-  if (!snapshot.hasData) {
-    return CircularProgressIndicator();
-  }
+              if (!snapshot.hasData) {
+                return CircularProgressIndicator();
+              }
 
-  return ListView.builder(
-    itemCount: snapshot.data!.docs.length,
-    itemBuilder: (BuildContext context, int index) {
-      final studentDoc = snapshot.data!.docs[index];
-      final name = studentDoc['studentName'];
-      final email = studentDoc['studentEmail'];
-      final passoutYear = studentDoc['passoutYear'];
-      final department = studentDoc['department'];
+              return ListView.builder(
+                itemCount: snapshot.data!.docs.length,
+                itemBuilder: (BuildContext context, int index) {
+                  final studentDoc = snapshot.data!.docs[index];
+                  final name = studentDoc['studentName'];
+                  final email = studentDoc['studentEmail'];
+                  final passoutYear = studentDoc['passoutYear'];
+                  final department = studentDoc['department'];
 
-      return ListTile(
-        title: Text(name),
-        subtitle: Text('$email ($passoutYear, $department)'),
-      );
-    },
-  );
-},
+                  return ListTile(
+                    title: Text(name),
+                    subtitle: Text('$email ($passoutYear, $department)'),
+                  );
+                },
+              );
+            },
           ),
         ),
         Padding(
@@ -260,27 +238,21 @@ class _AdminManagementPageState extends State<AdminManagementPage> {
               Expanded(
                 child: TextField(
                   controller: _studentNameController,
-                  decoration: InputDecoration(
-                    hintText: 'Student name',
-                  ),
+                  decoration: InputDecoration(hintText: 'Student name'),
                 ),
               ),
               SizedBox(width: 8.0),
               Expanded(
                 child: TextField(
                   controller: _passoutYearController,
-                  decoration: InputDecoration(
-                    hintText: 'Passout year',
-                  ),
+                  decoration: InputDecoration(hintText: 'Passout year'),
                 ),
               ),
               SizedBox(width: 8.0),
               Expanded(
                 child: TextField(
                   controller: _departmentController,
-                  decoration: InputDecoration(
-                    hintText: 'Department',
-                  ),
+                  decoration: InputDecoration(hintText: 'Department'),
                 ),
               ),
               IconButton(
@@ -304,12 +276,9 @@ class _AdminManagementPageState extends State<AdminManagementPage> {
     );
   }
 
-  ////////////////////////////////////////////////ALUMNI//////////////////////////////////////////////////////////////
-
   Future<void> _addAlumni(String name, String passoutYear, String dept) async {
     final email = '${name.toLowerCase()}${passoutYear}@${dept.toLowerCase()}.sjcetpalai.ac.in';
-    final password = generatePassword(); // Implement password generation logic
-
+    final password = generatePassword();
     try {
       final userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email,
@@ -325,20 +294,15 @@ class _AdminManagementPageState extends State<AdminManagementPage> {
       });
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Alumni added successfully'),
-        ),
+        SnackBar(content: Text('Alumni added successfully')),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error adding alumni: $e'),
-        ),
+        SnackBar(content: Text('Error adding alumni: $e')),
       );
     }
   }
 
-  
   Widget _buildAlumniList() {
     return Column(
       children: [
@@ -379,27 +343,21 @@ class _AdminManagementPageState extends State<AdminManagementPage> {
               Expanded(
                 child: TextField(
                   controller: _alumniNameController,
-                  decoration: InputDecoration(
-                    hintText: 'Alumni name',
-                  ),
+                  decoration: InputDecoration(hintText: 'Alumni name'),
                 ),
               ),
               SizedBox(width: 8.0),
               Expanded(
                 child: TextField(
                   controller: _passoutYearController,
-                  decoration: InputDecoration(
-                    hintText: 'Passout year',
-                  ),
+                  decoration: InputDecoration(hintText: 'Passout year'),
                 ),
               ),
               SizedBox(width: 8.0),
               Expanded(
                 child: TextField(
                   controller: _departmentController,
-                  decoration: InputDecoration(
-                    hintText: 'Department',
-                  ),
+                  decoration: InputDecoration(hintText: 'Department'),
                 ),
               ),
               IconButton(
@@ -423,57 +381,33 @@ class _AdminManagementPageState extends State<AdminManagementPage> {
     );
   }
 
-  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
   @override
-    Widget build(BuildContext context) {
+  Widget build(BuildContext context) {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
-        body: Column(
+        appBar: AppBar(
+          // title: Text('Admin Management'),
+          bottom: TabBar(
+            tabs: [
+              Tab(text: 'Moderators'),
+              Tab(text: 'Students'),
+              Tab(text: 'Alumni'),
+            ],
+          ),
+        ),
+        body: TabBarView(
           children: [
-            TabBar(
-              tabs: [
-                Tab(text: 'Moderators'),
-                Tab(text: 'Students'),
-                Tab(text: 'Alumni'),
-              ],
-            ),
-            Expanded(
-              child: TabBarView(
-                children: [
-                  _buildModeratorList(),
-                  _buildStudentList(),
-                  _buildAlumniList(),
-                ],
-              ),
-            ),
+            _buildModeratorList(),
+            _buildStudentList(),
+            _buildAlumniList(),
           ],
         ),
       ),
     );
-  }
-  
-  final _moderatorNameController = TextEditingController();
-  final _communityNameController = TextEditingController();
-  final _studentNameController = TextEditingController();
-  final _passoutYearController = TextEditingController();
-  final _departmentController = TextEditingController();
-  final _alumniNameController = TextEditingController();
-
-  @override
-  void dispose() {
-    _moderatorNameController.dispose();
-    _communityNameController.dispose();
-    _studentNameController.dispose();
-    _passoutYearController.dispose();
-    _departmentController.dispose();
-    _alumniNameController.dispose();
-    super.dispose();
   }
 }
 
 String generatePassword() {
   return 'password123';
 }
-
