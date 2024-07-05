@@ -92,7 +92,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.people),
-            label: 'Moderators',
+            label: 'Users',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.add),
