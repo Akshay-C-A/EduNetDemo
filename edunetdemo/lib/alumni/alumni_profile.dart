@@ -73,7 +73,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         body: Stack(
           children: [
             Image.network(
-              'https://marketplace.canva.com/EAE1oe3H6Sc/1/0/1600w/canva-black-elegant-minimalist-profile-linkedin-banner-nc0eALdRvKU.jpg',
+              'https://firebasestorage.googleapis.com/v0/b/edunetdemo-5c098.appspot.com/o/banner%2FALUMNI.png?alt=media&token=6750e267-0c52-4765-a3c6-f8e2a01e0cbb',
               fit: BoxFit.cover,
             ),
             SingleChildScrollView(

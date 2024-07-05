@@ -96,7 +96,7 @@ class _ModeratorProfileScreenState extends State<ModeratorProfileScreen> {
         body: Stack(
           children: [
             Image.network(
-              'https://marketplace.canva.com/EAE1oe3H6Sc/1/0/1600w/canva-black-elegant-minimalist-profile-linkedin-banner-nc0eALdRvKU.jpg',
+              'https://firebasestorage.googleapis.com/v0/b/edunetdemo-5c098.appspot.com/o/banner%2FMODERATOR.png?alt=media&token=abaafe8e-f14a-4930-b748-2107486e42b0',
               fit: BoxFit.cover,
             ),
             SingleChildScrollView(

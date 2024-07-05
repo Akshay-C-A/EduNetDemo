@@ -190,88 +190,91 @@ class _EditPostFormState extends State<EditPostForm> {
       appBar: AppBar(
         title: Text('Edit Post'),
       ),
-      body: Center(
-        child: FutureBuilder(
-          future: _fetchPost(),
-          builder: (context, snapshot) {
-            return snapshot.connectionState == ConnectionState.waiting
-                ? CircularProgressIndicator()
-                : Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'Post Type',
-                          style: TextStyle(
-                            fontSize: 18.0,
-                            fontWeight: FontWeight.bold,
+      body: SingleChildScrollView(
+        child: Center(
+          child: FutureBuilder(
+            future: _fetchPost(),
+            builder: (context, snapshot) {
+              return snapshot.connectionState == ConnectionState.waiting
+                  ? CircularProgressIndicator()
+                  : Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Post Type',
+                            style: TextStyle(
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 8.0),
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8.0),
-                            border: Border.all(color: Colors.grey),
+                          const SizedBox(height: 8.0),
+                          Container(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 12.0),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8.0),
+                              border: Border.all(color: Colors.grey),
+                            ),
+                            child: DropdownButton<String>(
+                              value: _postType,
+                              isExpanded: true,
+                              underline: const SizedBox.shrink(),
+                              items: _postTypes.map((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList(),
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  _postType = newValue!;
+                                });
+                              },
+                            ),
                           ),
-                          child: DropdownButton<String>(
-                            value: _postType,
-                            isExpanded: true,
-                            underline: const SizedBox.shrink(),
-                            items: _postTypes.map((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(value),
-                              );
-                            }).toList(),
-                            onChanged: (String? newValue) {
-                              setState(() {
-                                _postType = newValue!;
-                              });
-                            },
+                          const SizedBox(height: 16.0),
+                          const Text(
+                            'Details',
+                            style: TextStyle(
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 16.0),
-                        const Text(
-                          'Details',
-                          style: TextStyle(
-                            fontSize: 18.0,
-                            fontWeight: FontWeight.bold,
+                          TextField(
+                            controller: _detailsController,
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                            ),
+                            maxLines: null,
                           ),
-                        ),
-                        TextField(
-                          controller: _detailsController,
-                          decoration: const InputDecoration(
-                            border: OutlineInputBorder(),
+                          const SizedBox(height: 16.0),
+                          const Text(
+                            'Caption',
+                            style: TextStyle(
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                          maxLines: null,
-                        ),
-                        const SizedBox(height: 16.0),
-                        const Text(
-                          'Caption',
-                          style: TextStyle(
-                            fontSize: 18.0,
-                            fontWeight: FontWeight.bold,
+                          TextField(
+                            controller: _captionController,
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                            ),
                           ),
-                        ),
-                        TextField(
-                          controller: _captionController,
-                          decoration: const InputDecoration(
-                            border: OutlineInputBorder(),
+                          const SizedBox(height: 16.0),
+                          Center(
+                            child: TextButton(
+                              onPressed: _updatePost,
+                              child: const Text('Update'),
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 16.0),
-                        Center(
-                          child: TextButton(
-                            onPressed: _updatePost,
-                            child: const Text('Update'),
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-          },
+                        ],
+                      ),
+                    );
+            },
+          ),
         ),
       ),
     );

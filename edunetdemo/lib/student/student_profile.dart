@@ -8,7 +8,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-
 class ProfileScreen extends StatefulWidget {
   final Student student;
 
@@ -29,7 +28,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   void _copyLink(String iconB) {
     if (iconB == 'LinkedIn') {
-      Clipboard.setData(ClipboardData(text: widget.student.linkedIn.toString()));
+      Clipboard.setData(
+          ClipboardData(text: widget.student.linkedIn.toString()));
     } else if (iconB == 'Twitter') {
       Clipboard.setData(ClipboardData(text: widget.student.twitter.toString()));
     } else if (iconB == 'Mail') {
@@ -73,7 +73,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         body: Stack(
           children: [
             Image.network(
-              'https://marketplace.canva.com/EAE1oe3H6Sc/1/0/1600w/canva-black-elegant-minimalist-profile-linkedin-banner-nc0eALdRvKU.jpg',
+              'https://firebasestorage.googleapis.com/v0/b/edunetdemo-5c098.appspot.com/o/banner%2FSTUDENT.png?alt=media&token=074112ec-e90a-49d5-a782-8fc8d6269028',
               fit: BoxFit.cover,
             ),
             SingleChildScrollView(
@@ -290,9 +290,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 }
 
-
-
-
 // SkillsSection
 class SkillsSection extends StatelessWidget {
   final List<dynamic> skills;
@@ -362,7 +359,6 @@ class EmailSection extends StatelessWidget {
 }
 
 // CompanySection
-
 
 // PostsSection
 class PostsSection extends StatefulWidget {

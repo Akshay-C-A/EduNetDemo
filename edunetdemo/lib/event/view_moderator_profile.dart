@@ -25,7 +25,6 @@ class _ViewModeratorProfileState extends State<ViewModeratorProfile> {
 
   Map<String, dynamic>? _postData;
 
-
   @override
   void initState() {
     super.initState();
@@ -46,7 +45,7 @@ class _ViewModeratorProfileState extends State<ViewModeratorProfile> {
       postData = null;
     }
 
-   if (postData != null) {
+    if (postData != null) {
       moderatorId = widget.moderatorId;
       communityName = postData['communityName'] as String;
       moderatorName = postData['moderatorName'] as String;
@@ -99,174 +98,175 @@ class _ViewModeratorProfileState extends State<ViewModeratorProfile> {
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
-    return Scaffold(
-        body: FutureBuilder(
-      future: _fetchDetails(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        } else if (snapshot.hasError) {
-          return Center(
-            child: Text('Error: ${snapshot.error}'),
-          );
-        } else {
-          return Stack(
-            children: [
-              Image.network(
-                'https://marketplace.canva.com/EAE1oe3H6Sc/1/0/1600w/canva-black-elegant-minimalist-profile-linkedin-banner-nc0eALdRvKU.jpg',
-                fit: BoxFit.cover,
-              ),
-              SingleChildScrollView(
-                child: Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [Colors.transparent, Colors.white],
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      stops: [0, .2],
+    return SafeArea(
+      child: Scaffold(
+          body: FutureBuilder(
+        future: _fetchDetails(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Text('Error: ${snapshot.error}'),
+            );
+          } else {
+            return Stack(
+              children: [
+                Image.network(
+                  'https://firebasestorage.googleapis.com/v0/b/edunetdemo-5c098.appspot.com/o/banner%2FMODERATOR.png?alt=media&token=abaafe8e-f14a-4930-b748-2107486e42b0',
+                  fit: BoxFit.cover,
+                ),
+                SingleChildScrollView(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [Colors.transparent, Colors.white],
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        stops: [0, .2],
+                      ),
                     ),
-                  ),
-                  child: Column(
-                    children: [
-                      SizedBox(height: height * .13),
-                      Padding(
-                        padding:
-                            EdgeInsets.fromLTRB(width * .08, 0, width * .08, 0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Container(
-                              width: 110,
-                              height: 110,
-                              decoration: BoxDecoration(
-                                color: Colors.grey[300],
-                                borderRadius: BorderRadius.circular(35),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(28),
-                                  child:
-                                      Image.network(dpURL, fit: BoxFit.cover),
+                    child: Column(
+                      children: [
+                        SizedBox(height: height * .13),
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(
+                              width * .08, 0, width * .08, 0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Container(
+                                width: 110,
+                                height: 110,
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[300],
+                                  borderRadius: BorderRadius.circular(35),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(28),
+                                    child:
+                                        Image.network(dpURL, fit: BoxFit.cover),
+                                  ),
                                 ),
                               ),
-                            ),
-                            SizedBox(width: width * .05),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Wrap(
-                                    alignment: WrapAlignment.center,
-                                    children: [
-                                      Text(
-                                        communityName,
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 30,
+                              SizedBox(width: width * .05),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Wrap(
+                                      alignment: WrapAlignment.center,
+                                      children: [
+                                        Text(
+                                          communityName,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 30,
+                                          ),
+                                          textAlign: TextAlign.start,
                                         ),
-                                        textAlign: TextAlign.start,
+                                      ],
+                                    ),
+                                    SizedBox(height: 4),
+                                    Text(moderatorName),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 16),
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(
+                              width * .08, width * 0.03, width * .08, 0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                about,
+                                style: TextStyle(
+                                  fontSize: 16,
+                                ),
+                              ),
+                              SizedBox(height: width * 0.08),
+                              Column(
+                                children: [
+                                  Text(
+                                    'Contact :',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                  SizedBox(height: 8),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      IconButton(
+                                        onPressed: () {
+                                          _copyLink('LinkedIn');
+                                        },
+                                        icon: Image.asset(
+                                          'assets/Linkedin.png',
+                                          width: 25,
+                                        ),
+                                      ),
+                                      IconButton(
+                                        onPressed: () {
+                                          _copyLink('Mail');
+                                        },
+                                        icon: Image.asset(
+                                          'assets/Mail.png',
+                                          width: 30,
+                                        ),
+                                      ),
+                                      IconButton(
+                                        onPressed: () {
+                                          _copyLink('Twitter');
+                                        },
+                                        icon: Image.asset(
+                                          'assets/X.png',
+                                          width: 25,
+                                        ),
                                       ),
                                     ],
                                   ),
-                                  SizedBox(height: 4),
-                                  Text(moderatorName),
                                 ],
                               ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: 16),
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(
-                            width * .08, width * 0.03, width * .08, 0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              about,
-                              style: TextStyle(
-                                fontSize: 16,
-                              ),
-                            ),
-                            SizedBox(height: width * 0.08),
-                            Column(
-                              children: [
-                                Text(
-                                  'Contact :',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 20,
-                                  ),
-                                ),
-                                SizedBox(height: 8),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  children: [
-                                    IconButton(
-                                      onPressed: () {
-                                        _copyLink('LinkedIn');
-                                      },
-                                      icon: Image.asset(
-                                        'assets/Linkedin.png',
-                                        width: 25,
-                                      ),
-                                    ),
-                                    IconButton(
-                                      onPressed: () {
-                                        _copyLink('Mail');
-                                      },
-                                      icon: Image.asset(
-                                        'assets/Mail.png',
-                                        width: 30,
-                                      ),
-                                    ),
-                                    IconButton(
-                                      onPressed: () {
-                                        _copyLink('Twitter');
-                                      },
-                                      icon: Image.asset(
-                                        'assets/X.png',
-                                        width: 25,
-                                      ),
-                                    ),
+                              SizedBox(height: width * 0.08),
+                              Center(
+                                child: SegmentedButton(
+                                  segments: <ButtonSegment<String>>[
+                                    ButtonSegment(
+                                        value: 'Posts', label: Text('Posts')),
                                   ],
+                                  selected: _selectedButton,
+                                  onSelectionChanged: updateSelected,
                                 ),
-                              ],
-                            ),
-                            SizedBox(height: width * 0.08),
-                            Center(
-                              child: SegmentedButton(
-                                segments: <ButtonSegment<String>>[
-                                  
-                                  ButtonSegment(
-                                      value: 'Posts', label: Text('Posts')),
-                                ],
-                                selected: _selectedButton,
-                                onSelectionChanged: updateSelected,
                               ),
-                            ),
-                            SizedBox(height: width * 0.08),
+                              SizedBox(height: width * 0.08),
                               PostsSection.withView(
                                 moderatorId: widget.moderatorId,
                                 firestoreService: FirestoreService(),
                                 isView: true,
                               ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
-          );
-        }
-      },
-    ));
+              ],
+            );
+          }
+        },
+      )),
+    );
   }
 }
