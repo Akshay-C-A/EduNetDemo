@@ -381,31 +381,35 @@ class _AdminManagementPageState extends State<AdminManagementPage> {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 3,
-      child: Scaffold(
-        appBar: AppBar(
-          // title: Text('Admin Management'),
-          bottom: TabBar(
+@override
+Widget build(BuildContext context) {
+  return DefaultTabController(
+    length: 3,
+    child: Scaffold(
+      body: Column(
+        children: [
+          TabBar(
             tabs: [
               Tab(text: 'Moderators'),
               Tab(text: 'Students'),
               Tab(text: 'Alumni'),
             ],
           ),
-        ),
-        body: TabBarView(
-          children: [
-            _buildModeratorList(),
-            _buildStudentList(),
-            _buildAlumniList(),
-          ],
-        ),
+          Expanded(
+            child: TabBarView(
+              children: [
+                _buildModeratorList(),
+                _buildStudentList(),
+                _buildAlumniList(),
+              ],
+            ),
+          ),
+        ],
       ),
-    );
-  }
+    ),
+  );
+}
+
 }
 
 String generatePassword() {
